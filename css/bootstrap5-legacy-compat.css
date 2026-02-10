@@ -1,0 +1,182 @@
+/* Bootstrap 3 -> Bootstrap 5 compatibility helpers for staged migration. */
+
+/* Accessibility alias removed in BS5. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Utility aliases. */
+.pull-right { float: right !important; }
+.pull-left { float: left !important; }
+
+/* Legacy xs grid aliases: only for xs viewport, so sm/md/lg classes can override. */
+@media (max-width: 767.98px) {
+  .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6,
+  .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+    float: left;
+    flex: 0 0 auto;
+  }
+
+  .col-xs-1 { width: 8.33333333%; }
+  .col-xs-2 { width: 16.66666667%; }
+  .col-xs-3 { width: 25%; }
+  .col-xs-4 { width: 33.33333333%; }
+  .col-xs-5 { width: 41.66666667%; }
+  .col-xs-6 { width: 50%; }
+  .col-xs-7 { width: 58.33333333%; }
+  .col-xs-8 { width: 66.66666667%; }
+  .col-xs-9 { width: 75%; }
+  .col-xs-10 { width: 83.33333333%; }
+  .col-xs-11 { width: 91.66666667%; }
+  .col-xs-12 { width: 100%; }
+
+  .col-xs-offset-0 { margin-left: 0; }
+  .col-xs-offset-1 { margin-left: 8.33333333%; }
+  .col-xs-offset-2 { margin-left: 16.66666667%; }
+  .col-xs-offset-3 { margin-left: 25%; }
+  .col-xs-offset-4 { margin-left: 33.33333333%; }
+  .col-xs-offset-5 { margin-left: 41.66666667%; }
+  .col-xs-offset-6 { margin-left: 50%; }
+  .col-xs-offset-7 { margin-left: 58.33333333%; }
+  .col-xs-offset-8 { margin-left: 66.66666667%; }
+  .col-xs-offset-9 { margin-left: 75%; }
+  .col-xs-offset-10 { margin-left: 83.33333333%; }
+  .col-xs-offset-11 { margin-left: 91.66666667%; }
+}
+
+/* Legacy navbar toggler style hooks expected by old templates/CSS. */
+.navbar-toggle {
+  position: relative;
+  float: right;
+  padding: 9px 10px;
+  margin-top: 8px;
+  margin-right: 15px;
+  margin-bottom: 8px;
+  background-color: transparent;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.navbar-toggle .icon-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 1px;
+  background-color: #404041;
+}
+
+.navbar-toggle .icon-bar + .icon-bar {
+  margin-top: 4px;
+}
+
+/* Bootstrap 3 navbar behavior baseline for legacy templates. */
+.navbar-collapse {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+@media (max-width: 767.98px) {
+  .bottom-header .navbar-nav li {
+    display: block !important;
+    width: 100%;
+    text-align: left;
+  }
+
+  .bottom-header .navbar-nav {
+    margin: 7.5px -15px;
+  }
+
+  .navbar-collapse.collapse {
+    display: none;
+  }
+
+  .navbar-collapse.collapse.show {
+    display: block;
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar-toggle {
+    display: none;
+  }
+
+  .navbar-collapse.collapse {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding-bottom: 0;
+  }
+
+  /* BS5 adds dropdown-toggle::after; legacy templates already render <span class="caret">. */
+  .bottom-header .dropdown-toggle::after {
+    display: none !important;
+  }
+
+  /* In BS5 navbar dropdowns can become static; legacy nav expects absolute overlays. */
+  .bottom-header .navbar-nav > li {
+    position: relative;
+  }
+
+  .bottom-header .navbar-nav > li > .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    float: left;
+    z-index: 1000;
+    margin-top: 0;
+  }
+
+  .bottom-header .navbar-nav > li > .dropdown-menu[data-bs-popper] {
+    top: calc(100% + 6px);
+    left: 0;
+    margin-top: 0;
+    transform: none;
+  }
+
+  /* Keep top-level caret aligned in nav line. */
+  .bottom-header .navbar-nav > li > a .caret {
+    display: inline-block;
+    margin-left: 6px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+}
+
+/* Legacy helper utility. */
+.clearfix::before,
+.clearfix::after {
+  display: table;
+  content: " ";
+}
+
+.clearfix::after {
+  clear: both;
+}
+
+/* BS3 carousel class alias. */
+.carousel .item {
+  position: relative;
+  display: none;
+  float: left;
+  width: 100%;
+  margin-right: -100%;
+  backface-visibility: hidden;
+  transition: transform .6s ease-in-out;
+}
+
+.carousel .item.active {
+  display: block;
+}
