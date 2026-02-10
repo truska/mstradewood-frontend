@@ -96,6 +96,14 @@ label {
 .info_details {
     margin: 30px 0;
 }
+
+/* Keep top-right header contact details right-aligned regardless of global li styles */
+.header-numbers .info_details ul {
+    text-align: right;
+}
+.header-numbers .info_details ul li {
+    display: block;
+}
 .dropdown-1 a {
     display: block;
     background: #3ea244;
