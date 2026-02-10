@@ -30,7 +30,7 @@ $selectcontent = "SELECT * FROM `content` WHERE `id` = '" . $contentid  . "' AND
                                 echo "</div>" ;
                             }
 
-                      //          echo "<div class='row row-wrp'>" ;
+                                echo "<div class='row row-wrp'>" ;
                                 ?>
 <style>
     .leftsidebar img {
@@ -43,17 +43,19 @@ $selectcontent = "SELECT * FROM `content` WHERE `id` = '" . $contentid  . "' AND
                                 <?php
                                     echo "<div class='col-sm-3 text-center'>" ;
                                         echo "<div class='leftsidebar'>" ;
-                                            echo "" . $rowcontent["text2"] . "</p>" ;
+                                            echo "" . $rowcontent["text2"] . "" ;
                                             echo "<img src='" . $baseURL . "/filestore/images/content/" . $rowcontent["image"] . "'>" ;
                                         echo "</div>" ;
                                     echo "</div>" ;
                             
                                     echo "<div class='col-sm-9'>" ;
                                         echo "<div class='inner-contact'>" ;
-                                            echo "" . $rowcontent["text"] . "</p>" ;
+                                            echo "" . $rowcontent["text"] . "" ;
                                             //echo "<a href='https://www.pefc.org/'>https://www.pefc.org/</a>" ;
                                         echo "</div>" ;
                                     echo "</div>" ;
+
+                                echo "</div>" ;
                             
                                 echo "<div class='clearfix' style='padding-bottom:50px'></div>" ;
                         }
