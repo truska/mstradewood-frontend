@@ -258,6 +258,27 @@ For each change, capture:
 3. Reason:
 - In BS5, default navbar dropdown behavior conflicted with legacy nav markup/CSS and caused misplaced icons and menu items shifting into the dropdown flow.
 4. Rollback:
+### 2026-02-10 - Frontend Git deploy workflow established and verified
+1. Files:
+- `web/docs/frontend-git-deploy-runbook.md`
+2. Change summary:
+- Documented final, repeatable frontend deploy process used in production rehearsal:
+  - Dev commit/push from `web8` repo.
+  - Live pull from clone and rsync to webroot via reusable script.
+  - Excludes confirmed (`filestore`, `wccms`, `stats`, `error`, root system files, `.git`, `deploy_scripts`).
+- Added operational troubleshooting notes for:
+  - Git dubious ownership/safe directory.
+  - Incorrect SSH identity path (`/root/.ssh/...`).
+  - MobaXterm bracketed-paste control characters.
+3. Reason:
+- Ensure future site deployments follow a consistent and low-risk process.
+4. Rollback:
+- N/A (documentation-only update).
+5. Verification:
+- Rehearsal completed successfully:
+  - Dev push to `main`.
+  - Live pull and rsync deploy.
+  - Frontend changes visible post-deploy.
 - Remove the added desktop dropdown/caret compatibility block from `bootstrap5-legacy-compat.css`.
 5. Verification:
 - Visual check on home menu closed/open/hover states.

@@ -1,128 +1,145 @@
 # Frontend-Only Git Deploy Runbook
 
-Purpose: deploy only frontend code from this repo to live server, excluding CMS and system/content folders.
+Purpose: deploy frontend code only (no CMS) from GitHub to live.
 
-This runbook is intentionally separate from PHP/Bootstrap migration notes.
+This runbook is separate from migration work.
 
 ## Scope
 
-Deploy from `web/` only.
+Repository content deployed to live webroot, with these exclusions:
+- `filestore/`
+- `wccms/`
+- `stats/`
+- `error/`
+- `deploy_scripts/`
+- `.htaccess`
+- `inside.php`
+- `truska.php`
+- `.git/`
 
-Exclude:
-- `web/filestore/`
-- `web/wccms/`
-- `web/stats/`
-- `web/error/`
-- root-level frontend entry/system files in `web/` (e.g. `.htaccess`, `inside.php`, `truska.php`)
+Nothing outside webroot is deployed by this flow.
 
-Do not deploy anything outside `web/` (especially `private/`).
+## Paths Used On This Site
 
-## Standard Workflow
+- Dev repo: `/var/www/clients/client4/web8/web`
+- Live clone: `/var/www/mstradewood.com/web/mstradewood-frontend`
+- Live webroot: `/var/www/mstradewood.com/web`
+- Live deploy script: `/var/www/mstradewood.com/web/deploy_scripts/deploy-frontend.sh`
 
-1. Commit and push from dev.
-2. Export DB from dev and import to live (manual).
-3. Pull latest code on live.
-4. Sync only allowed frontend files from `web/` to live document root with excludes.
-5. Clear caches/restart PHP if needed.
-6. Smoke test.
+## One-Time Setup
 
-## 1) Dev: Commit and Push
+### A) Dev repo (done)
+1. Initialize Git in dev web folder.
+2. Add `.gitignore` exclusions for non-frontend content.
+3. Set remote:
+`git@github.com:truska/mstradewood-frontend.git`
+4. Commit and push baseline.
 
-```bash
-git status
-git add -A
-git commit -m "Deploy: frontend update"
-git push origin <branch>
+### B) SSH authentication
+Recommended: SSH deploy key (not HTTPS token prompts).
+
+Per user account that runs Git:
+1. Create key (`id_ed25519`)
+2. Add public key to GitHub account
+3. Add `~/.ssh/config`:
+
+```sshconfig
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_ed25519
+  IdentitiesOnly yes
 ```
 
-## 2) Database: Export Dev and Import Live
+4. Test:
+`ssh -T git@github.com`
 
-### 2.1 Export dev DB
+Expected:
+`Hi <github-user>! You've successfully authenticated...`
 
-```bash
-mysqldump --single-transaction --routines --triggers \
-  -h <DEV_DB_HOST> -u <DEV_DB_USER> -p <DEV_DB_NAME> \
-  > dev_export_$(date +%F_%H%M).sql
-```
-
-Optional compress:
+### C) Live deploy script
+Create `/var/www/mstradewood.com/web/deploy_scripts/deploy-frontend.sh`:
 
 ```bash
-gzip dev_export_*.sql
-```
+#!/usr/bin/env bash
+set -euo pipefail
 
-### 2.2 Backup live DB before import
+REPO_DIR="/var/www/mstradewood.com/web/mstradewood-frontend"
+LIVE_DIR="/var/www/mstradewood.com/web"
 
-```bash
-mysqldump --single-transaction --routines --triggers \
-  -h <LIVE_DB_HOST> -u <LIVE_DB_USER> -p <LIVE_DB_NAME> \
-  > live_backup_before_import_$(date +%F_%H%M).sql
-```
+cd "$REPO_DIR"
+git pull --ff-only origin main
 
-### 2.3 Import into live
-
-If compressed:
-
-```bash
-gunzip -c dev_export_<timestamp>.sql.gz | \
-mysql -h <LIVE_DB_HOST> -u <LIVE_DB_USER> -p <LIVE_DB_NAME>
-```
-
-If plain SQL:
-
-```bash
-mysql -h <LIVE_DB_HOST> -u <LIVE_DB_USER> -p <LIVE_DB_NAME> < dev_export_<timestamp>.sql
-```
-
-## 3) Live: Pull Latest Git
-
-In your live repo clone:
-
-```bash
-git fetch --all
-git checkout <branch>
-git pull --ff-only origin <branch>
-```
-
-## 4) Live: Frontend-Only Sync (with excludes)
-
-From live repo root, sync `web/` into live document root:
-
-```bash
 rsync -av \
+  --exclude='.git/' \
   --exclude='filestore/' \
   --exclude='wccms/' \
   --exclude='stats/' \
   --exclude='error/' \
+  --exclude='deploy_scripts/' \
   --exclude='.htaccess' \
   --exclude='inside.php' \
   --exclude='truska.php' \
-  ./web/ <LIVE_DOCROOT>/
+  ./ "$LIVE_DIR/"
 ```
 
-Notes:
-- This copies only frontend files allowed by scope.
-- No files from `private/` are included.
-- Add `--dry-run` first if you want a preview.
+Make executable:
+`chmod 700 /var/www/mstradewood.com/web/deploy_scripts/deploy-frontend.sh`
 
-## 5) Post-Deploy
+## Regular Deploy Cycle
 
-If OPcache is enabled, reload PHP-FPM/Apache or clear OPcache by your normal host procedure.
+### 1) Dev (VSCode Source Control or terminal)
+1. Make changes.
+2. Commit.
+3. Push `main`.
 
-## 6) Smoke Test Checklist
+### 2) Live (MobaXterm terminal)
+1. Confirm host/user first:
+`hostname && whoami && pwd`
+2. Run:
+`/var/www/mstradewood.com/web/deploy_scripts/deploy-frontend.sh`
 
-- Home page loads.
-- One content page loads.
-- CSS/JS/assets load with 200 status.
-- Navigation works on desktop/mobile.
-- Forms/CMS links expected for this phase (CMS excluded).
+### 3) Verify
+1. Hard refresh browser (`Ctrl+F5`).
+2. Check home + one internal page.
+3. Confirm expected change is live.
 
-## Quick Reuse Checklist
+## Optional: Database Move
 
-1. `git push`
-2. `mysqldump` dev
-3. backup live DB
-4. import live DB
-5. `git pull` on live
-6. `rsync` frontend with excludes
-7. smoke test
+DB export/import is currently manual and separate from this frontend deploy flow.
+
+## Troubleshooting
+
+### Git unsafe repository / dubious ownership
+Symptom: VSCode/Git says repo is unsafe.
+
+Fix:
+1. Ensure working as `web8` on dev.
+2. Correct ownership if needed:
+`chown -R web8:client4 /var/www/clients/client4/web8/web`
+3. If still blocked:
+`git config --global --add safe.directory /var/www/clients/client4/web8/web`
+
+### Wrong SSH identity (tries `/root/.ssh/...`)
+Symptom: Git error references `/root/.ssh/id_ed25519`.
+
+Fix:
+1. Use correct user shell (`web8` on dev).
+2. Ensure no forced ssh command in git config:
+`git config --show-origin -l | grep -i ssh`
+3. Reconnect VSCode remote session as correct user.
+
+### MobaXterm pasted control characters (`^[[200~`)
+Symptom: command starts/ends with garbage and fails.
+
+Fix:
+1. Press `Ctrl+C`.
+2. Paste short commands line-by-line.
+3. Optional in shell:
+`bind 'set enable-bracketed-paste off'`
+
+## Quick Checklist
+
+1. Dev: commit + push.
+2. Live: run deploy script.
+3. Hard refresh and smoke test.
