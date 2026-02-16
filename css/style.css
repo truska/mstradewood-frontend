@@ -104,6 +104,17 @@ label {
 .header-numbers .info_details ul li {
     display: block;
 }
+/* Header contact links should be black by default; keep existing hover/icon styling. */
+.header-numbers .info_details p.header-tel a,
+.header-numbers .info_details p.header-tel a:link,
+.header-numbers .info_details p.header-tel a:visited {
+    color: #000;
+}
+.header-numbers .info_details p.header-tel a:hover,
+.header-numbers .info_details p.header-tel a:active,
+.header-numbers .info_details p.header-tel a:focus {
+    color: #3ea244;
+}
 .dropdown-1 a {
     display: block;
     background: #3ea244;
@@ -527,7 +538,7 @@ li.toplevel:first-child {
 
 .productpage h1 {
 /*	font-family: 'Orbitron', sans-serif; */
-    font-family: 'Martel', serif;
+/*   font-family: 'Martel', serif; */
 }
 
 
@@ -567,6 +578,16 @@ li.toplevel:first-child {
 footer {
     background: rgba(255, 255, 255, 0.78);
     padding: 80px 0 150px; 
+}
+/* Temporary global normalization: two-tone footer on all pages with no top gap. */
+footer.footer {
+    background: #d0d0d0 !important;
+    padding: 0 !important;
+    margin: 0;
+}
+footer.footer .inner-footer {
+    background: rgba(255, 255, 255, 0.78) !important;
+    margin-top: 0;
 }
 footer li {
     display: block;
@@ -829,7 +850,8 @@ footer a:active {
 }
 .hibernia-list {
    border-top: 25px solid #f5f4f4;
-   border-bottom: 25px solid #404041;
+   /* border-bottom: 25px solid #404041; */
+   border-bottom: 25px solid #000;
 }
 .hibernia-list li span {
     font-size: 13.68px;
@@ -842,7 +864,8 @@ footer a:active {
 .inner-contact h4 {
     font-size: 26px;
     color: #d0c514;
-    background: #404041;
+    /* background: #404041; */
+    background: #000;
     padding: 20px 32px;
     font-weight: 700;
     text-transform: uppercase;

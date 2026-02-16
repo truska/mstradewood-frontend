@@ -2,7 +2,7 @@
 
 <!-- Specific home Styles -->
 <style>
-	.inner-footer {background:transparent;}
+	.inner-footer {background: rgba(255, 255, 255, 0.78);}
 </style>
 
 <?php
@@ -33,11 +33,11 @@
           width: 1em;
           margin-left: -1em;
     }
-    .inner {
+    .homepage-inner {
         padding-top:0px;
     }
 </style>
-<div class='container inner'>
+<div class='container inner homepage-inner'>
             <div class="row homepage">
 				<div class="col-md-6" style="padding-top:100px;"> 
                     <?php
