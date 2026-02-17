@@ -1,9 +1,8 @@
 <!-- START page-contact.php -->
-<script src='https://www.google.com/recaptcha/api.js'></script>
 <style>
     .google-maps {
         position: relative;
-        padding-bottom: 75%; // This is the aspect ratio
+        padding-bottom: 75%; /* This is the aspect ratio */
         height: 0;
         overflow: hidden;
     }
@@ -29,17 +28,17 @@
 				</ul>
 			</div> 
             
-            <div class="row">
+            <div class="row g-4">
                <?php 
                 
-                echo "<div class='col-sm-12  inner-contact'>" ;
+                echo "<div class='col-12 inner-contact'>" ;
                     echo "<h1>" . $rowpage["name"] . "</h1>" ;
                 echo "</div>" ;
                 ?>
                 
 
 				
-				<div class="col-sm-6">
+				<div class="col-12 col-lg-6">
 					<div class="contact-wrapper">
 					<!--	<div id="googleMap3" class="tow-map map-section"></div> --> <!-- NO MAP for HQ -->
 						<h2>Headquarters </h2>
@@ -68,62 +67,12 @@
 					</div>
 				</div>
 				
-				<div class="col-sm-6">
+				<div class="col-12 col-lg-6">
 					<div class="contact-wrapper">
 						
 						<h2>Contact Us </h2>
 						<p>&nbsp;</p>
                     
-                        <!-- Use Contact-form.php -->
-                        <!--
-                        <form action="contacthandler" id="formData"  method="post">
-                    
-                        <input type="hidden" class="form-control" name="tRhgY654">
-                        <input type="hidden" class="form-control" name="sourcepage" value="<?php echo $rowpage["slug"] ; ?>">
-                        
-                        
-                        
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Your Name</label>
-                        <input type="text" class="form-control" id="exampleInputEmail1" name="realname" placeholder="Your Name">
-                      </div>
-                    
-                    
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Email Address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" name="email" placeholder="Email Address">
-                      </div>
-                    
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Contact Number</label>
-                        <input type="tel" class="form-control" id="exampleInputEmail1" name="tele" placeholder="Telephone">
-                      </div>
-                      
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Have you a location in mind</label>
-                        <input type="tel" class="form-control" id="exampleInputEmail1" name="location" placeholder="Possible Location">
-                      </div>
-                  
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Message or Question</label>
-                        <textarea class="form-control" name="message" rows="5"></textarea>
-                      </div>
-					<?php 					  
-					 if( $data['value']=='Yes' )
-					 {
-					?>
-
-                       <div class="g-recaptcha" data-sitekey="<?php echo $data2["value"] ; ?>"></div>
-                        <p  style="color:red;font-weight:bold;" id="error-recaptcha"></p>
-                    <?php 
-					 }
-					?>
-						 <button type="submit"  class="btn btn-default">Submit</button>
-						 <p class="text-muted">
-                            
-                  </form>
-                        -->
-                        
                         <?php
                             include("includes/contact-form.php"); 
                         ?>
@@ -133,7 +82,7 @@
 				</div>
                 
                 
-                <div class="col-sm-6">
+                <div class="col-12 col-lg-6">
 					<div class="contact-wrapper">
                         
 						<h2><?php echo  $prefs['prefBelfastDepotName'] ;?></h2>
@@ -171,7 +120,7 @@
 					</div>
 				</div>
 				
-				<div class="col-sm-6">
+				<div class="col-12 col-lg-6">
 					<div class="contact-wrapper">
 						<h2><?php echo  $prefs['prefDublinDepotName'] ;?> </h2>
                         <div class="google-maps">

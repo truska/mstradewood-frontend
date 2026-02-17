@@ -26,6 +26,58 @@ if (!function_exists('cms_localize_internal_link')) {
         return rtrim($baseURL, '/') . $path . $query . $fragment;
     }
 }
+if (!function_exists('cms_extract_youtube_id')) {
+    function cms_extract_youtube_id($value) {
+        $value = trim((string) $value);
+        if ($value === '') {
+            return '';
+        }
+
+        if (preg_match('/^[A-Za-z0-9_-]{11}$/', $value)) {
+            return $value;
+        }
+
+        $parts = @parse_url($value);
+        if (!is_array($parts)) {
+            return '';
+        }
+
+        $host = strtolower($parts['host'] ?? '');
+        $path = trim((string) ($parts['path'] ?? ''), '/');
+
+        if ($host === 'youtu.be') {
+            $segments = explode('/', $path);
+            $candidate = $segments[0] ?? '';
+            return preg_match('/^[A-Za-z0-9_-]{11}$/', $candidate) ? $candidate : '';
+        }
+
+        if (
+            $host === 'youtube.com' ||
+            $host === 'www.youtube.com' ||
+            $host === 'm.youtube.com' ||
+            $host === 'youtube-nocookie.com' ||
+            $host === 'www.youtube-nocookie.com'
+        ) {
+            if (!empty($parts['query'])) {
+                parse_str($parts['query'], $query);
+                $candidate = trim((string) ($query['v'] ?? ''));
+                if (preg_match('/^[A-Za-z0-9_-]{11}$/', $candidate)) {
+                    return $candidate;
+                }
+            }
+
+            $segments = explode('/', $path);
+            if (($segments[0] ?? '') === 'embed' || ($segments[0] ?? '') === 'shorts') {
+                $candidate = $segments[1] ?? '';
+                if (preg_match('/^[A-Za-z0-9_-]{11}$/', $candidate)) {
+                    return $candidate;
+                }
+            }
+        }
+
+        return '';
+    }
+}
 // GET SIDEBAR CONTENT Below Alternative Porducts
 $selectsidebar = "SELECT * FROM `sidebar` WHERE `page` = '" . $slugID  . "' AND (`product` = '0' OR `product` = '" . $segs[1]  . "') AND `showonweb` = 'Yes' ORDER BY `order` " ;
 				//	echo "<p>SelectSidebar = " . $selectsidebar . "</p>";
@@ -40,6 +92,20 @@ $selectsidebar = "SELECT * FROM `sidebar` WHERE `page` = '" . $slugID  . "' AND 
 <style>
     .sbimg img {
        /* max-width: none; */
+    }
+    .sidebar-video-embed {
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%;
+        overflow: hidden;
+    }
+    .sidebar-video-embed iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
     }
 </style>
 <!-- <div class="col-sm-3 col-md-2 sidebar-right"> -->
@@ -68,9 +134,30 @@ $selectsidebar = "SELECT * FROM `sidebar` WHERE `page` = '" . $slugID  . "' AND 
 					}
 					// IF Video Link 
 					if ($rowsidebar["item"] == "Video") {
+                        $youtubeId = '';
+                        $videoIdCandidates = [
+                            $rowsidebar["link"] ?? '',
+                            $rowsidebar["youtubeid"] ?? '',
+                            $rowsidebar["source"] ?? '',
+                        ];
+                        foreach ($videoIdCandidates as $candidate) {
+                            $youtubeId = cms_extract_youtube_id($candidate);
+                            if ($youtubeId !== '') {
+                                break;
+                            }
+                        }
 						echo "<div class='download sdvideo'>" ;
 							echo "<h3>" . $rowsidebar["heading"] . "</h3>" ;
-							echo "<iframe width='100%' height='100%' src='https://www.youtube.com/embed/" . $rowsidebar["source"] . "' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>" ;
+                            if ($youtubeId !== '') {
+                                echo "<div class='sidebar-video-embed'>";
+                                    echo "<iframe src='https://www.youtube.com/embed/" . $youtubeId . "' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>" ;
+                                echo "</div>";
+                            } else {
+                                $sidebarLink = cms_localize_internal_link($rowsidebar["link"] ?? '', $baseURL);
+                                echo "<a href='" . $sidebarLink . "' target='_blank'>" ;
+                                    echo "<img src='" . $baseURL . "/filestore/images/content/youtube-click-to-play.jpg' class='img-responsive' style='width:85%;' alt='" . $rowsidebar["alttag"] . "' title='" . $rowsidebar["alttag"] . " - " . $rowsidebar["id"] . "'>" ;
+                                echo "</a>";
+                            }
 						echo "</div>" ;
 					}
 					// IF URL Web Link
