@@ -2,31 +2,64 @@
 
 
 		<div class="banner">
-			<div class="desktop">	
-				<div id="home-banner-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
-					<div class="carousel-inner" role="listbox">
-						<div class="carousel-item active">
-							<img src="<?php echo $baseURL ;?>/filestore/images/banners/banner-home-1.jpg" alt="Home banner 1">
-							<div class="carousel-caption container inner"></div>
+			<div class="desktop">
+				<?php
+				$homeBannerImages = [];
+				$selectHomeBanners = "SELECT `image`, `alttag`, `caption`, `folder_name` FROM `gallery`
+					WHERE `form_id` = 8
+					AND `record_id` = 37
+					AND `showonweb` = 'Yes'
+					AND `archived` = 0
+					ORDER BY `sort`, `id`";
+				$queryHomeBanners = mysqli_query($conn, $selectHomeBanners);
+				if ($queryHomeBanners instanceof mysqli_result) {
+					while ($rowHomeBanner = mysqli_fetch_assoc($queryHomeBanners)) {
+						$imageFile = trim((string) ($rowHomeBanner['image'] ?? ''));
+						if ($imageFile === '') {
+							continue;
+						}
+						$folderName = trim((string) ($rowHomeBanner['folder_name'] ?? ''), '/');
+						if ($folderName === '') {
+							$folderName = 'images/banners';
+						}
+						$altText = trim((string) ($rowHomeBanner['alttag'] ?? ''));
+						if ($altText === '') {
+							$altText = trim((string) ($rowHomeBanner['caption'] ?? ''));
+						}
+						if ($altText === '') {
+							$altText = 'Home banner';
+						}
+						$homeBannerImages[] = [
+							'src' => $baseURL . '/filestore/' . $folderName . '/' . $imageFile,
+							'alt' => $altText,
+						];
+					}
+				}
+				$homeBannerCount = count($homeBannerImages);
+				?>
+
+				<?php if ($homeBannerCount === 1): ?>
+					<img src="<?php echo htmlspecialchars($homeBannerImages[0]['src'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($homeBannerImages[0]['alt'], ENT_QUOTES, 'UTF-8'); ?>">
+				<?php elseif ($homeBannerCount > 1): ?>
+					<div id="home-banner-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
+						<div class="carousel-inner" role="listbox">
+							<?php foreach ($homeBannerImages as $index => $homeBanner): ?>
+								<div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>">
+									<img src="<?php echo htmlspecialchars($homeBanner['src'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($homeBanner['alt'], ENT_QUOTES, 'UTF-8'); ?>">
+									<div class="carousel-caption container inner"></div>
+								</div>
+							<?php endforeach; ?>
 						</div>
-						<div class="carousel-item">
-							<img src="<?php echo $baseURL ;?>/filestore/images/banners/banner-home-2.jpg" alt="Home banner 2">
-							<div class="carousel-caption container inner"></div>
-						</div>
-						<div class="carousel-item">
-							<img src="<?php echo $baseURL ;?>/filestore/images/banners/banner-home-3.jpg" alt="Home banner 3">
-							<div class="carousel-caption container inner"></div>
-						</div>
+						<button class="carousel-control-prev" type="button" data-bs-target="#home-banner-carousel" data-bs-slide="prev">
+							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Previous</span>
+						</button>
+						<button class="carousel-control-next" type="button" data-bs-target="#home-banner-carousel" data-bs-slide="next">
+							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Next</span>
+						</button>
 					</div>
-					<button class="carousel-control-prev" type="button" data-bs-target="#home-banner-carousel" data-bs-slide="prev">
-						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-						<span class="visually-hidden">Previous</span>
-					</button>
-					<button class="carousel-control-next" type="button" data-bs-target="#home-banner-carousel" data-bs-slide="next">
-						<span class="carousel-control-next-icon" aria-hidden="true"></span>
-						<span class="visually-hidden">Next</span>
-					</button>
-				</div>
+				<?php endif; ?>
 			</div>
         
         

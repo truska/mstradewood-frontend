@@ -10,7 +10,7 @@
 		<div class="col-lg-7 col-md-6 col-sm-12 col-xs-12">
 
 		<?php
-			$selectcontent = "SELECT * FROM `content` WHERE `page` = '" . $rowpage['id'] . "' AND `showonweb` = 'Yes' ORDER BY `order`  ";
+			$selectcontent = "SELECT * FROM `content` WHERE `page` = '" . $rowpage['id'] . "' AND `showonweb` = 'Yes' ORDER BY `sort`  ";
 			$querycontent = mysqli_query($conn,$selectcontent);
 			$num_rows = mysqli_num_rows($querycontent);
 			//echo "rows = " .$num_rows . "<br>";

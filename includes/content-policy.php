@@ -3,7 +3,7 @@
 <?php
 
 //Set up Content Pages Data 
-$selectcontent = "SELECT * FROM `content` WHERE `page` = '" . $rowpage["id"] . "' AND `showonweb` = 'Yes' ORDER BY `order` ";
+$selectcontent = "SELECT * FROM `content` WHERE `page` = '" . $rowpage["id"] . "' AND `showonweb` = 'Yes' ORDER BY `sort` ";
 $querycontent = mysqli_query($conn, $selectcontent );
 ?>
 

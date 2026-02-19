@@ -1,7 +1,7 @@
 <!-- START content-standard-by-cols.php (ABOUT US) -->
 <?php
 // GET CONTENT
-$selectcontent = "SELECT * FROM `content` WHERE `page` = " . $slugID . " AND `showonweb` = 'Yes' ORDER BY `order` ";
+$selectcontent = "SELECT * FROM `content` WHERE `page` = " . $slugID . " AND `showonweb` = 'Yes' ORDER BY `sort` ";
 $querycontent = mysqli_query($conn, $selectcontent);
 $rowcontent = mysqli_fetch_assoc($querycontent);
 

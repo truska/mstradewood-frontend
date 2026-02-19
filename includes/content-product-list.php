@@ -2,7 +2,7 @@
 <?php
 // GET CONTENT
 
-$selectcontent = "SELECT * FROM `content` WHERE `id` = '" . $contentid  . "' AND `showonweb` = 'Yes' ORDER BY `order` " ;
+$selectcontent = "SELECT * FROM `content` WHERE `id` = '" . $contentid  . "' AND `showonweb` = 'Yes' ORDER BY `sort` " ;
 				//	echo $selectcontent . "<br>";
 					$querycontent = mysqli_query($conn,$selectcontent);
 				//	$num_rows_content = mysqli_num_rows($querycontent);

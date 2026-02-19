@@ -51,7 +51,7 @@
 					</script>
 				<?php
 				//	$selectgallery = "SELECT * FROM `gallery` WHERE `page` = " . $rowpage['id'] . " AND `showonweb` = 'Yes' ORDER BY `order` " ;
-					$selectgallery = "SELECT * FROM `gallery` WHERE `content` = " . $rowcontent['id'] . " AND `showonweb` = 'Yes' ORDER BY `order` " ;
+					$selectgallery = "SELECT * FROM `gallery` WHERE `content` = " . $rowcontent['id'] . " AND `showonweb` = 'Yes' ORDER BY `sort` " ;
 				//	echo $selectgallery . "<br>";
 					$querygallery = mysqli_query($conn,$selectgallery);
 					$num_rows = mysqli_num_rows($querygallery);
