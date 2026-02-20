@@ -537,8 +537,9 @@ li.toplevel:first-child {
 }
 
 .productpage h1 {
-/*	font-family: 'Orbitron', sans-serif; */
-/*   font-family: 'Martel', serif; */
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    color: #000;
 }
 
 
@@ -691,6 +692,11 @@ footer a:active {
     font-weight: 700;
     margin-bottom: 10px;
     margin-top: 30px;
+}
+.inner-contact.productpage h1 {
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    color: #000;
 }
 .inner-contact p {
     font-size: 19px;
