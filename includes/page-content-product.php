@@ -115,7 +115,7 @@ $productGalleryImages = cms_product_gallery_images(
                                     ?>
                                     <!-- All products with $showdop == yes should use this / Direct link above is not being used currently -->
                                     <!-- Code for popup form is in footer-code.php -->
-                                    <a href="javascript:void(0)" class="banner-btn" data-toggle="modal" data-target="#chat-Modal">
+                                    <a href="#" class="banner-btn" data-bs-toggle="modal" data-bs-target="#dopRequestModal">
                                        CLICK HERE TO REQUEST <?php echo $rowproduct["doptext"] ; ?>
                                     </a>
 
@@ -219,5 +219,6 @@ $productGalleryImages = cms_product_gallery_images(
 		
 		</div>
 
+<?php include __DIR__ . '/dop-request-modal.php'; ?>
 
 <!-- END page-content-product.php -->
