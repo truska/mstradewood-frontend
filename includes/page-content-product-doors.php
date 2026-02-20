@@ -191,7 +191,7 @@ $selectgallery = "SELECT * FROM `gallery` WHERE `product` = " . $rowproduct["id"
 				
 
 				<!-- C E N T E R  P R O D U C T  S E C T I O N -->
-				<div class="col-sm-9 col-md-7 col-lg-7">
+				<div class="col-sm-6 col-md-7 col-lg-7">
 					<div class="inner-contact productpage">
 						<h1><?php echo $rowproduct["name"] ; ?></h1>
 				<!--		<p class="sub-p"><?php echo $rowproduct["shorttext"] ; ?> </p> -->
