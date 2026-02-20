@@ -66,7 +66,12 @@
 						}
 						$folderName = trim((string) ($rowHomeBanner['folder_name'] ?? ''), '/');
 						if ($folderName === '') {
-							$folderName = 'images/banners';
+							$folderName = 'images/content';
+						}
+						$imageBasePath = rtrim((string) ($_SERVER['DOCUMENT_ROOT'] ?? ''), '/') . '/filestore/' . $folderName . '/';
+						$desktopImageFile = $imageFile;
+						if (file_exists($imageBasePath . 'lg-' . $imageFile)) {
+							$desktopImageFile = 'lg-' . $imageFile;
 						}
 						$altText = trim((string) ($rowHomeBanner['alttag'] ?? ''));
 						if ($altText === '') {
@@ -76,7 +81,7 @@
 							$altText = 'Home banner';
 						}
 						$homeBannerImages[] = [
-							'src' => $baseURL . '/filestore/' . $folderName . '/' . $imageFile,
+							'src' => $baseURL . '/filestore/' . $folderName . '/' . $desktopImageFile,
 							'alt' => $altText,
 						];
 					}
