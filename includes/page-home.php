@@ -18,16 +18,39 @@
 
 ?>
 <style>
+    .homepage,
+    .homepage p,
+    .homepage p a,
+    .homepage li,
+    .homepage h1,
+    .homepage h2,
+    .homepage h3,
+    .homepage h4 {
+        color: #fff;
+    }
+    .homepage h1,
+    .homepage h2,
+    .homepage h3 {
+        font-size: 32px;
+        font-weight: 700;
+        font-family: 'Lato', sans-serif;
+        margin-bottom: 18px;
+    }
+    .homepage p {
+        font-size: 18px;
+        margin-bottom: 18px;
+    }
     .homepage ul {
         list-style:none;
         padding-left:30px;
     }
     .homepage ul li {
         display:list-item;
+        font-size: 18px;
     }
     .homepage ul li::before {
         content: "\2022";
-        color:#3ea244;
+        color:#fff;
          font-weight: bold;
           display: inline-block; 
           width: 1em;
@@ -38,15 +61,19 @@
     }
 </style>
 <div class='container inner homepage-inner'>
-            <div class="row homepage">
-				<div class="col-md-6" style="padding-top:100px;"> 
+			<div class="row homepage">
+				<div class="col-md-12" style="padding-top:100px;">
                     <?php
-                    echo "<h3>" . $rowcontent["heading"] . "</h3>";
-                    echo "" . $rowcontent["text"] . ">";
+                    echo "<h1>" . $rowcontent["heading"] . "</h1>";
+                    ?>
+                </div>
+				<div class="col-md-6 home-content-left"> 
+                    <?php
+                    echo "" . $rowcontent["text"] . "";
                     ?>
                     
 				</div>
-				<div class="col-md-6 right-section homepara2">
+				<div class="col-md-6 right-section homepara2 home-content-right">
                     <?php
                     echo "" . $rowcontent["text2"] . "";
                     ?>

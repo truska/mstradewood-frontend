@@ -20,6 +20,42 @@
 			{
 			//	echo "<div class='container inner inner-footer'>" ;
 			}
+            $cmsPrefs = $prefs;
+            $footerPrefKeys = [
+                'prefSiteName',
+                'prefCompanyName',
+                'prefCopyrightStartYear',
+                'prefAddress1',
+                'prefAddress2',
+                'prefTown',
+                'prefCounty',
+                'prefCountry',
+                'prefPostcode',
+                'prefTel1',
+                'prefTel2',
+                'prefTelIntCode',
+                'prefEmail',
+                'prefBelfastDepotName',
+                'prefBelfastDepotAddress1',
+                'prefBelfastDepotAddress2',
+                'prefBelfastDepotAddress3',
+                'prefBelfastDepotTown',
+                'prefBelfastDepotCounty',
+                'prefBelfastDepotCountry',
+                'prefBelfastDepotPostcode',
+                'prefDublinDepotName',
+                'prefDublinDepotAddress1',
+                'prefDublinDepotAddress2',
+                'prefDublinDepotAddress3',
+                'prefDublinDepotTown',
+                'prefDublinDepotCounty',
+                'prefDublinDepotCountry',
+                'prefDublinDepotPostcode',
+                'prefShowFooterDebug'
+            ];
+            foreach ($footerPrefKeys as $key) {
+                $cmsPrefs[$key] = cms_pref($key, $cmsPrefs[$key] ?? '');
+            }
 ?>
   		<footer class="footer">          
 <?php
@@ -48,30 +84,30 @@
 							
 							<?php
 							
-							if ($prefs['prefBelfastDepotName']) {echo "<li><em><strong>" . $prefs['prefBelfastDepotName'] . "</em></strong></li>" ; }	
+							if ($cmsPrefs['prefBelfastDepotName']) {echo "<li><em><strong>" . $cmsPrefs['prefBelfastDepotName'] . "</em></strong></li>" ; }	
 							echo "<li>";
-							if ($prefs['prefBelfastDepotAddress1']) {echo "<li>" . $prefs['prefBelfastDepotAddress1'] . ", " ; }	
-							if ($prefs['prefBelfastDepotAddress2']) {echo "" . $prefs['prefBelfastDepotAddress2'] . ", " ; }	
-							if ($prefs['prefBelfastDepotAddress3']) {echo "" . $prefs['prefBelfastDepotAddress3'] . ", " ; }	
-							if ($prefs['prefBelfastDepotTown']) {echo "" . $prefs['prefBelfastDepotTown'] . ", " ; }	
-							if ($prefs['prefBelfastDepotCounty']) {echo "" . $prefs['prefBelfastDepotCounty'] . ", " ; }	
-							if ($prefs['prefBelfastDepotCountry']) {echo "" . $prefs['prefBelfastDepotCountry'] . "," ; }	
-							if ($prefs['prefBelfastDepotPostcode']) {echo "" . $prefs['prefBelfastDepotPostcode'] . " " ; }
+							if ($cmsPrefs['prefBelfastDepotAddress1']) {echo "<li>" . $cmsPrefs['prefBelfastDepotAddress1'] . ", " ; }	
+							if ($cmsPrefs['prefBelfastDepotAddress2']) {echo "" . $cmsPrefs['prefBelfastDepotAddress2'] . ", " ; }	
+							if ($cmsPrefs['prefBelfastDepotAddress3']) {echo "" . $cmsPrefs['prefBelfastDepotAddress3'] . ", " ; }	
+							if ($cmsPrefs['prefBelfastDepotTown']) {echo "" . $cmsPrefs['prefBelfastDepotTown'] . ", " ; }	
+							if ($cmsPrefs['prefBelfastDepotCounty']) {echo "" . $cmsPrefs['prefBelfastDepotCounty'] . ", " ; }	
+							if ($cmsPrefs['prefBelfastDepotCountry']) {echo "" . $cmsPrefs['prefBelfastDepotCountry'] . "," ; }	
+							if ($cmsPrefs['prefBelfastDepotPostcode']) {echo "" . $cmsPrefs['prefBelfastDepotPostcode'] . " " ; }
 							echo "<br><br></li>";
 							?>	
 							
 							
 							<?php
 							
-							if ($prefs['prefDublinDepotName']) {echo "<li><em><strong>" . $prefs['prefDublinDepotName'] . "</em></strong></li>" ; }
+							if ($cmsPrefs['prefDublinDepotName']) {echo "<li><em><strong>" . $cmsPrefs['prefDublinDepotName'] . "</em></strong></li>" ; }
 							echo "<li>";
-							if ($prefs['prefDublinDepotAddress1']) {echo "" . $prefs['prefDublinDepotAddress1'] . ", " ; }	
-							if ($prefs['prefDublinDepotAddress2']) {echo "" . $prefs['prefDublinDepotAddress2'] . ", " ; }	
-							if ($prefs['prefDublinDepotAddress3']) {echo "" . $prefs['prefDublinDepotAddress3'] . ", " ; }	
-							if ($prefs['prefDublinDepotTown']) {echo "" . $prefs['prefDublinDepotTown'] . ", " ; }	
-							if ($prefs['prefDublinDepotCounty']) {echo "" . $prefs['prefDublinDepotCounty'] . ", " ; }	
-							if ($prefs['prefDublinDepotCountry']) {echo "" . $prefs['prefDublinDepotCountry'] . ", " ; }	
-								if (!empty($prefs['prefDublinDepotPostcode'])) {echo "" . $prefs['prefDublinDepotPostcode'] . " " ; }
+							if ($cmsPrefs['prefDublinDepotAddress1']) {echo "" . $cmsPrefs['prefDublinDepotAddress1'] . ", " ; }	
+							if ($cmsPrefs['prefDublinDepotAddress2']) {echo "" . $cmsPrefs['prefDublinDepotAddress2'] . ", " ; }	
+							if ($cmsPrefs['prefDublinDepotAddress3']) {echo "" . $cmsPrefs['prefDublinDepotAddress3'] . ", " ; }	
+							if ($cmsPrefs['prefDublinDepotTown']) {echo "" . $cmsPrefs['prefDublinDepotTown'] . ", " ; }	
+							if ($cmsPrefs['prefDublinDepotCounty']) {echo "" . $cmsPrefs['prefDublinDepotCounty'] . ", " ; }	
+							if ($cmsPrefs['prefDublinDepotCountry']) {echo "" . $cmsPrefs['prefDublinDepotCountry'] . ", " ; }	
+								if (!empty($cmsPrefs['prefDublinDepotPostcode'])) {echo "" . $cmsPrefs['prefDublinDepotPostcode'] . " " ; }
 							echo "</li>";
 							?>						
 <!--
@@ -92,7 +128,7 @@
             		<div class="col-sm-4 col-md-2">
             			<ul class="addres">
 							<?php
-							echo "<p>" . getAddressShortList($prefs) . "</p>" ;
+							echo "<p>" . getAddressShortList($cmsPrefs) . "</p>" ;
                             ?>
                             <!--
                             <li><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp; <a href="tel:<?php echo getTel1Int($prefs); ?>"><?php echo getTel1($prefs); ?></a> (UK)<br><br></li>
@@ -104,9 +140,9 @@
             			<div class="row">
             				<div class="col-sm-6">
             					<ul class="phone">
-                                    <li><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp; <a href="tel:<?php echo getTel1Int($prefs); ?>"><?php echo getTel1Int($prefs); ?></a> </li>
-                                    <li><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp; <a href="tel:<?php echo getTel2Int($prefs); ?>"><?php echo getTel2Int($prefs); ?></a> </li>
-				                    <li><span class="col2"><i class="fas fa-at"></i></span>&nbsp;&nbsp; <a href="mailto:<?php echo getEmail($prefs); ?>"><?php echo getEmail($prefs); ?></a></li>
+                                    <li><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp; <a href="tel:<?php echo getTel1Int($cmsPrefs); ?>"><?php echo getTel1Int($cmsPrefs); ?></a> </li>
+                                    <li><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp; <a href="tel:<?php echo getTel2Int($cmsPrefs); ?>"><?php echo getTel2Int($cmsPrefs); ?></a> </li>
+				                    <li><span class="col2"><i class="fas fa-at"></i></span>&nbsp;&nbsp; <a href="mailto:<?php echo getEmail($cmsPrefs); ?>"><?php echo getEmail($cmsPrefs); ?></a></li>
 
             					</ul>
             				</div>
@@ -151,14 +187,22 @@
             	</div>
                 <div class="row imprint">
                     <div class="col-sm-6 ">
-                        <p class="footerimprint">&copy; Copyright <?php echo $prefs["prefCopyrightStartYear"] . " - " . date('Y') . " " . getCompanyName($prefs) ; ?><br><a href='<?php echo $baseURL ;?>/privacy' target='_blank'>Privacy</a> | <a href='<?php echo $baseURL ;?>/site-policy' target='_blank'>T&Cs</a><br>...</p>
+                        <?php
+                        $copyrightStartYear = (string) ($cmsPrefs["prefCopyrightStartYear"] ?? '');
+                        $copyrightCurrentYear = date('Y');
+                        $copyrightYears = $copyrightCurrentYear;
+                        if ($copyrightStartYear !== '' && $copyrightStartYear !== $copyrightCurrentYear) {
+                            $copyrightYears = $copyrightStartYear . " - " . $copyrightCurrentYear;
+                        }
+                        ?>
+                        <p class="footerimprint">&copy; Copyright <?php echo $copyrightYears . " " . getCompanyName($cmsPrefs) ; ?><br><a href='<?php echo $baseURL ;?>/privacy' target='_blank'>Privacy</a> | <a href='<?php echo $baseURL ;?>/site-policy' target='_blank'>T&Cs</a><br>...</p>
                     </div>
                     <div class="col-sm-6 footerimprint">
                         <p style="text-align: right">&nbsp;<br><a href='https://digita.agency' target='_blank'>website design, build and hosting by digita.agency</a></p>
                     </div>
                 </div>
 			<?php
-                if ($prefs['prefShowFooterDebug'] == 'Yes') {
+                if ($cmsPrefs['prefShowFooterDebug'] == 'Yes') {
 				    include("includes/footer-debug.php");
                 }
 			?>

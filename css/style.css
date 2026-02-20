@@ -33,6 +33,11 @@ h1, h2, h3, h4, h5, h6 {
     color: #404041;
     line-height: normal;
 } 
+h1 {
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    color: #000;
+}
 p,
 p a,
 p a:link,
@@ -688,7 +693,7 @@ footer a:active {
 .inner-contact h1 {
     font-size: 56px;
     font-size: 48px;
-    color: #404041;
+    color: #000;
     font-weight: 700;
     margin-bottom: 10px;
     margin-top: 30px;

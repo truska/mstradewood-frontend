@@ -17,6 +17,24 @@
     .techterms {
         padding-bottom:30px;
     }
+    .techterms-layout {
+        margin-top: 15px;
+    }
+    .techterms-main {
+        padding-right: 25px;
+    }
+    .techterms-item {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .techterms-item .techterms-label,
+    .techterms-item .techterms-copy {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .techterms-sidebar {
+        padding-left: 15px;
+    }
 </style>
 <?php
 // GET CONTENT
@@ -26,37 +44,27 @@
 		$querytechterms = mysqli_query($conn,$selecttechterms);
 		$numrowstechterms1 = mysqli_num_rows($querytechterms);
 		//echo "rows = " .$numrows1 . "<br>";
-            echo "<div class='col-lg-12 inner-contact'>" ;
-                
-                echo "<div class='col-lg-9 col-md-9 col-sm-12 col-xs-12 '>" ;
-                echo "<div class='col-sm-12 col-sm-offset-2'>" ;
+            echo "<div class='row inner-contact techterms-layout'>" ;
+                echo "<div class='col-lg-9 col-md-9 col-sm-12 col-xs-12 techterms-main'>" ;
                     echo "<h1>" . $rowpage["name"] . "</h1>" ;
-                echo "</div>" ;
-                $backcol = "#F5F5F5" ;
+                    $backcol = "#F5F5F5" ;
                     while ($rowtechterms = mysqli_fetch_assoc($querytechterms) )
                     {
-                        echo "<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='background-color:" . $backcol . ";'>" ;
-                            echo "<a name='" . $rowtechterms["name"] . "'>" ;
-                            echo "<div class='col-lg-2 col-md-3 col-sm-3 col-xs-12'>" ;
+                        echo "<div class='row techterms-item' style='background-color:" . $backcol . ";'>" ;
+                            echo "<a name='" . $rowtechterms["name"] . "'></a>" ;
+                            echo "<div class='col-lg-2 col-md-3 col-sm-3 col-xs-12 techterms-label'>" ;
                                 echo "<p><strong>" . $rowtechterms["name"] . "</strong></p>" ;
                             echo "</div>" ;
-
-                            echo "<div class='col-lg-10 col-md-10 col-sm-9 col-xs-12 techterms'>" ;
+                            echo "<div class='col-lg-10 col-md-9 col-sm-9 col-xs-12 techterms techterms-copy'>" ;
                                 echo "" . $rowtechterms["text"] . "" ;
                             echo "</div>" ;
-                            if ($backcol == '#F5F5F5') {$backcol = '#ffffff';} else {$backcol = '#F5F5F5';}
                         echo "</div>" ;
-                        echo "<div class='clearfix'></div>" ;
+                        if ($backcol == '#F5F5F5') {$backcol = '#ffffff';} else {$backcol = '#F5F5F5';}
                     }
-
                 echo "</div>" ;
-
-                
-                
-                echo "<div class='col-lg-2 col-md-2 hidden-sm hidden-xs'>" ;
+                echo "<div class='col-lg-3 col-md-3 hidden-sm hidden-xs techterms-sidebar'>" ;
                     include("includes/content-standard-sidebar.php");
                 echo "</div>" ;
-                
             echo "</div>" ;
 ?>
 			</div>		

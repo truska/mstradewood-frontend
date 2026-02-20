@@ -14,6 +14,45 @@
         height: 100% !important;
     }
 </style>
+<?php
+$cmsPrefs = $prefs;
+$contactPrefKeys = [
+    'prefSiteName',
+    'prefAddress1',
+    'prefAddress2',
+    'prefTown',
+    'prefCounty',
+    'prefCountry',
+    'prefPostcode',
+    'prefTel1',
+    'prefTel2',
+    'prefTelIntCode',
+    'prefEmail',
+    'prefBelfastDepotName',
+    'prefBelfastDepotMap',
+    'prefBelfastDepotAddress1',
+    'prefBelfastDepotAddress2',
+    'prefBelfastDepotAddress3',
+    'prefBelfastDepotTown',
+    'prefBelfastDepotCounty',
+    'prefBelfastDepotPostcode',
+    'prefBelfastDepotCountry',
+    'prefBelfastDepotEmail',
+    'prefDublinDepotName',
+    'prefDublinDepotMap',
+    'prefDublinDepotAddress1',
+    'prefDublinDepotAddress2',
+    'prefDublinDepotAddress3',
+    'prefDublinDepotTown',
+    'prefDublinDepotCounty',
+    'prefDublinDepotPostcode',
+    'prefDublinDepotCountry',
+    'prefDublinDepotEmail'
+];
+foreach ($contactPrefKeys as $key) {
+    $cmsPrefs[$key] = cms_pref($key, $cmsPrefs[$key] ?? '');
+}
+?>
 
 		<div class="container inner inner-page">
 		<!-- Breadcrumb Trail -->
@@ -46,12 +85,12 @@
 						<ul>
 							
 							<?php
-							echo "<li>" . $prefs['prefSiteName'] . "</li>" ;
-							echo getAddressShortList($prefs) . "" ;
+							echo "<li>" . $cmsPrefs['prefSiteName'] . "</li>" ;
+							echo getAddressShortList($cmsPrefs) . "" ;
 							?>						
-							<li class="mt-10"><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp;<a href="tel:<?php echo getTel1Int($prefs); ?>"><?php echo getTel1Int($prefs); ?></a> (UK)</li>
-                           <li class="mt-10"><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp;<a href="tel:<?php echo getTel2Int($prefs); ?>"><?php echo getTel2Int($prefs); ?></a> (RoI)</li> 
-							<li class="mt-10"><span class="col2"><i class="fas fa-at"></i></span>&nbsp;&nbsp;<a href="mailto:<?php echo getEmail($prefs); ?>"><?php echo getEmail($prefs); ?></a></li>
+							<li class="mt-10"><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp;<a href="tel:<?php echo getTel1Int($cmsPrefs); ?>"><?php echo getTel1Int($cmsPrefs); ?></a> (UK)</li>
+                           <li class="mt-10"><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp;<a href="tel:<?php echo getTel2Int($cmsPrefs); ?>"><?php echo getTel2Int($cmsPrefs); ?></a> (RoI)</li> 
+							<li class="mt-10"><span class="col2"><i class="fas fa-at"></i></span>&nbsp;&nbsp;<a href="mailto:<?php echo getEmail($cmsPrefs); ?>"><?php echo getEmail($cmsPrefs); ?></a></li>
 						</ul>
                         
                         
@@ -85,11 +124,11 @@
                 <div class="col-12 col-lg-6">
 					<div class="contact-wrapper">
                         
-						<h2><?php echo  $prefs['prefBelfastDepotName'] ;?></h2>
+						<h2><?php echo  $cmsPrefs['prefBelfastDepotName'] ;?></h2>
 
                         <div class="google-maps">
                             
-                        <?php echo $prefs['prefBelfastDepotMap']; ?>
+                        <?php echo $cmsPrefs['prefBelfastDepotMap']; ?>
 						<!--	<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4552.344522834317!2d-5.921558858904399!3d54.613619729024556!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTTCsDM2JzQ3LjQiTiA1wrA1NScxMS4xIlc!5e0!3m2!1sen!2suk!4v1571658082659!5m2!1sen!2suk" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen=""></iframe> -->
                         
                         </div>
@@ -97,18 +136,18 @@
 						<ul>
 							
 							<?php
-							echo "<li>" . $prefs['prefSiteName'] . "</li>" ;
-							if ($prefs['prefBelfastDepotAddress1']) {echo "<li>" . $prefs['prefBelfastDepotAddress1'] . "</li>" ; }	
-							if ($prefs['prefBelfastDepotAddress2']) {echo "<li>" . $prefs['prefBelfastDepotAddress2'] . "</li>" ; }	
-							if ($prefs['prefBelfastDepotAddress3']) {echo "<li>" . $prefs['prefBelfastDepotAddress3'] . "</li>" ; }	
-							if ($prefs['prefBelfastDepotTown']) {echo "<li>" . $prefs['prefBelfastDepotTown'] . "</li>" ; }	
-							if ($prefs['prefBelfastDepotCounty']) {echo "<li>" . $prefs['prefBelfastDepotCounty'] . "</li>" ; }	
-							if ($prefs['prefBelfastDepotPostcode']) {echo "<li>" . $prefs['prefBelfastDepotPostcode'] . "</li>" ; }	
-							if ($prefs['prefBelfastDepotCountry']) {echo "<li>" . $prefs['prefBelfastDepotCountry'] . "</li>" ; }	
+							echo "<li>" . $cmsPrefs['prefSiteName'] . "</li>" ;
+							if ($cmsPrefs['prefBelfastDepotAddress1']) {echo "<li>" . $cmsPrefs['prefBelfastDepotAddress1'] . "</li>" ; }	
+							if ($cmsPrefs['prefBelfastDepotAddress2']) {echo "<li>" . $cmsPrefs['prefBelfastDepotAddress2'] . "</li>" ; }	
+							if ($cmsPrefs['prefBelfastDepotAddress3']) {echo "<li>" . $cmsPrefs['prefBelfastDepotAddress3'] . "</li>" ; }	
+							if ($cmsPrefs['prefBelfastDepotTown']) {echo "<li>" . $cmsPrefs['prefBelfastDepotTown'] . "</li>" ; }	
+							if ($cmsPrefs['prefBelfastDepotCounty']) {echo "<li>" . $cmsPrefs['prefBelfastDepotCounty'] . "</li>" ; }	
+							if ($cmsPrefs['prefBelfastDepotPostcode']) {echo "<li>" . $cmsPrefs['prefBelfastDepotPostcode'] . "</li>" ; }	
+							if ($cmsPrefs['prefBelfastDepotCountry']) {echo "<li>" . $cmsPrefs['prefBelfastDepotCountry'] . "</li>" ; }	
 							?>						
 
-							<li class="mt-10"><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp;  <a href="tel:<?php echo getTel1Int($prefs); ?>"><?php echo getTel1Int($prefs); ?></a> </li>
-							<li class="mt-10"><span class="col2"><i class="fas fa-at"></i></span>&nbsp;&nbsp;  <a href="mailto:<?php echo $prefs['prefBelfastDepotEmail']; ?>"><?php echo  $prefs['prefBelfastDepotEmail']; ?></a></li>
+							<li class="mt-10"><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp;  <a href="tel:<?php echo getTel1Int($cmsPrefs); ?>"><?php echo getTel1Int($cmsPrefs); ?></a> </li>
+							<li class="mt-10"><span class="col2"><i class="fas fa-at"></i></span>&nbsp;&nbsp;  <a href="mailto:<?php echo $cmsPrefs['prefBelfastDepotEmail']; ?>"><?php echo  $cmsPrefs['prefBelfastDepotEmail']; ?></a></li>
 							<?php
 					//		if ($prefs['prefBelfastDepotLat']) {echo "<li> " . $prefs['prefBelfastDepotLat'] . "</li>" ; }	
 					//		if ($prefs['prefBelfastDepotLong']) {echo "<li> " . $prefs['prefBelfastDepotLong'] . "</li>" ; }					
@@ -122,10 +161,10 @@
 				
 				<div class="col-12 col-lg-6">
 					<div class="contact-wrapper">
-						<h2><?php echo  $prefs['prefDublinDepotName'] ;?> </h2>
+						<h2><?php echo  $cmsPrefs['prefDublinDepotName'] ;?> </h2>
                         <div class="google-maps">
 
-							<?php echo $prefs['prefDublinDepotMap']; ?>
+							<?php echo $cmsPrefs['prefDublinDepotMap']; ?>
 						<!--	<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d304222.9658777274!2d-6.580223998400102!3d53.437322597094976!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48676b6ef59c75f1%3A0x62124df97ffe643b!2sGlascarn%2C%20Co.%20Meath%2C%20A85%20R652%2C%20Ireland!5e0!3m2!1sen!2suk!4v1589801073566!5m2!1sen!2suk" width="600" height="350" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>-->
                             
 
@@ -134,17 +173,17 @@
 						<p>&nbsp;</p>
 						<ul>
 							<?php
-							echo "<li>" . $prefs['prefSiteName'] . "</li>" ;
-							if ($prefs['prefDublinDepotAddress1']) {echo "<li>" . $prefs['prefDublinDepotAddress1'] . "</li>" ; }	
-							if ($prefs['prefDublinDepotAddress2']) {echo "<li>" . $prefs['prefDublinDepotAddress2'] . "</li>" ; }	
-							if ($prefs['prefDublinDepotAddress3']) {echo "<li>" . $prefs['prefDublinDepotAddress3'] . "</li>" ; }	
-							if ($prefs['prefDublinDepotTown']) {echo "<li>" . $prefs['prefDublinDepotTown'] . "</li>" ; }	
-							if ($prefs['prefDublinDepotCounty']) {echo "<li>" . $prefs['prefDublinDepotCounty'] . "</li>" ; }	
-							if ($prefs['prefDublinDepotPostcode']) {echo "<li>" . $prefs['prefDublinDepotPostcode'] . "</li>" ; }	
-							if ($prefs['prefDublinDepotCountry']) {echo "<li>" . $prefs['prefDublinDepotCountry'] . "</li>" ; }	
+							echo "<li>" . $cmsPrefs['prefSiteName'] . "</li>" ;
+							if ($cmsPrefs['prefDublinDepotAddress1']) {echo "<li>" . $cmsPrefs['prefDublinDepotAddress1'] . "</li>" ; }	
+							if ($cmsPrefs['prefDublinDepotAddress2']) {echo "<li>" . $cmsPrefs['prefDublinDepotAddress2'] . "</li>" ; }	
+							if ($cmsPrefs['prefDublinDepotAddress3']) {echo "<li>" . $cmsPrefs['prefDublinDepotAddress3'] . "</li>" ; }	
+							if ($cmsPrefs['prefDublinDepotTown']) {echo "<li>" . $cmsPrefs['prefDublinDepotTown'] . "</li>" ; }	
+							if ($cmsPrefs['prefDublinDepotCounty']) {echo "<li>" . $cmsPrefs['prefDublinDepotCounty'] . "</li>" ; }	
+							if ($cmsPrefs['prefDublinDepotPostcode']) {echo "<li>" . $cmsPrefs['prefDublinDepotPostcode'] . "</li>" ; }	
+							if ($cmsPrefs['prefDublinDepotCountry']) {echo "<li>" . $cmsPrefs['prefDublinDepotCountry'] . "</li>" ; }	
 							?>						
-							<li class="mt-10"><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp;  <a href="tel:<?php echo getTel2Int($prefs); ?>"><?php echo getTel2Int($prefs); ?></a> </li>
-							<li class="mt-10"><span class="col2"><i class="fas fa-at"></i></span>&nbsp;&nbsp;  <a href="mailto:<?php echo $prefs['prefDublinDepotEmail']; ?>"><?php echo $prefs['prefDublinDepotEmail']; ?></a></li>
+							<li class="mt-10"><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp;  <a href="tel:<?php echo getTel2Int($cmsPrefs); ?>"><?php echo getTel2Int($cmsPrefs); ?></a> </li>
+							<li class="mt-10"><span class="col2"><i class="fas fa-at"></i></span>&nbsp;&nbsp;  <a href="mailto:<?php echo $cmsPrefs['prefDublinDepotEmail']; ?>"><?php echo $cmsPrefs['prefDublinDepotEmail']; ?></a></li>
 							<?php
 					//		if ($prefs['prefDublinDepotLat']) {echo "<li> " . $prefs['prefDublinDepotLat'] . "</li>" ; }	
 					//		if ($prefs['prefDublinDepotLong']) {echo "<li>" . $prefs['prefDublinDepotLong'] . "</li>" ; }					

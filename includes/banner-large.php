@@ -89,8 +89,8 @@
 
 				<?php if ($homeBannerCount === 1): ?>
 					<img src="<?php echo htmlspecialchars($homeBannerImages[0]['src'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($homeBannerImages[0]['alt'], ENT_QUOTES, 'UTF-8'); ?>">
-				<?php elseif ($homeBannerCount > 1): ?>
-					<div id="home-banner-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6000">
+					<?php elseif ($homeBannerCount > 1): ?>
+						<div id="home-banner-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
 						<div class="carousel-inner" role="listbox">
 							<?php foreach ($homeBannerImages as $index => $homeBanner): ?>
 								<div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>">

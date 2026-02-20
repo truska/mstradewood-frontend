@@ -1,77 +1,89 @@
-<!-- START footer-debug.php -->
-<style>
-	.footerdebug {padding-top:50px;}
-	.footerdebug ,
-	.footerdebug p
-		{color:#333333;}
-		
-</style>
- <?php
-// include("includes/dbcon.php");
-
- // $prefs = loadPrefs($conn);
- //  echo "<pre>";
-//  print_r($prefs);
- 
-            	echo "<div class='row footerdebug' style='padding-top:50px;'>" ;
-            		echo "<div class='col-sm-4 col-md-4' style='padding-top:50px; border-top:thin solid #333333;'>" ;
-						echo "<p>Page ID  =  " . $slugID . " / " . $rowpage['id'] . "</p>" ;
-						echo "<p>Site Search  =  " . $prefs['prefSiteSearchOn'] . "</p>" ;
-						echo "<p>Page Search  =  " . $rowpage["pagesearch"] . "</p>" ;
-						echo "<p>Def Meta Key  =  " . $prefs['prefDefaultMetaKeywords'] . "</p>" ;
-						echo "<p>Server name  =  " . $servername . "</p>" ;
-					//	echo "<p>Is Home Page? = " . $homePage . "</p>" ;
-					//	echo "<p>Base URL = " . $baseURL . "</p>" ;
-					//	echo "<p>Long Address URL = " . getAddressLong($prefs) . "</p>" ;
-					//	echo "<p>Long Address URL = " . getAddressLong($prefs) . "</p>" ;
-						
-					//	echo "<p>&copy; Year Start = " . $prefs['prefCopyrightStartYear'] . "</p>" ;
-					//	echo "<p>File store path = " . $prefs['prefFileStorePath'] . "</p>" ;
-
-            		echo "</div>" ;
-            		echo "<div class='col-sm-4 col-md-4' style='padding-top:50px; border-top:thin solid #333333;'>" ;
-					   
-				     /* print_r(loadPrefs($conn));
-					  foreach(loadPrefs($conn) as $dataa)
-					  {
-						 // print_r($dataa);
-						  echo $dataa['name']['prefCompanyName'];
-					  } */
-					  
-					  
-					// $customarray[0]['value'];
-					//	echo "<p>Company Name = " . getCompanyName($prefs) . "</p>" ;
-						//echo "<p>Company Name = " . $customarray[0]['value'] . "</p>" ;
-					//	echo "<p>Site name Name = " . getSiteName($prefs) . "</p>" ;
-
-					//	echo "<p>&nbsp;</p>";
-						echo "<p>segs[0] = " .$segs[0] . "</p>"; 
-						echo "<p>segs[1] = " .$segs[1] . "</p>"; 
-						echo "<p>segs[2] = " .$segs[2] . "</p>"; 
-		//				echo "<p>segs[3] = " .$segs[3] . "</p>"; 
-		//				echo "<p>segs[4] = " .$segs[4] . "</p>"; 
-		//				echo "<p>segs[5] = " .$segs[5] . "</p>";  
-            		echo "</div>" ;
-
-
-            		echo "<div class='col-sm-4 col-md-4' style='padding-top:50px; border-top:thin solid #333333;'>" ;
-					//	echo "<p>Banner layout = " . $bannerLayout . "</p>" ;
-						echo "<p>Slug ID (slugID)  = " . $slugID . "</p>" ;
-					//	echo "<p>Page Layout = " . $pageLayout . "</p>" ;
-						//echo "<p>Select Panel 1 = " . $selectpanel1 . "</p>" ;
-						//echo "<p>Select Panel 2 = " . $selectpanel2 . "</p>" ;
-						//echo "<p>Select Panel 3 = " . $selectpanel3 . "</p>" ;
-
-						echo "<p>&nbsp;</p>";
-						$selectprefs1 = "SELECT `name`, `value` FROM `preferences` ORDER BY `prefCat` ";
-							$queryprefs1 = mysqli_query($conn,$selectprefs1);
-							//while ($rowprefs = mysqli_fetch_assoc($queryprefs) )
-							while ($rowprefs1 = mysqli_fetch_array($queryprefs1) )
-								{
-								//	echo "<p>" . $rowprefs1["name"] . " = " . $rowprefs1["value"] . "</p>";
-								}
-
-            		echo "</div>" ;
-            	echo "</div>" ;
+<?php
+$dbOk = isset($DB_OK) ? (bool) $DB_OK : (isset($pdo) && $pdo instanceof PDO);
+$dbName = $DB_NAME ?? 'unknown';
 ?>
-<!-- END footer-debug.php -->
+<section class="footer-debug">
+  <style>
+    .footer-debug {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      margin-top: 0.75rem;
+    }
+    .footer-debug .small {
+      line-height: 1.45;
+    }
+    .footer-debug .content-debug-list {
+      line-height: 1.5;
+    }
+    .footer-debug .content-debug-list > div {
+      margin-bottom: 0.25rem;
+    }
+  </style>
+  <div class="container">
+    <div class="row g-3">
+      <div class="col-sm-6 col-lg-3">
+        <h6>Environment</h6>
+        <p class="mb-0">Development</p>
+        <?php
+          $requestUri = (string) ($_SERVER['REQUEST_URI'] ?? '');
+          $requestPath = trim((string) parse_url($requestUri, PHP_URL_PATH), '/');
+          $segs = $requestPath !== '' ? array_values(array_filter(explode('/', $requestPath), 'strlen')) : [];
+          if (!$segs && !empty($pageSegments) && is_array($pageSegments)) {
+            $segs = array_values($pageSegments);
+          }
+        ?>
+        <div class="small mt-2">
+          <div><strong>Segments</strong></div>
+          <?php if (!$segs): ?>
+            <div class="text-muted">No URL segments</div>
+          <?php endif; ?>
+          <?php for ($i = 0; $i <= 4; $i++): ?>
+            <div>
+              segs[<?php echo $i; ?>]:
+              <?php echo htmlspecialchars((string) ($segs[$i] ?? ''), ENT_QUOTES); ?>
+            </div>
+          <?php endfor; ?>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <h6>Server</h6>
+        <p class="mb-0"><?php echo htmlspecialchars($_SERVER['SERVER_NAME'] ?? 'unknown', ENT_QUOTES); ?></p>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <h6>PHP</h6>
+        <p class="mb-0"><?php echo htmlspecialchars(PHP_VERSION, ENT_QUOTES); ?></p>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <h6>Database</h6>
+        <p class="mb-0">
+          <i class="fa-solid <?php echo $dbOk ? 'fa-circle-check' : 'fa-circle-xmark'; ?>"></i>
+          <span><?php echo htmlspecialchars($dbName, ENT_QUOTES); ?></span>
+        </p>
+      </div>
+    </div>
+    <div class="row g-3 mt-2">
+      <div class="col-12 col-lg-9 ms-lg-auto">
+        <h6>Content Map</h6>
+        <?php
+          $contentDebug = $GLOBALS['cms_content_debug'] ?? [];
+        ?>
+        <?php if (!empty($contentDebug)): ?>
+          <div class="content-debug-list">
+            <?php foreach ($contentDebug as $item): ?>
+              <div>
+                [<?php echo htmlspecialchars((string) ($item['id'] ?? ''), ENT_QUOTES); ?>]
+                | <?php echo htmlspecialchars((string) ($item['name'] ?? ''), ENT_QUOTES); ?>
+                {Layout: <?php echo htmlspecialchars((string) ($item['layout'] ?? ''), ENT_QUOTES); ?>
+                | URL: <?php echo htmlspecialchars((string) ($item['layout_url'] ?? ''), ENT_QUOTES); ?>
+                | <?php echo htmlspecialchars((string) ($item['layout_name'] ?? ''), ENT_QUOTES); ?>}
+                | Sort: <?php echo htmlspecialchars((string) ($item['sort'] ?? ''), ENT_QUOTES); ?>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        <?php else: ?>
+          <p class="mb-0">No content blocks found.</p>
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+</section>
