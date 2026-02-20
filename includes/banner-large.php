@@ -66,13 +66,10 @@
 						}
 						$folderName = trim((string) ($rowHomeBanner['folder_name'] ?? ''), '/');
 						if ($folderName === '') {
-							$folderName = 'images/content';
+							$folderName = 'content';
 						}
-						$imageBasePath = rtrim((string) ($_SERVER['DOCUMENT_ROOT'] ?? ''), '/') . '/filestore/' . $folderName . '/';
-						$desktopImageFile = $imageFile;
-						if (file_exists($imageBasePath . 'lg-' . $imageFile)) {
-							$desktopImageFile = 'lg-' . $imageFile;
-						}
+						$folderName = preg_replace('#^images/#', '', $folderName);
+						$desktopImagePath = 'images/' . rtrim($folderName, '/') . '/lg/' . $imageFile;
 						$altText = trim((string) ($rowHomeBanner['alttag'] ?? ''));
 						if ($altText === '') {
 							$altText = trim((string) ($rowHomeBanner['caption'] ?? ''));
@@ -81,7 +78,7 @@
 							$altText = 'Home banner';
 						}
 						$homeBannerImages[] = [
-							'src' => $baseURL . '/filestore/' . $folderName . '/' . $desktopImageFile,
+							'src' => $baseURL . '/filestore/' . $desktopImagePath,
 							'alt' => $altText,
 						];
 					}
