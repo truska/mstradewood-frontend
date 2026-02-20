@@ -140,11 +140,11 @@ $productGalleryImages = cms_product_gallery_images(
                                     echo "</div>";
 
                                     if (count($productGalleryImages) > 1) {
-                                        echo "<div class='thumbnailimages' style='padding-bottom:20px; padding-left:0px; padding-right:0px;'>";
+                                        echo "<div class='row thumbnailimages' style='padding-bottom:20px; padding-left:0px; padding-right:0px;'>";
                                         foreach ($productGalleryImages as $image) {
-                                            echo "<div class='col-lg-4 col-md-4 col-sm-4 col-xs-4 thumbnailimages'>";
+                                            echo "<div class='col-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 thumbnailimages'>";
                                             echo "<a data-zoom-id='doors' href='" . $image['zoom'] . "' data-image='" . $image['main'] . "'>";
-                                            echo "<img src='" . $image['thumb'] . "' alt='" . htmlspecialchars($image['alt'], ENT_QUOTES, 'UTF-8') . "' title='" . htmlspecialchars($image['alt'], ENT_QUOTES, 'UTF-8') . "'>";
+                                            echo "<img src='" . $image['thumb'] . "' class='img-responsive img-fluid' alt='" . htmlspecialchars($image['alt'], ENT_QUOTES, 'UTF-8') . "' title='" . htmlspecialchars($image['alt'], ENT_QUOTES, 'UTF-8') . "'>";
                                             echo "</a>";
                                             echo "</div>";
                                         }
