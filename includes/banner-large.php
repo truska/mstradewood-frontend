@@ -5,9 +5,13 @@
 			<div class="desktop">
 				<?php
 				$homeBannerImages = [];
+				$homeBannerRecordId = (int) ($prefs['prefHomePage'] ?? 0);
+				if ($homeBannerRecordId <= 0) {
+					$homeBannerRecordId = (int) ($rowpage['id'] ?? 0);
+				}
 				$selectHomeBanners = "SELECT `image`, `alttag`, `caption`, `folder_name` FROM `gallery`
 					WHERE `form_id` = 8
-					AND `record_id` = 37
+					AND `record_id` = " . $homeBannerRecordId . "
 					AND `showonweb` = 'Yes'
 					AND `archived` = 0
 					ORDER BY `sort`, `id`";
