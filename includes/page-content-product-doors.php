@@ -1,6 +1,8 @@
 <!-- START page-content-product-doors.php -->
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <?php
+require_once __DIR__ . '/lib/cms_product_images.php';
+
 // GET PRODUCT
 $selectproduct = "SELECT * FROM `products` WHERE `id` = " . $segs[1]  . " AND `showonweb` = 'Yes' " ;
 				//	echo "selectproduct = " . $selectproduct . "<br>";
@@ -35,14 +37,16 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = " . $rowproduct["manuf"]  . "
 				//	echo "Number of records = " . $numrowsmanuf . "<br>";
 					$rowmanuf = mysqli_fetch_assoc($querymanuf) ;
 
-// GET Gallery Images
-$selectgallery = "SELECT * FROM `gallery` WHERE `product` = " . $rowproduct["id"]  . " AND `showonweb` = 'Yes' " ;
-				//	echo "selectgallery = " . $selectgallery . "<br>";
-					$querygallery = mysqli_query($conn,$selectgallery);
-				//	$numrowsgallery = mysqli_num_rows($querygallery);
-				//	$count = 1 ;
-				//	echo "Number of records = " . $numrowsgallery . "<br>";
-				//	$rowgallery = mysqli_fetch_assoc($querygallery) ;
+$companyName = trim((string) cms_pref('prefCompanyName', (string) getCompanyName($prefs)));
+if ($companyName === '') {
+    $companyName = 'MSTradewood';
+}
+$productGalleryImages = cms_product_gallery_images(
+    $conn,
+    (int) ($rowproduct['id'] ?? 0),
+    (string) $baseURL,
+    (string) ($rowproduct['name'] ?? '')
+);
 
 ?>
 <style>
@@ -84,7 +88,7 @@ $selectgallery = "SELECT * FROM `gallery` WHERE `product` = " . $rowproduct["id"
                         }
                         else
                         {
-                            $imagetag = $rowproduct["name"] . " available from MS Timber " ;
+                            $imagetag = $rowproduct["name"] . " available from " . $companyName;
                         }
                     ?>
 							<div class="sidebar-wpr" style="padding-bottom:25px;">	
@@ -126,59 +130,44 @@ $selectgallery = "SELECT * FROM `gallery` WHERE `product` = " . $rowproduct["id"
                                     <?php
                                 }
                                 ?>							</figcaption>
-								<?php 
-                        
-                        //Doors image section
-                        $gallerycounter = 1 ;
-                        while ($rowgallery = mysqli_fetch_assoc($querygallery) )
-                        {
-                            $gallerytag = $rowgallery["name"] . " available from MS Timber " ;
-                            if ($rowgallery["image"])
-                            {
-                                $imagefilenamelg1 = $_SERVER['DOCUMENT_ROOT'] . "/filestore/images/content/lg-" . stripslashes($rowgallery["image"]) ;
-                                if (file_exists($imagefilenamelg1)) { $imagefilenamelg = "lg-" . stripslashes($rowgallery["image"]) ; }
+								<?php
+                                if (!empty($productGalleryImages)) {
+                                    $firstImage = $productGalleryImages[0];
+                                    echo "<div style='padding-bottom:20px; display:block; margin-left:auto; margin-right:auto; width:100%;'>";
+                                    echo "<a href='" . $firstImage['zoom'] . "' class='MagicZoom' id='doors' title='" . htmlspecialchars($firstImage['alt'], ENT_QUOTES, 'UTF-8') . "' data-options='zoomWidth:120%; zoomHeight:100%'>";
+                                    echo "<img src='" . $firstImage['main'] . "' class='img-responsive' alt='" . htmlspecialchars($firstImage['alt'], ENT_QUOTES, 'UTF-8') . "' title='" . htmlspecialchars($firstImage['alt'], ENT_QUOTES, 'UTF-8') . "'>";
+                                    echo "</a>";
+                                    echo "</div>";
 
-
-                                $imagefilenamesm1 = $_SERVER['DOCUMENT_ROOT'] . "/filestore/images/content/sm-" . stripslashes($rowgallery["image"]) ;
-                                if (file_exists($imagefilenamesm1)) { 
-                                    $imagefilenamesm = "sm-" . stripslashes($rowgallery["image"]) ; } else  { $imagefilenamesm = stripslashes($rowgallery["image"]) ; }
-                                
-                                $imagefilenametn1 = $_SERVER['DOCUMENT_ROOT'] . "/filestore/images/content/tn-" . stripslashes($rowgallery["image"]) ;
-                                if (file_exists($imagefilenametn1)) { $imagefilenametn = "tn-" . stripslashes($rowgallery["image"]) ; }
-                                
-                                if ($gallerycounter == 1 ) {
-                                echo "<div style='padding-bottom:20px; display:block;  margin-left:auto; margin-right:auto; width:100%;'>" ;
-
-                                        if (file_exists($imagefilenamelg1)) 
-                                        { 
-                                            echo "<a href='" . $baseURL . "/filestore/images/content/" . $imagefilenamelg . "' class='MagicZoom' title='" . $gallerytag. "' id='doors' data-options='zoomWidth:120%; zoomHeight:100%'>" ;
-                                                echo "<img src='" . $baseURL . "/filestore/images/content/" . $imagefilenamesm . "' class='img-responsive' alt='" . $gallerytag . "' title='" . $gallerytag. "'>" ;
-                                            echo "</a>" ;
+                                    if (count($productGalleryImages) > 1) {
+                                        echo "<div class='thumbnailimages' style='padding-bottom:20px; padding-left:0px; padding-right:0px;'>";
+                                        foreach ($productGalleryImages as $image) {
+                                            echo "<div class='col-lg-4 col-md-4 col-sm-4 col-xs-4 thumbnailimages'>";
+                                            echo "<a data-zoom-id='doors' href='" . $image['zoom'] . "' data-image='" . $image['main'] . "'>";
+                                            echo "<img src='" . $image['thumb'] . "' alt='" . htmlspecialchars($image['alt'], ENT_QUOTES, 'UTF-8') . "' title='" . htmlspecialchars($image['alt'], ENT_QUOTES, 'UTF-8') . "'>";
+                                            echo "</a>";
+                                            echo "</div>";
                                         }
-                                        else
-                                        {
-                                            echo "<img src='" . $baseURL . "/filestore/images/content/" . $imagefilenamesm . "' class='img-responsive' alt='" . $gallerytag . "' title='" . $gallerytag. "'>" ;
-                                        }
-                                echo "</div>" ;
-                                
-                                echo "<div class='thumbnailimages' style='padding-bottom:20px; padding-left:0px; padding-right:0px;'>" ;
+                                        echo "</div>";
                                     }
-                                
-                            }
-                                //Thumbnails
+                                } elseif ($rowproduct["image"]) {
+                                    // Legacy fallback: keep existing products.image behavior.
+                                    $imagefilenamelg1 = $_SERVER['DOCUMENT_ROOT'] . "/filestore/images/content/lg-" . stripslashes($rowproduct["image"]) ;
+                                    if (file_exists($imagefilenamelg1)) { $imagefilenamelg = "lg-" . stripslashes($rowproduct["image"]) ; }
 
-                                if (file_exists($imagefilenamelg1)) {
-                                    echo "<div class='col-lg-4 col-md-4 col-sm-4 col-xs-4 thumbnailimages' >" ;
-                                        echo "<a data-zoom-id='doors' href='" . $baseURL . "/filestore/images/content/" . $imagefilenamelg . "' data-image='" .   $baseURL . "/filestore/images/content/" . $imagefilenamesm . "'>" ;
-                                            echo "<img src='" . $baseURL . "/filestore/images/content/" . $imagefilenametn . "'>" ;
-                                        echo "</a>" ;
-                                    echo "</div>" ;
+                                    $imagefilenamesm1 = $_SERVER['DOCUMENT_ROOT'] . "/filestore/images/content/sm-" . stripslashes($rowproduct["image"]) ;
+                                    if (file_exists($imagefilenamesm1)) { 
+                                        $imagefilenamesm = "sm-" . stripslashes($rowproduct["image"]) ; } else  { $imagefilenamesm = stripslashes($rowproduct["image"]) ; }
 
-                                    $gallerycounter ++ ;
-                              }
-                                  
-                        }
-                            echo "</div>" ;
+                                    if (file_exists($imagefilenamelg1)) 
+                                    { 
+                                        echo "<a href='" . $baseURL . "/filestore/images/content/" . $imagefilenamelg . "' class='MagicZoom' id='doors' title='" . $imagetag. "' data-options='zoomWidth:120%; zoomHeight:100%'><img src='" . $baseURL . "/filestore/images/content/" . $imagefilenamesm . "' class='img-responsive' alt='" . $imagetag . "' title='" . $imagetag. "'></a>" ;
+                                    }
+                                    else
+                                    {
+                                        echo "<img src='" . $baseURL . "/filestore/images/content/" . $imagefilenamesm . "' class='img-responsive' alt='" . $imagetag . "' title='" . $imagetag. "'>" ;
+                                    }
+                                }
 								?>
 
                                 <!--	</div> -->

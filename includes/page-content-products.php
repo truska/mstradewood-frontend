@@ -1,6 +1,7 @@
 <!-- START page-content-products.php -->
 
 <?php
+require_once __DIR__ . '/lib/cms_product_images.php';
 // GET PRODUCT
 //	$selectproduct = "SELECT * FROM `products` WHERE `id` = " . $segs[2]  . " AND `showonweb` = 'Yes' " ;
 	$selectpanelfinder = "SELECT * FROM `panelfinder` WHERE `id` = ' " . $segs[1] . "' AND `showonweb` = 'Yes' " ;
@@ -56,39 +57,7 @@
 			$position = "left" ;
 			while ($rowproduct = mysqli_fetch_assoc($queryproduct) )
 			{
-				// Check for image
-				if ($rowproduct["image"]) 
-				{
-					$useimage = "sm-" . $rowproduct["image"] ;
-                    $imagefilename = $_SERVER['DOCUMENT_ROOT'] . "/filestore/images/content/" . $useimage ;
-                    if (file_exists($imagefilename)) 
-                    { 
-                        $brandimage = $useimage ;
-                    } 
-                    else
-                    {
-                    $useimage = $rowproduct["image"] ;
-                    $imagefilename = $_SERVER['DOCUMENT_ROOT'] . "/filestore/images/content/" . $useimage ;
-                        if (file_exists($imagefilename)) 
-                        { 
-                            $brandimage = $useimage ;
-                        } 
-                    }
-                    
-				}
-				else
-				{
-					$useimage = $rowproduct["brandimage"] ;
-				}
-			$imagefilename = $_SERVER['DOCUMENT_ROOT'] . "/filestore/images/content/" . $useimage ;
-			if (file_exists($imagefilename)) 
-			{ 
-				$brandimage = $useimage ;
-			}
-			else
-			{
-				$brandimage = 'brand-default.jpg' ;
-			}
+				$cardImageUrl = cms_product_card_image_url($conn, $rowproduct, $baseURL);
 			
 			echo "<div class='row row-wrp'>" ;
                 $productslug = 'product';
@@ -97,7 +66,7 @@
 				echo "<div class='col-lg-4 col-md-5 col-sm-6 text-center'>" ;
 					echo "<div class='' style='padding-top:10px;'>" ;
 						echo "<a href='" . $baseURL . "/" . $productslug ."/" . $rowproduct["id"] . "/" . strtolower($rowproduct["slug"]) . "'>" ;
-							echo "<img src='" . $baseURL . "/filestore/images/content/" . $brandimage . "' class='img-responsive' style='max-width:250px;'>" ;
+							echo "<img src='" . $cardImageUrl . "' class='img-responsive' style='max-width:250px;' alt='" . htmlspecialchars((string) $rowproduct["name"], ENT_QUOTES, 'UTF-8') . "'>" ;
 						echo "</a>" ;
             //    echo "image to use = " . $useimage . "" ;
 					echo "</div>" ;

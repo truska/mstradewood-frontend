@@ -1,6 +1,8 @@
 <!-- START page-content-product.php -->
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <?php
+require_once __DIR__ . '/lib/cms_product_images.php';
+
 // GET PRODUCT
 $selectproduct = "SELECT * FROM `products` WHERE `id` = " . $segs[1]  . " AND `showonweb` = 'Yes' " ;
 				//	echo "selectproduct = " . $selectproduct . "<br>";
@@ -34,6 +36,18 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = " . $rowproduct["manuf"]  . "
 				//	$count = 1 ;
 				//	echo "Number of records = " . $numrowsmanuf . "<br>";
 					$rowmanuf = mysqli_fetch_assoc($querymanuf) ;
+
+$companyName = trim((string) cms_pref('prefCompanyName', (string) getCompanyName($prefs)));
+if ($companyName === '') {
+    $companyName = 'MSTradewood';
+}
+
+$productGalleryImages = cms_product_gallery_images(
+    $conn,
+    (int) ($rowproduct['id'] ?? 0),
+    (string) $baseURL,
+    (string) ($rowproduct['name'] ?? '')
+);
 ?>
 
 		<div class="container inner inner-page">
@@ -62,11 +76,11 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = " . $rowproduct["manuf"]  . "
 					<!--	<div class="col-xs-4 col-sm-12 col-md-12 sidebar-left" style="padding-left: 0px; padding-right: 0px;">  -->
                     <?php 
                         if ($rowmanuf["id"] == 1 ) {
-                            $imagetag = $rowmanuf["name"] . " " . $rowproduct["name"] ;
+                            $imagetag = $rowmanuf["name"] . " | " . $rowproduct["name"] ;
                         }
                         else
                         {
-                            $imagetag = $rowproduct["name"] . " available from MS Timber " ;
+                            $imagetag = $rowproduct["name"] . " available from " . $companyName;
                         }
                     ?>
 							<div class="sidebar-wpr" style="padding-bottom:25px;">	
@@ -116,9 +130,28 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = " . $rowproduct["manuf"]  . "
                                 }
                                 ?>
 							</figcaption>
-								<?php 
-								if ($rowproduct["image"])
-								{
+								<?php
+                                if (!empty($productGalleryImages)) {
+                                    $firstImage = $productGalleryImages[0];
+                                    echo "<div style='padding-bottom:20px; display:block; margin-left:auto; margin-right:auto; width:100%;'>";
+                                    echo "<a href='" . $firstImage['zoom'] . "' class='MagicZoom' id='product-gallery-zoom' title='" . htmlspecialchars($firstImage['alt'], ENT_QUOTES, 'UTF-8') . "'>";
+                                    echo "<img src='" . $firstImage['main'] . "' class='img-responsive' alt='" . htmlspecialchars($firstImage['alt'], ENT_QUOTES, 'UTF-8') . "' title='" . htmlspecialchars($firstImage['alt'], ENT_QUOTES, 'UTF-8') . "'>";
+                                    echo "</a>";
+                                    echo "</div>";
+
+                                    if (count($productGalleryImages) > 1) {
+                                        echo "<div class='thumbnailimages' style='padding-bottom:20px; padding-left:0px; padding-right:0px;'>";
+                                        foreach ($productGalleryImages as $image) {
+                                            echo "<div class='col-lg-4 col-md-4 col-sm-4 col-xs-4 thumbnailimages'>";
+                                            echo "<a data-zoom-id='product-gallery-zoom' href='" . $image['zoom'] . "' data-image='" . $image['main'] . "'>";
+                                            echo "<img src='" . $image['thumb'] . "' alt='" . htmlspecialchars($image['alt'], ENT_QUOTES, 'UTF-8') . "' title='" . htmlspecialchars($image['alt'], ENT_QUOTES, 'UTF-8') . "'>";
+                                            echo "</a>";
+                                            echo "</div>";
+                                        }
+                                        echo "</div>";
+                                    }
+                                } elseif ($rowproduct["image"]) {
+                                    // Legacy fallback: keep existing products.image behavior.
                                     $imagefilenamelg1 = $_SERVER['DOCUMENT_ROOT'] . "/filestore/images/content/lg-" . stripslashes($rowproduct["image"]) ;
                                     if (file_exists($imagefilenamelg1)) { $imagefilenamelg = "lg-" . stripslashes($rowproduct["image"]) ; }
                                     
@@ -134,7 +167,7 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = " . $rowproduct["manuf"]  . "
                                     {
                                         echo "<img src='" . $baseURL . "/filestore/images/content/" . $imagefilenamesm . "' class='img-responsive' alt='" . $imagetag . "' title='" . $imagetag. "'>" ;
                                     }
-								}
+                                }
 								?>
 
 					<!--	</div> -->
