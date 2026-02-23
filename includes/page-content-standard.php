@@ -18,7 +18,7 @@
 // GET CONTENT
 		$GLOBALS['cms_content_debug'] = [];
 			
-		$selectcontent1 = "SELECT * FROM `content` WHERE `page` = '" . $slugID . "' AND `showonweb` = 'Yes'  ";
+		$selectcontent1 = "SELECT * FROM `content` WHERE `page` = '" . $slugID . "' AND `showonweb` = 'Yes' ORDER BY `sort` ";
 		//echo "selectcontent = " . $selectcontent . "<br>" ;
 		$querycontent1 = mysqli_query($conn,$selectcontent1);
 		$nurows1 = mysqli_num_rows($querycontent1);

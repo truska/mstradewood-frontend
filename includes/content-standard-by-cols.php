@@ -1,9 +1,23 @@
 <!-- START content-standard-by-cols.php (ABOUT US) -->
 <?php
-// GET CONTENT
-$selectcontent = "SELECT * FROM `content` WHERE `page` = " . $slugID . " AND `showonweb` = 'Yes' ORDER BY `sort` ";
-$querycontent = mysqli_query($conn, $selectcontent);
-$rowcontent = mysqli_fetch_assoc($querycontent);
+// Use the row from the page loop when available.
+$contentItem = null;
+if (isset($rowcontent) && is_array($rowcontent)) {
+    $contentItem = $rowcontent;
+} elseif (isset($rowcontent1) && is_array($rowcontent1)) {
+    $contentItem = $rowcontent1;
+}
+
+// Fallback for direct/legacy use where this layout is included standalone.
+if (!$contentItem && isset($slugID)) {
+    $selectcontent = "SELECT * FROM `content` WHERE `page` = " . (int) $slugID . " AND `showonweb` = 'Yes' ORDER BY `sort` LIMIT 1";
+    $querycontent = mysqli_query($conn, $selectcontent);
+    $contentItem = mysqli_fetch_assoc($querycontent) ?: [];
+}
+
+if (!$contentItem) {
+    $contentItem = [];
+}
 
 // GET PEOPLE
 $selectpeople = "SELECT * FROM `people` WHERE `showonweb` = 'Yes' ORDER BY `order` ";
@@ -42,8 +56,11 @@ $querypeople = mysqli_query($conn, $selectpeople);
 
     <div class="col-12 col-lg-8">
         <div class="inner-contact">
-            <h1><?php echo $rowcontent["heading"]; ?></h1>
-            <?php echo $rowcontent["text"]; ?>
+            <h1><?php echo $contentItem["heading"] ?? ''; ?></h1>
+            <?php if (!empty($contentItem["subheading"])): ?>
+                <h3><?php echo $contentItem["subheading"]; ?></h3>
+            <?php endif; ?>
+            <?php echo $contentItem["text"] ?? ''; ?>
         </div>
     </div>
 </div>

@@ -6,6 +6,14 @@ $captchaVerPref = (string) ($prefs['prefCaptchaVer'] ?? '');
 if ($captchaVerPref === '') {
   $captchaVerPref = '2';
 }
+$forwardedFor = trim((string) ($_SERVER['HTTP_X_FORWARDED_FOR'] ?? ''));
+$requestIp = $forwardedFor !== ''
+  ? trim((string) explode(',', $forwardedFor)[0])
+  : (string) ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+$requestHost = (string) ($_SERVER['HTTP_HOST'] ?? ($_SERVER['SERVER_NAME'] ?? 'unknown'));
+$requestScheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$requestUri = (string) ($_SERVER['REQUEST_URI'] ?? '/');
+$requestUrl = $requestScheme . '://' . $requestHost . $requestUri;
 ?>
 <section class="footer-debug">
   <style>
@@ -50,8 +58,11 @@ if ($captchaVerPref === '') {
         </div>
       </div>
       <div class="col-sm-6 col-lg-3">
-        <h6>Server</h6>
-        <p class="mb-0"><?php echo htmlspecialchars($_SERVER['SERVER_NAME'] ?? 'unknown', ENT_QUOTES); ?></p>
+        <h6>Server Stuff</h6>
+        <div class="small">
+          <div><strong>URL:</strong> <?php echo htmlspecialchars($requestUrl, ENT_QUOTES); ?></div>
+          <div><strong>IP:</strong> <?php echo htmlspecialchars($requestIp, ENT_QUOTES); ?></div>
+        </div>
       </div>
       <div class="col-sm-6 col-lg-3">
         <h6>Setting</h6>
