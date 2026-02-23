@@ -76,67 +76,24 @@
 							?>
             			</ul>
             		</div>
-            		<div class="col-sm-4 col-md-2">
-                        <p>
-            			<ul class="addres">
-            				<li><strong>DEPOTS</strong></li>
-							
-							
-							<?php
-							
-							if ($cmsPrefs['prefBelfastDepotName']) {echo "<li><em><strong>" . $cmsPrefs['prefBelfastDepotName'] . "</em></strong></li>" ; }	
-							echo "<li>";
-							if ($cmsPrefs['prefBelfastDepotAddress1']) {echo "<li>" . $cmsPrefs['prefBelfastDepotAddress1'] . ", " ; }	
-							if ($cmsPrefs['prefBelfastDepotAddress2']) {echo "" . $cmsPrefs['prefBelfastDepotAddress2'] . ", " ; }	
-							if ($cmsPrefs['prefBelfastDepotAddress3']) {echo "" . $cmsPrefs['prefBelfastDepotAddress3'] . ", " ; }	
-							if ($cmsPrefs['prefBelfastDepotTown']) {echo "" . $cmsPrefs['prefBelfastDepotTown'] . ", " ; }	
-							if ($cmsPrefs['prefBelfastDepotCounty']) {echo "" . $cmsPrefs['prefBelfastDepotCounty'] . ", " ; }	
-							if ($cmsPrefs['prefBelfastDepotCountry']) {echo "" . $cmsPrefs['prefBelfastDepotCountry'] . "," ; }	
-							if ($cmsPrefs['prefBelfastDepotPostcode']) {echo "" . $cmsPrefs['prefBelfastDepotPostcode'] . " " ; }
-							echo "<br><br></li>";
-							?>	
-							
-							
-							<?php
-							
-							if ($cmsPrefs['prefDublinDepotName']) {echo "<li><em><strong>" . $cmsPrefs['prefDublinDepotName'] . "</em></strong></li>" ; }
-							echo "<li>";
-							if ($cmsPrefs['prefDublinDepotAddress1']) {echo "" . $cmsPrefs['prefDublinDepotAddress1'] . ", " ; }	
-							if ($cmsPrefs['prefDublinDepotAddress2']) {echo "" . $cmsPrefs['prefDublinDepotAddress2'] . ", " ; }	
-							if ($cmsPrefs['prefDublinDepotAddress3']) {echo "" . $cmsPrefs['prefDublinDepotAddress3'] . ", " ; }	
-							if ($cmsPrefs['prefDublinDepotTown']) {echo "" . $cmsPrefs['prefDublinDepotTown'] . ", " ; }	
-							if ($cmsPrefs['prefDublinDepotCounty']) {echo "" . $cmsPrefs['prefDublinDepotCounty'] . ", " ; }	
-							if ($cmsPrefs['prefDublinDepotCountry']) {echo "" . $cmsPrefs['prefDublinDepotCountry'] . ", " ; }	
-								if (!empty($cmsPrefs['prefDublinDepotPostcode'])) {echo "" . $cmsPrefs['prefDublinDepotPostcode'] . " " ; }
-							echo "</li>";
-							?>						
-<!--
-							
-            				<li><em><strong>Belfast</strong></em></li>
-            				<li>Rubb Shed, Pollock Dock, Northern Road, Belfast BT3 9AL</li>
-                            <li><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp; <a href="tel:<?php echo getTel1Int($prefs); ?>"><?php echo getTel1Int($prefs); ?></a> (UK)<br><br></li>
 
 
-            				<li><em><strong>Dublin</strong></em></li>
-            				<li>Glascarn, Glascarn&nbsp;Lane, Ratoath, Co.&nbsp;Meath, A85 R652</li>
-							
-                            <li><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp; <a href="tel:<?php echo getTel2Int($prefs); ?>"><?php echo getTel2Int($prefs); ?></a> (RoI)</li> 
--->
-            			</ul>
-                        </p>
-            		</div>
-            		<div class="col-sm-4 col-md-2">
+
+
+
+					
+            		<div class="col-sm-4 col-md-3">
             			<ul class="addres">
 							<?php
 							echo "<p>" . getAddressShortList($cmsPrefs) . "</p>" ;
                             ?>
                             <!--
-                            <li><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp; <a href="tel:<?php echo getTel1Int($prefs); ?>"><?php echo getTel1($prefs); ?></a> (UK)<br><br></li>
-				            <li><p><span class="col2"><i class="fas fa-at"></i></span>&nbsp;&nbsp; <a href="mailto:<?php echo getEmail($prefs); ?>"><?php echo getEmail($prefs); ?></a></p></li>
--->
+                            	<li><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp; <a href="tel:<?php echo getTel1Int($prefs); ?>"><?php echo getTel1($prefs); ?></a> (UK)<br><br></li>
+				           		<li><p><span class="col2"><i class="fas fa-at"></i></span>&nbsp;&nbsp; <a href="mailto:<?php echo getEmail($prefs); ?>"><?php echo getEmail($prefs); ?></a></p></li>
+							-->
             			</ul>
             		</div>
-            		<div class="col-md-5">
+            		<div class="col-md-6">
             			<div class="row">
             				<div class="col-sm-6">
             					<ul class="phone">
@@ -185,6 +142,8 @@
             			</div>
             		</div>
             	</div>
+
+
                 <div class="row imprint">
                     <div class="col-sm-6 ">
                         <?php

@@ -465,6 +465,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     color: #6c757d;
     font-size: 0.875rem;
   }
+  .contact-v5-form .contact-v5-submit {
+    background-color: #3ea244;
+    border-color: #3ea244;
+    color: #fff;
+    font-weight: 600;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .contact-v5-form .contact-v5-submit:hover,
+  .contact-v5-form .contact-v5-submit:focus {
+    background-color: #37913d;
+    border-color: #37913d;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(62, 162, 68, 0.25);
+    transform: translateY(-1px);
+  }
+  .contact-v5-form .contact-v5-submit:active {
+    background-color: #2f7f35;
+    border-color: #2f7f35;
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(62, 162, 68, 0.2);
+  }
   .contact-v5-status {
     border-radius: 0.375rem;
     padding: 0.75rem 1rem;
@@ -572,7 +593,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   <?php endif; ?>
 
-  <button type="submit" class="btn btn-primary btn-lg w-100">Send Message</button>
+  <button type="submit" class="btn btn-lg w-100 contact-v5-submit">Send Message</button>
   <p class="form-note">By submitting, you agree to be contacted about your request.</p>
 </form>
 
