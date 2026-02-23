@@ -14,6 +14,7 @@ $requestHost = (string) ($_SERVER['HTTP_HOST'] ?? ($_SERVER['SERVER_NAME'] ?? 'u
 $requestScheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $requestUri = (string) ($_SERVER['REQUEST_URI'] ?? '/');
 $requestUrl = $requestScheme . '://' . $requestHost . $requestUri;
+$debugPageId = (int) ($rowpage['id'] ?? ($pageData['id'] ?? ($slugID ?? 0)));
 ?>
 <section class="footer-debug">
   <style>
@@ -23,9 +24,19 @@ $requestUrl = $requestScheme . '://' . $requestHost . $requestUri;
       margin-top: 0.75rem;
     }
     .footer-debug .small {
+      font-size: 0.875rem;
       line-height: 1.45;
     }
+    .footer-debug .small > div,
+    .footer-debug .content-debug-list > div {
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .footer-debug .small strong {
+      white-space: nowrap;
+    }
     .footer-debug .content-debug-list {
+      font-size: 0.875rem;
       line-height: 1.5;
     }
     .footer-debug .content-debug-list > div {
@@ -45,6 +56,8 @@ $requestUrl = $requestScheme . '://' . $requestHost . $requestUri;
           }
         ?>
         <div class="small mt-2">
+          <div><strong>Page</strong></div>
+          <div>Page ID: <?php echo htmlspecialchars((string) $debugPageId, ENT_QUOTES); ?></div>
           <div><strong>Segments</strong></div>
           <?php if (!$segs): ?>
             <div class="text-muted">No URL segments</div>
