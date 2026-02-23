@@ -1,6 +1,11 @@
 <?php
 $dbOk = isset($DB_OK) ? (bool) $DB_OK : (isset($pdo) && $pdo instanceof PDO);
 $dbName = $DB_NAME ?? 'unknown';
+$captchaEnabledPref = (string) ($prefs['prefCaptchaEnabled'] ?? ($prefs['prefCaptcha'] ?? 'No'));
+$captchaVerPref = (string) ($prefs['prefCaptchaVer'] ?? '');
+if ($captchaVerPref === '') {
+  $captchaVerPref = '2';
+}
 ?>
 <section class="footer-debug">
   <style>
@@ -23,7 +28,6 @@ $dbName = $DB_NAME ?? 'unknown';
     <div class="row g-3">
       <div class="col-sm-6 col-lg-3">
         <h6>Environment</h6>
-        <p class="mb-0">Development</p>
         <?php
           $requestUri = (string) ($_SERVER['REQUEST_URI'] ?? '');
           $requestPath = trim((string) parse_url($requestUri, PHP_URL_PATH), '/');
@@ -50,8 +54,14 @@ $dbName = $DB_NAME ?? 'unknown';
         <p class="mb-0"><?php echo htmlspecialchars($_SERVER['SERVER_NAME'] ?? 'unknown', ENT_QUOTES); ?></p>
       </div>
       <div class="col-sm-6 col-lg-3">
-        <h6>PHP</h6>
-        <p class="mb-0"><?php echo htmlspecialchars(PHP_VERSION, ENT_QUOTES); ?></p>
+        <h6>Setting</h6>
+        <div class="small">
+          <div><strong>PHP:</strong> <?php echo htmlspecialchars(PHP_VERSION, ENT_QUOTES); ?></div>
+          <div><strong>Captcha On:</strong> <?php echo htmlspecialchars($captchaEnabledPref, ENT_QUOTES); ?></div>
+          <div><strong>Captcha Ver:</strong> <?php echo htmlspecialchars($captchaVerPref, ENT_QUOTES); ?></div>
+          <div><strong>Spam Check:</strong> <?php echo htmlspecialchars((string) ($prefs['prefIPSpamCheck'] ?? 'No'), ENT_QUOTES); ?></div>
+          <div><strong>Spam Thresholds:</strong> <?php echo htmlspecialchars((string) ($prefs['prefSpamOK'] ?? '10'), ENT_QUOTES); ?> | <?php echo htmlspecialchars((string) ($prefs['prefSpamNoSend'] ?? '30'), ENT_QUOTES); ?> | <?php echo htmlspecialchars((string) ($prefs['prefSpamNoSave'] ?? '60'), ENT_QUOTES); ?></div>
+        </div>
       </div>
       <div class="col-sm-6 col-lg-3">
         <h6>Database</h6>

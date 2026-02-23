@@ -30,13 +30,21 @@ if (empty($_SESSION['contact_form_token'])) {
   $_SESSION['contact_form_token'] = bin2hex(random_bytes(16));
 }
 
-$captchaSiteKey = (string) cms_pref('prefCaptchaSiteKey', (string) ($prefs['prefCaptchaSiteKey'] ?? ''));
-$captchaSecret = (string) cms_pref('prefCaptchaSecret', (string) ($prefs['prefCaptchaSecretKey'] ?? cms_pref('prefCaptchaSecretKey', '')));
-$captchaEnabled = (
-  ((string) cms_pref('prefCaptchaEnabled', (string) ($prefs['prefCaptcha'] ?? 'No')) === 'Yes') &&
-  $captchaSiteKey !== '' &&
-  $captchaSecret !== ''
-);
+$captchaVersion = trim((string) cms_pref('prefCaptchaVer', '2'));
+if ($captchaVersion !== '3') {
+  $captchaVersion = '2';
+}
+$captchaSiteKey = trim((string) cms_pref(
+  $captchaVersion === '3' ? 'prefCaptchaSiteKeyv3' : 'prefCaptchaSiteKey',
+  (string) cms_pref('prefCaptchaSiteKey', (string) ($prefs['prefCaptchaSiteKey'] ?? ''))
+));
+$captchaSecret = trim((string) cms_pref(
+  $captchaVersion === '3' ? 'prefCaptchaSecretv3' : 'prefCaptchaSecret',
+  (string) cms_pref('prefCaptchaSecret', (string) cms_pref('prefCaptchaSecretKey', (string) cms_pref('prefCaptchaSecretKeyV3', (string) ($prefs['prefCaptchaSecretKey'] ?? ''))))
+));
+$captchaEnabled = ((string) cms_pref('prefCaptchaEnabled', (string) ($prefs['prefCaptcha'] ?? 'No')) === 'Yes');
+$useCaptcha = $captchaEnabled && $captchaSiteKey !== '' && $captchaSecret !== '';
+$captchaMinScore = (float) cms_pref('prefCaptchaMinScore', 0.3);
 
 $spamLookupEnabled = cms_pref('prefIPSpamCheck', 'No') === 'Yes';
 $spamOkThreshold = (int) cms_pref('prefSpamOK', 10);
@@ -142,8 +150,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
     }
 
-    if ($captchaEnabled) {
-      $captchaToken = $_POST['g-recaptcha-response'] ?? '';
+    if ($useCaptcha) {
+      $captchaToken = trim((string) ($_POST['g-recaptcha-response'] ?? ($_POST['recaptcha_token'] ?? '')));
       if ($captchaToken === '') {
         $formStatus = [
           'type' => 'error',
@@ -164,7 +172,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
         $captchaResponse = @file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $verifyContext);
         $captchaData = $captchaResponse ? json_decode($captchaResponse, true) : null;
-        if (!is_array($captchaData) || empty($captchaData['success'])) {
+        $captchaOk = is_array($captchaData) && !empty($captchaData['success']);
+        if ($captchaOk && $captchaVersion === '3') {
+          $captchaScore = (float) ($captchaData['score'] ?? 0);
+          $captchaAction = trim((string) ($captchaData['action'] ?? ''));
+          if ($captchaScore < $captchaMinScore || ($captchaAction !== '' && $captchaAction !== 'contact_form')) {
+            $captchaOk = false;
+          }
+        }
+        if (!$captchaOk) {
           $formStatus = [
             'type' => 'error',
             'message' => 'Captcha verification failed. Please try again.',
@@ -504,7 +520,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 </style>
 
-<form class="contact-v5-form" method="post" action="<?php echo cms_h($baseURL . '/' . $contactSlug); ?>" novalidate>
+<form class="contact-v5-form" method="post" action="<?php echo cms_h($baseURL . '/' . $contactSlug); ?>" novalidate data-captcha-version="<?php echo cms_h($captchaVersion); ?>">
   <input type="hidden" name="csrf_token" value="<?php echo cms_h((string) $_SESSION['contact_form_token']); ?>">
 
   <?php if ($formStatus): ?>
@@ -587,18 +603,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   <?php endforeach; ?>
 
-  <?php if ($captchaEnabled): ?>
+  <?php if ($useCaptcha && $captchaVersion === '2'): ?>
     <div class="mb-3">
       <div class="g-recaptcha" data-sitekey="<?php echo cms_h($captchaSiteKey); ?>"></div>
     </div>
+  <?php endif; ?>
+  <?php if ($useCaptcha && $captchaVersion === '3'): ?>
+    <input type="hidden" id="contact_recaptcha_token" name="recaptcha_token" value="">
   <?php endif; ?>
 
   <button type="submit" class="btn btn-lg w-100 contact-v5-submit">Send Message</button>
   <p class="form-note">By submitting, you agree to be contacted about your request.</p>
 </form>
 
-<?php if ($captchaEnabled): ?>
+<?php if ($useCaptcha && $captchaVersion === '2'): ?>
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<?php endif; ?>
+<?php if ($useCaptcha && $captchaVersion === '3'): ?>
+  <script src="https://www.google.com/recaptcha/api.js?render=<?php echo rawurlencode($captchaSiteKey); ?>"></script>
 <?php endif; ?>
 <script>
   (function() {
@@ -609,6 +631,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     tooltipTriggerList.forEach(function(el) {
       new bootstrap.Tooltip(el);
     });
+
+    <?php if ($useCaptcha && $captchaVersion === '3'): ?>
+    var form = document.querySelector('.contact-v5-form');
+    var siteKey = <?php echo json_encode($captchaSiteKey); ?>;
+    if (form) {
+      form.addEventListener('submit', function(event) {
+        if ((form.getAttribute('data-captcha-version') || '') !== '3') {
+          return;
+        }
+        if (form.getAttribute('data-captcha-pending') === '1') {
+          return;
+        }
+        event.preventDefault();
+        if (typeof grecaptcha === 'undefined') {
+          form.submit();
+          return;
+        }
+        grecaptcha.ready(function() {
+          grecaptcha.execute(siteKey, { action: 'contact_form' }).then(function(token) {
+            var tokenInput = document.getElementById('contact_recaptcha_token');
+            if (tokenInput) {
+              tokenInput.value = token;
+            }
+            form.setAttribute('data-captcha-pending', '1');
+            form.submit();
+          });
+        });
+      });
+    }
+    <?php endif; ?>
   })();
 </script>
 <!-- END contact-form.php -->
