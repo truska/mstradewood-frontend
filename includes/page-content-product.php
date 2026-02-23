@@ -3,6 +3,14 @@
 <?php
 require_once __DIR__ . '/lib/cms_product_images.php';
 
+$cmsHasColumn = static function (mysqli $conn, string $table, string $column): bool {
+    $tableEsc = mysqli_real_escape_string($conn, $table);
+    $columnEsc = mysqli_real_escape_string($conn, $column);
+    $sql = "SHOW COLUMNS FROM `$tableEsc` LIKE '$columnEsc'";
+    $result = mysqli_query($conn, $sql);
+    return ($result && mysqli_num_rows($result) > 0);
+};
+
 // GET PRODUCT
 $selectproduct = "SELECT * FROM `products` WHERE `id` = " . $segs[1]  . " AND `showonweb` = 'Yes' " ;
 				//	echo "selectproduct = " . $selectproduct . "<br>";
@@ -12,21 +20,47 @@ $selectproduct = "SELECT * FROM `products` WHERE `id` = " . $segs[1]  . " AND `s
 				//	echo "Number of records = " . $num_rows_product . "<br>";
 					$rowproduct = mysqli_fetch_assoc($queryproduct) ;
 
-// GET Features
-$selectfeatures = "SELECT * FROM `productfeatures` WHERE `product` = " . $rowproduct["id"]  . " AND `showonweb` = 'Yes' ORDER BY `order` " ;
-				//	echo $selectfeatures . "<br>";
-					$queryfeatures = mysqli_query($conn,$selectfeatures);
-					$numrowsfeatures = mysqli_num_rows($queryfeatures);
-				//	$count = 1 ;
-				//	echo "Number of records = " . $num_rows_features . "<br>";
+// GET Features (supports legacy and normalized schemas).
+$pfNameCol = $cmsHasColumn($conn, 'productfeatures', 'name') ? 'name' : 'feature';
+$pfSortCol = $cmsHasColumn($conn, 'productfeatures', 'sort') ? 'sort' : 'order';
+$pfHasFeatureId = $cmsHasColumn($conn, 'productfeatures', 'feature_id');
+$fcNameCol = $cmsHasColumn($conn, 'product_feature_catalog', 'name') ? 'name' : 'feature';
 
-// GET Tech Spec
-$selecttech = "SELECT * FROM `producttechspec` WHERE `product` = " . $rowproduct["id"]  . " AND `showonweb` = 'Yes' ORDER BY `order` " ;
-				//	echo $selecttech . "<br>";
-					$querytech = mysqli_query($conn,$selecttech);
-					$numrowstech = mysqli_num_rows($querytech);
-				//	$count = 1 ;
-				//	echo "Number of records = " . $num_rows_tech . "<br>";
+if ($pfHasFeatureId) {
+    $selectfeatures = "SELECT pf.*, COALESCE(fc.`$fcNameCol`, pf.`$pfNameCol`) AS feature_label
+                       FROM `productfeatures` pf
+                       LEFT JOIN `product_feature_catalog` fc ON fc.id = pf.feature_id
+                       WHERE pf.`product` = " . (int) $rowproduct["id"] . " AND pf.`showonweb` = 'Yes'
+                       ORDER BY pf.`$pfSortCol`";
+} else {
+    $selectfeatures = "SELECT pf.*, pf.`$pfNameCol` AS feature_label
+                       FROM `productfeatures` pf
+                       WHERE pf.`product` = " . (int) $rowproduct["id"] . " AND pf.`showonweb` = 'Yes'
+                       ORDER BY pf.`$pfSortCol`";
+}
+$queryfeatures = mysqli_query($conn, $selectfeatures);
+$numrowsfeatures = $queryfeatures ? mysqli_num_rows($queryfeatures) : 0;
+
+// GET Tech Spec (supports legacy and normalized schemas).
+$ptsNameCol = $cmsHasColumn($conn, 'producttechspec', 'name') ? 'name' : 'feature';
+$ptsSortCol = $cmsHasColumn($conn, 'producttechspec', 'sort') ? 'sort' : 'order';
+$ptsHasSpecId = $cmsHasColumn($conn, 'producttechspec', 'spec_id');
+$tscNameCol = $cmsHasColumn($conn, 'product_techspec_catalog', 'name') ? 'name' : 'spec';
+
+if ($ptsHasSpecId) {
+    $selecttech = "SELECT pts.*, COALESCE(tsc.`$tscNameCol`, pts.`$ptsNameCol`) AS feature_label
+                   FROM `producttechspec` pts
+                   LEFT JOIN `product_techspec_catalog` tsc ON tsc.id = pts.spec_id
+                   WHERE pts.`product` = " . (int) $rowproduct["id"] . " AND pts.`showonweb` = 'Yes'
+                   ORDER BY pts.`$ptsSortCol`";
+} else {
+    $selecttech = "SELECT pts.*, pts.`$ptsNameCol` AS feature_label
+                   FROM `producttechspec` pts
+                   WHERE pts.`product` = " . (int) $rowproduct["id"] . " AND pts.`showonweb` = 'Yes'
+                   ORDER BY pts.`$ptsSortCol`";
+}
+$querytech = mysqli_query($conn, $selecttech);
+$numrowstech = $querytech ? mysqli_num_rows($querytech) : 0;
 
 // GET Maunf
 $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = " . $rowproduct["manuf"]  . " AND `showonweb` = 'Yes' " ;
@@ -94,7 +128,7 @@ $productGalleryImages = cms_product_gallery_images(
                                     echo "<ul>" ;									
                                         while ($rowfeatures = mysqli_fetch_assoc($queryfeatures) )
                                         {
-                                            echo "<li>• " . $rowfeatures["feature"] . "</li>" ;
+                                            echo "<li>• " . ($rowfeatures["feature_label"] ?? $rowfeatures[$pfNameCol]) . "</li>" ;
                                         }
                                     echo "</ul>" ;
                                 }
@@ -199,7 +233,7 @@ $productGalleryImages = cms_product_gallery_images(
                                 <?php
                                 while ($rowtech = mysqli_fetch_assoc($querytech) )
                                 {
-                                    echo "<li>" . $rowtech["feature"] . "</li>" ;
+                                    echo "<li>" . ($rowtech["feature_label"] ?? $rowtech[$ptsNameCol]) . "</li>" ;
                                 }
                                 ?>
                             </ul>

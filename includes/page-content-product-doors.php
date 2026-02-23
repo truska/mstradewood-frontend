@@ -13,20 +13,32 @@ $selectproduct = "SELECT * FROM `products` WHERE `id` = " . $segs[1]  . " AND `s
 					$rowproduct = mysqli_fetch_assoc($queryproduct) ;
 
 // GET Features
-$selectfeatures = "SELECT * FROM `productfeatures` WHERE `product` = " . $rowproduct["id"]  . " AND `showonweb` = 'Yes' ORDER BY `order` " ;
-				//	echo $selectfeatures . "<br>";
-					$queryfeatures = mysqli_query($conn,$selectfeatures);
-					$numrowsfeatures = mysqli_num_rows($queryfeatures);
-				//	$count = 1 ;
-				//	echo "Number of records = " . $num_rows_features . "<br>";
+$selectfeatures = "SELECT pf.*, COALESCE(fc.name, pf.name) AS feature_label
+                   FROM `productfeatures` pf
+                   LEFT JOIN `product_feature_catalog` fc ON fc.id = pf.feature_id
+                   WHERE pf.`product` = " . (int) $rowproduct["id"] . " AND pf.`showonweb` = 'Yes'
+                   ORDER BY pf.`sort`";
+$queryfeatures = mysqli_query($conn, $selectfeatures);
+if (!$queryfeatures) {
+    // Backward compatibility before normalization migration is applied.
+    $selectfeatures = "SELECT * FROM `productfeatures` WHERE `product` = " . (int) $rowproduct["id"] . " AND `showonweb` = 'Yes' ORDER BY `sort`";
+    $queryfeatures = mysqli_query($conn, $selectfeatures);
+}
+$numrowsfeatures = $queryfeatures ? mysqli_num_rows($queryfeatures) : 0;
 
 // GET Tech Spec
-$selecttech = "SELECT * FROM `producttechspec` WHERE `product` = " . $rowproduct["id"]  . " AND `showonweb` = 'Yes' ORDER BY `order` " ;
-				//	echo $selecttech . "<br>";
-					$querytech = mysqli_query($conn,$selecttech);
-					$numrowstech = mysqli_num_rows($querytech);
-				//	$count = 1 ;
-				//	echo "Number of records = " . $num_rows_tech . "<br>";
+$selecttech = "SELECT pts.*, COALESCE(tsc.name, pts.name) AS feature_label
+               FROM `producttechspec` pts
+               LEFT JOIN `product_techspec_catalog` tsc ON tsc.id = pts.spec_id
+               WHERE pts.`product` = " . (int) $rowproduct["id"] . " AND pts.`showonweb` = 'Yes'
+               ORDER BY pts.`sort`";
+$querytech = mysqli_query($conn, $selecttech);
+if (!$querytech) {
+    // Backward compatibility before normalization migration is applied.
+    $selecttech = "SELECT * FROM `producttechspec` WHERE `product` = " . (int) $rowproduct["id"] . " AND `showonweb` = 'Yes' ORDER BY `sort`";
+    $querytech = mysqli_query($conn, $selecttech);
+}
+$numrowstech = $querytech ? mysqli_num_rows($querytech) : 0;
 
 // GET Maunf
 $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = " . $rowproduct["manuf"]  . " AND `showonweb` = 'Yes' " ;
@@ -102,7 +114,7 @@ $productGalleryImages = cms_product_gallery_images(
                                     echo "<ul>" ;									
                                         while ($rowfeatures = mysqli_fetch_assoc($queryfeatures) )
                                         {
-                                            echo "<li>• " . $rowfeatures["feature"] . "</li>" ;
+                                            echo "<li>• " . ($rowfeatures["feature_label"] ?? $rowfeatures["name"]) . "</li>" ;
                                         }
                                     echo "</ul>" ;
                                 }
@@ -199,7 +211,7 @@ $productGalleryImages = cms_product_gallery_images(
                                 <?php
                                 while ($rowtech = mysqli_fetch_assoc($querytech) )
                                 {
-                                    echo "<li>" . $rowtech["feature"] . "</li>" ;
+                                    echo "<li>" . ($rowtech["feature_label"] ?? $rowtech["name"]) . "</li>" ;
                                 }
                                 ?>
                             </ul>
