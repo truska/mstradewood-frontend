@@ -18,12 +18,6 @@ function cms_preferences_table(): ?string {
       $table = 'cms_preferences';
       return $table;
     }
-
-    $stmt = $pdo->query("SHOW TABLES LIKE 'preferences'");
-    if ($stmt && $stmt->fetchColumn()) {
-      $table = 'preferences';
-      return $table;
-    }
   } catch (PDOException $e) {
     $table = null;
     return $table;

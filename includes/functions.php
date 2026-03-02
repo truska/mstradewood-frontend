@@ -2,57 +2,99 @@
 <?php
 
 function loadPrefs($conn) {
-	$selectprefs = "SELECT `name`, `value` FROM `preferences` ORDER BY `prefCat` ";
-	$queryprefs = mysqli_query($conn,$selectprefs);
-	while ($rowprefs = mysqli_fetch_assoc($queryprefs) )
-		{
-			$prefs[$rowprefs["name"]] = $rowprefs["value"];
-		}
+	static $prefs = null;
+
+	if (is_array($prefs)) {
 		return $prefs;
+	}
+
+	$cmsPrefsPath = __DIR__ . '/lib/cms_prefs.php';
+	if (file_exists($cmsPrefsPath)) {
+		require_once $cmsPrefsPath;
+	}
+
+	$prefs = [];
+	if (function_exists('cms_load_preferences')) {
+		$rows = cms_load_preferences('web');
+		foreach ($rows as $name => $row) {
+			if (is_array($row) && array_key_exists('value', $row)) {
+				$prefs[$name] = $row['value'];
+				continue;
+			}
+			$prefs[$name] = $row;
+		}
+	}
+
+	return $prefs;
 	}
 ?>
 <!-- End loadprefs -->
 <?php
 function getCompanyName($prefs) {
-		return $prefs['prefCompanyName'];
+		return prefValue($prefs, 'prefCompanyName');
 	}
 function getSiteName($prefs) {
-		return $prefs['prefSiteName'];
+		return prefValue($prefs, 'prefSiteName');
 	}
-	
-function  getAddressLong($prefs) {
-			$prefsAddressLong = '';
-		    
-			if ($prefs['prefAddress1']){$prefsAddressLong = $prefsAddressLong  . $prefs['prefAddress1'];}
-		if ($prefs['prefAddress2']){$prefsAddressLong = $prefsAddressLong . ", " . $prefs['prefAddress2'];}
-		if ($prefs['prefTown']){$prefsAddressLong = $prefsAddressLong  . ", " . $prefs['prefTown'];}
-		if ($prefs['prefCounty']){$prefsAddressLong = $prefsAddressLong  . ", " . $prefs['prefCounty'];}
-		if ($prefs['prefCountry']){$prefsAddressLong = $prefsAddressLong  . ", " . $prefs['prefCountry'];}
-		if ($prefs['prefPostcode']){$prefsAddressLong = $prefsAddressLong  . ", "   . $prefs['prefPostcode'];}
 
-		return $prefsAddressLong;  
+function prefValue($prefs, $key, $default = '') {
+	$value = null;
+
+	if (function_exists('cms_pref')) {
+		$cmsValue = cms_pref($key, null);
+		if ($cmsValue !== null && $cmsValue !== '') {
+			$value = $cmsValue;
+		}
+	}
+
+	if (($value === null || $value === '') && is_array($prefs) && array_key_exists($key, $prefs) && $prefs[$key] !== null && $prefs[$key] !== '') {
+		$value = $prefs[$key];
+	}
+
+	if ($value === null) {
+		$value = $default;
+	}
+
+	if (is_string($value)) {
+		return trim($value);
+	}
+
+	return $value;
+}
+
+function prefAddressParts($prefs, $prefix = 'pref') {
+	$keys = [
+		$prefix . 'Address1',
+		$prefix . 'Address2',
+		$prefix . 'Address3',
+		$prefix . 'Town',
+		$prefix . 'County',
+		$prefix . 'Country',
+		$prefix . 'Postcode',
+	];
+	$parts = [];
+
+	foreach ($keys as $key) {
+		$value = prefValue($prefs, $key, '');
+		if ($value !== '') {
+			$parts[] = $value;
+		}
+	}
+
+	return $parts;
+}
+
+function  getAddressLong($prefs) {
+		return implode(', ', prefAddressParts($prefs));  
 	}
 function  getAddressShort($prefs) {
-			$prefsAddressShort = '';
-		    
-			if ($prefs['prefAddress1']){$prefsAddressShort = $prefsAddressShort  . $prefs['prefAddress1'];}
-		if ($prefs['prefAddress2']){$prefsAddressShort = $prefsAddressShort . "<br>" . $prefs['prefAddress2'];}
-		if ($prefs['prefTown']){$prefsAddressShort = $prefsAddressShort  . "<br>" . $prefs['prefTown'];}
-		if ($prefs['prefCounty']){$prefsAddressShort = $prefsAddressShort  . "<br>" . $prefs['prefCounty'];}
-		if ($prefs['prefCountry']){$prefsAddressShort = $prefsAddressShort  . "<br>" . $prefs['prefCountry'];}
-		if ($prefs['prefPostcode']){$prefsAddressShort = $prefsAddressShort  . "<br>"   . $prefs['prefPostcode'];}
-
-		return $prefsAddressShort;  
+		return implode("<br>", prefAddressParts($prefs));  
 	}
 function  getAddressList($prefs) {
-			$prefsAddressList = '';
-		    
-			if ($prefs['prefAddress1']){$prefsAddressList = $prefsAddressList  . "<li>" . $prefs['prefAddress1'] . "</li>" ;}
-		if ($prefs['prefAddress2']){$prefsAddressList = $prefsAddressList . "<li>" . $prefs['prefAddress2'] . "</li>" ;}
-		if ($prefs['prefTown']){$prefsAddressList = $prefsAddressList  . "<li>" . $prefs['prefTown'] . "</li>" ;}
-		if ($prefs['prefCounty']){$prefsAddressList = $prefsAddressList  . "<li>" . $prefs['prefCounty'] . "</li>" ;}
-		if ($prefs['prefCountry']){$prefsAddressList = $prefsAddressList  . "<li>" . $prefs['prefCountry'] . "</li>" ;}
-		if ($prefs['prefPostcode']){$prefsAddressList = $prefsAddressList  . "<li>"   . $prefs['prefPostcode'] . "</li>" ;}
+		$prefsAddressList = '';
+		foreach (prefAddressParts($prefs) as $part) {
+			$prefsAddressList = $prefsAddressList . "<li>" . $part . "</li>";
+		}
 
 		return $prefsAddressList;  
 	}
@@ -60,55 +102,99 @@ function  getAddressShortList($prefs) {
 			$prefsAddressShortList = '';
 
 			$prefsAddressShortList = $prefsAddressShortList  . "<li><strong>Head Office</strong></li>" ;
-		if ($prefs['prefAddress1']){$prefsAddressShortList = $prefsAddressShortList  . "<li>" . $prefs['prefAddress1'] . "</li>" ;}
-		if ($prefs['prefAddress2']){$prefsAddressShortList = $prefsAddressShortList . "<li>" . $prefs['prefAddress2'] . "</li>" ;}
-		if ($prefs['prefTown']){$prefsAddressShortList = $prefsAddressShortList  . "<li>" . $prefs['prefTown'] . "</li>" ;}
-		if ($prefs['prefCounty']){$prefsAddressShortList = $prefsAddressShortList  . "<li>" . $prefs['prefCounty'] . "</li>" ;}
-		if ($prefs['prefCountry']){$prefsAddressShortList = $prefsAddressShortList  . "<li>" . $prefs['prefCountry'] . "</li>" ;}
-		if ($prefs['prefPostcode']){$prefsAddressShortList = $prefsAddressShortList  . "<li>"   . $prefs['prefPostcode'] . "</li>" ;}
+		foreach (prefAddressParts($prefs) as $part) {
+			$prefsAddressShortList = $prefsAddressShortList . "<li>" . $part . "</li>";
+		}
 
 		return $prefsAddressShortList;  
 	}
 function  getAddressNameShortList($prefs) {
 			$prefsAddressNameShortList = '';
 
-			if ($prefs['prefCompanyName']){$prefsAddressNameShortList = $prefsAddressNameShortList  . "<li>" . $prefs['prefCompanyName'] . "</li>" ;}
-		if ($prefs['prefAddress1']){$prefsAddressNameShortList = $prefsAddressNameShortList  . "<li>" . $prefs['prefAddress1'] . "</li>" ;}
-		if ($prefs['prefAddress2']){$prefsAddressNameShortList = $prefsAddressNameShortList . "<li>" . $prefs['prefAddress2'] . "</li>" ;}
-		if ($prefs['prefTown']){$prefsAddressNameShortList = $prefsAddressNameShortList  . "<li>" . $prefs['prefTown'] . "</li>" ;}
-		if ($prefs['prefCounty']){$prefsAddressNameShortList = $prefsAddressNameShortList  . "<li>" . $prefs['prefCounty'] . "</li>" ;}
-		if ($prefs['prefCountry']){$prefsAddressNameShortList = $prefsAddressNameShortList  . "<li>" . $prefs['prefCountry'] . "</li>" ;}
-		if ($prefs['prefPostcode']){$prefsAddressNameShortList = $prefsAddressNameShortList  . "<li>"   . $prefs['prefPostcode'] . "</li>" ;}
+			if (prefValue($prefs, 'prefCompanyName') !== ''){$prefsAddressNameShortList = $prefsAddressNameShortList  . "<li>" . prefValue($prefs, 'prefCompanyName') . "</li>" ;}
+		foreach (prefAddressParts($prefs) as $part) {
+			$prefsAddressNameShortList = $prefsAddressNameShortList . "<li>" . $part . "</li>";
+		}
 
 		return $prefsAddressNameShortList;  
 	}
 
+function getAddessLong($prefs) {
+		return getAddressLong($prefs);
+	}
+
 function getEmail($prefs) {
-		return $prefs['prefEmail'];
+		return prefValue($prefs, 'prefEmail');
 	}
 function getTel1($prefs) {
-		return $prefs['prefTel1'];
+		return prefValue($prefs, 'prefTel1');
 	}
 function getTel1Int($prefs) {
-		return $prefs['prefTel1Int'];
+		return getTel1Display($prefs);
 	}
 function getTel2($prefs) {
-		return $prefs['prefTel2'];
+		return prefValue($prefs, 'prefTel2');
 	}
 function getTel2Int($prefs) {
-		return $prefs['prefTel2Int'];
+		return getTel2Display($prefs);
 	}
 function getFax($prefs) {
-		return $prefs['prefFax'];
+		return prefValue($prefs, 'prefFax');
 	}
 function getGoogleMap($prefs) {
-		return $prefs['prefGoogleMap'];
+		return prefValue($prefs, 'prefGoogleMap');
 	}
 function getLogo($prefs) {
-		return "filestore/images/logos/" . $prefs['prefLogo'];
+		return "filestore/images/logos/" . prefValue($prefs, 'prefLogo');
 	}
 function getTagline($prefs) {
-		return $prefs['prefTagline'];
+		return prefValue($prefs, 'prefTagline');
+	}
+
+function getTelData($prefs, $telKey = 'prefTel1', $intCodeKey = 'prefTelIntCode') {
+	$display = prefValue($prefs, $telKey, '');
+	$intl = prefValue($prefs, $intCodeKey, '');
+	$displayTrim = ltrim($display);
+	$isInternational = ($displayTrim !== '' && $displayTrim[0] === '+');
+	$dial = '';
+	$displayIntl = $display;
+
+	if ($display !== '') {
+		$dial = preg_replace('/[^0-9+]/', '', $display);
+		if (!$isInternational && $intl !== '') {
+			$trimmedLocal = ltrim($display);
+			if ($trimmedLocal !== '' && $trimmedLocal[0] === '0') {
+				$trimmedLocal = substr($trimmedLocal, 1);
+			}
+			$displayIntl = rtrim($intl) . ' ' . ltrim($trimmedLocal);
+			$dial = preg_replace('/[^0-9+]/', '', $intl . $trimmedLocal);
+		}
+	}
+
+	return [
+		'display' => trim($displayIntl),
+		'dial' => $dial,
+	];
+}
+
+function getTel1Display($prefs) {
+		$data = getTelData($prefs, 'prefTel1');
+		return $data['display'];
+	}
+
+function getTel1Dial($prefs) {
+		$data = getTelData($prefs, 'prefTel1');
+		return $data['dial'];
+	}
+
+function getTel2Display($prefs) {
+		$data = getTelData($prefs, 'prefTel2');
+		return $data['display'];
+	}
+
+function getTel2Dial($prefs) {
+		$data = getTelData($prefs, 'prefTel2');
+		return $data['dial'];
 	}
 ?>
 <!-- End loadprefs specifics -->

@@ -97,9 +97,9 @@
             			<div class="row">
             				<div class="col-sm-6">
             					<ul class="phone">
-                                    <li><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp; <a href="tel:<?php echo getTel1Int($cmsPrefs); ?>"><?php echo getTel1Int($cmsPrefs); ?></a> </li>
-                                    <li><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp; <a href="tel:<?php echo getTel2Int($cmsPrefs); ?>"><?php echo getTel2Int($cmsPrefs); ?></a> </li>
-				                    <li><span class="col2"><i class="fas fa-at"></i></span>&nbsp;&nbsp; <a href="mailto:<?php echo getEmail($cmsPrefs); ?>"><?php echo getEmail($cmsPrefs); ?></a></li>
+                                    <li><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp; <a href="tel:<?php echo getTel1Dial($cmsPrefs); ?>"><?php echo getTel1Display($cmsPrefs); ?></a> </li>
+                                    <li><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp; <a href="tel:<?php echo getTel2Dial($cmsPrefs); ?>"><?php echo getTel2Display($cmsPrefs); ?></a> </li>
+				                    <li><span class="col2"><i class="fas fa-at"></i></span>&nbsp;&nbsp; <a class="footer-contact-email" href="mailto:<?php echo getEmail($cmsPrefs); ?>"><?php echo getEmail($cmsPrefs); ?></a></li>
 
             					</ul>
             				</div>

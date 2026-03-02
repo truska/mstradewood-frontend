@@ -604,6 +604,9 @@ footer a {
     line-height: 25px;
     text-transform: uppercase;
 }
+.footer-contact-email {
+    text-transform: none;
+}
 footer a:hover, 
 footer a:focus, 
 footer a:active {

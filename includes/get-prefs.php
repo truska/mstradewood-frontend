@@ -35,14 +35,9 @@ echo "<hr>" ;
 echo "<h1>Preference Variables for " . $prefSiteName . " site</h1>" ;
 echo "<h3>" . $prefs['prefURL'] . "</h3>" ;
 
-  $selectprefs = "SELECT name, value FROM `preferences` ORDER BY `prefCat` ";
-
-
-	$queryprefs = mysqli_query($conn,$selectprefs);
-	while ($rowprefs = mysqli_fetch_assoc($queryprefs) )
-		{
-			echo "result: " . $rowprefs["name"] . " = " . $rowprefs["value"] . "<br> " ;
-		}
+	foreach ($prefs as $prefName => $prefValue) {
+		echo "result: " . $prefName . " = " . $prefValue . "<br> " ;
+	}
 	?>
 </body>
 </html>

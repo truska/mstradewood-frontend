@@ -4,14 +4,7 @@
 <?php
 	
 function loadPrefs1() {
-  $selectprefs = "SELECT name, value FROM `preferences` ORDER BY `prefCat` ";
-	$queryprefs = mysqli_query($conn,$selectprefs);
-	
-	while ($rowprefs = mysqli_fetch_assoc($queryprefs) )
-		{
-			$prefs[$rowprefs["name"]] = $rowprefs["value"];
-		}
-		return $prefs;
+  return loadPrefs($conn ?? null);
 		
 	}
 /* */

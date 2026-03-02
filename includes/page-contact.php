@@ -88,8 +88,8 @@ foreach ($contactPrefKeys as $key) {
 							echo "<li>" . $cmsPrefs['prefSiteName'] . "</li>" ;
 							echo getAddressShortList($cmsPrefs) . "" ;
 							?>						
-							<li class="mt-10"><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp;<a href="tel:<?php echo getTel1Int($cmsPrefs); ?>"><?php echo getTel1Int($cmsPrefs); ?></a> (UK)</li>
-                           <li class="mt-10"><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp;<a href="tel:<?php echo getTel2Int($cmsPrefs); ?>"><?php echo getTel2Int($cmsPrefs); ?></a> (RoI)</li> 
+							<li class="mt-10"><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp;<a href="tel:<?php echo getTel1Dial($cmsPrefs); ?>"><?php echo getTel1Display($cmsPrefs); ?></a> (UK)</li>
+                           <li class="mt-10"><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp;<a href="tel:<?php echo getTel2Dial($cmsPrefs); ?>"><?php echo getTel2Display($cmsPrefs); ?></a> (RoI)</li> 
 							<li class="mt-10"><span class="col2"><i class="fas fa-at"></i></span>&nbsp;&nbsp;<a href="mailto:<?php echo getEmail($cmsPrefs); ?>"><?php echo getEmail($cmsPrefs); ?></a></li>
 						</ul>
                         
@@ -129,14 +129,7 @@ foreach ($contactPrefKeys as $key) {
                         <div class="google-maps">
                             
                         <?php
-                            $mapAddressParts = array_filter([
-                                trim((string) ($cmsPrefs['prefAddress1'] ?? '')),
-                                trim((string) ($cmsPrefs['prefAddress2'] ?? '')),
-                                trim((string) ($cmsPrefs['prefTown'] ?? '')),
-                                trim((string) ($cmsPrefs['prefCounty'] ?? '')),
-                                trim((string) ($cmsPrefs['prefCountry'] ?? '')),
-                                trim((string) ($cmsPrefs['prefPostcode'] ?? ''))
-                            ]);
+                            $mapAddressParts = prefAddressParts($cmsPrefs);
                             $mapQuery = implode(', ', $mapAddressParts);
                             if ($mapQuery !== '') {
                                 $mapSrc = 'https://maps.google.com/maps?q=' . rawurlencode($mapQuery) . '&t=&z=13&ie=UTF8&iwloc=&output=embed';
@@ -153,15 +146,10 @@ foreach ($contactPrefKeys as $key) {
 							
 							<?php
 							echo "<li>" . $cmsPrefs['prefSiteName'] . "</li>" ;
-							if ($cmsPrefs['prefAddress1']) {echo "<li>" . $cmsPrefs['prefAddress1'] . "</li>" ; }
-							if ($cmsPrefs['prefAddress2']) {echo "<li>" . $cmsPrefs['prefAddress2'] . "</li>" ; }
-							if ($cmsPrefs['prefTown']) {echo "<li>" . $cmsPrefs['prefTown'] . "</li>" ; }
-							if ($cmsPrefs['prefCounty']) {echo "<li>" . $cmsPrefs['prefCounty'] . "</li>" ; }
-							if ($cmsPrefs['prefPostcode']) {echo "<li>" . $cmsPrefs['prefPostcode'] . "</li>" ; }
-							if ($cmsPrefs['prefCountry']) {echo "<li>" . $cmsPrefs['prefCountry'] . "</li>" ; }
+							foreach (prefAddressParts($cmsPrefs) as $addressLine) {echo "<li>" . $addressLine . "</li>" ; }
 							?>						
 
-							<li class="mt-10"><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp;  <a href="tel:<?php echo getTel1Int($cmsPrefs); ?>"><?php echo getTel1Int($cmsPrefs); ?></a> </li>
+							<li class="mt-10"><span class="col2"><i class="fas fa-phone-alt"></i></span>&nbsp;&nbsp;  <a href="tel:<?php echo getTel1Dial($cmsPrefs); ?>"><?php echo getTel1Display($cmsPrefs); ?></a> </li>
 							<li class="mt-10"><span class="col2"><i class="fas fa-at"></i></span>&nbsp;&nbsp;  <a href="mailto:<?php echo getEmail($cmsPrefs); ?>"><?php echo  getEmail($cmsPrefs); ?></a></li>
 							<?php
 					//		if ($prefs['prefBelfastDepotLat']) {echo "<li> " . $prefs['prefBelfastDepotLat'] . "</li>" ; }	

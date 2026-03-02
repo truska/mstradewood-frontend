@@ -5,6 +5,11 @@
 //Set up Content Pages Data 
 $selectcontent = "SELECT * FROM `content` WHERE `page` = '" . $rowpage["id"] . "' AND `showonweb` = 'Yes' ORDER BY `sort` ";
 $querycontent = mysqli_query($conn, $selectcontent );
+$policyPrefs = $prefs;
+
+foreach (['prefCompanyNo', 'prefVATNo', 'prefPolicyDate', 'prefEmail', 'prefTel1', 'prefTel2', 'prefTelIntCode'] as $key) {
+    $policyPrefs[$key] = prefValue($policyPrefs, $key);
+}
 ?>
 
 <section class="policy-content textsection">
@@ -15,19 +20,21 @@ $querycontent = mysqli_query($conn, $selectcontent );
       <div class="col-xs-12 policy-content">
     <!--    <h2 class="heading2Size">Privacy Policy</h2> -->
         <p class="ptextSize">In this document the following references apply:</p>
-			<p>Where reference is made to "business or site owner, we or us" we are referring to <?php echo getCompanyName($prefs) ; ?> <br>
-			Our registered address is: <?php echo getAddressLong($prefs) ; ?> <br>
+			<p>Where reference is made to "business or site owner, we or us" we are referring to <?php echo getCompanyName($policyPrefs) ; ?> <br>
+			Our registered address is: <?php echo getAddressLong($policyPrefs) ; ?> <br>
 			
-			Our Telephone number is: <?php echo getTel1($prefs) ; ?> <br>
+			Our UK telephone number is: <?php echo getTel1Display($policyPrefs) ; ?> <br>
+			Our RoI telephone number is: <?php echo getTel2Display($policyPrefs) ; ?> <br>
+			Our email address is: <?php echo getEmail($policyPrefs) ; ?> <br>
 			<?php
-				if ($prefs['prefCompanyNo']) {
-					echo "Our Company Number is: " . $prefs['prefCompanyNo'] . "<br>" ;
+				if ($policyPrefs['prefCompanyNo']) {
+					echo "Our Company Number is: " . $policyPrefs['prefCompanyNo'] . "<br>" ;
 				}
-				if ($prefs['prefVATNo']) {
-					echo "Our VAT Number is: " . $prefs['prefVATNo'] . "<br>" ;
+				if ($policyPrefs['prefVATNo']) {
+					echo "Our VAT Number is: " . $policyPrefs['prefVATNo'] . "<br>" ;
 				}
-				if ($prefs['prefPolicyDate']) {
-					echo "This policy is effective from: " . $prefs['prefPolicyDate'] . "<br>" ;
+				if ($policyPrefs['prefPolicyDate']) {
+					echo "This policy is effective from: " . $policyPrefs['prefPolicyDate'] . "<br>" ;
 				}
 			?>
 		  </p>

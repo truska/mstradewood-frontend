@@ -57,7 +57,7 @@ include("includes/functions.php");
 
 	if ($debug == 'Yes' ){
 		echo "<p><strong>Check DB Connection </strong><br>" ;
-		$selecttest = "SELECT * FROM `preferences` ";
+		$selecttest = "SELECT * FROM `cms_preferences` ";
 		echo "select for test : " . $selecttest . "<br>" ;
 		$querytest = mysqli_query($conn,$selecttest);
 		while ($rowtest = mysqli_fetch_assoc($querytest) ) {
