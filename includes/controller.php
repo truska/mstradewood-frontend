@@ -135,16 +135,12 @@ $preftext = loadShopText($conn) ;
 			}
 
 // Home Page
-	if ($prefs['prefHomePage'] == $rowpage['id'])
+	if (($rowpage['slug'] ?? '') === 'welcome')
 	{$homePage = "Yes" ;} else {$homePage = "No" ;}
-		$selectHomePage = "SELECT * FROM `pages` WHERE `id` = " . $prefs['prefHomePage'] . " ";
-		$queryHomePage = mysqli_query($conn,$selectHomePage);
-		$rowHomePage = mysqli_fetch_assoc($queryHomePage) ;
-		
-		$homePageURL = $rowHomePage["slug"] ;
+		$homePageURL = rtrim($baseURL, '/') . '/' ;
 		// Check for holding page
 		if ($slugID == '79') { // Holdingpage id
-			$homePageURL = 'holding' ;
+			$homePageURL = rtrim($baseURL, '/') . '/holding' ;
 		}
 			if ($debug == 'Yes' OR $devdebug == 'Yes' )
 			{

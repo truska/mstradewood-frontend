@@ -14,14 +14,103 @@ function loadPrefs($conn) {
 	}
 
 	$prefs = [];
-	if (function_exists('cms_load_preferences')) {
-		$rows = cms_load_preferences('web');
-		foreach ($rows as $name => $row) {
-			if (is_array($row) && array_key_exists('value', $row)) {
-				$prefs[$name] = $row['value'];
-				continue;
+	if ($conn instanceof mysqli) {
+		$queryprefs = false;
+		$table = 'cms_preferences';
+		$tableCheck = mysqli_query($conn, "SHOW TABLES LIKE 'cms_preferences'");
+		if ($tableCheck instanceof mysqli_result && mysqli_fetch_row($tableCheck)) {
+			$columns = [];
+			$columnQuery = mysqli_query($conn, "SHOW COLUMNS FROM `{$table}`");
+			if ($columnQuery instanceof mysqli_result) {
+				while ($columnRow = mysqli_fetch_assoc($columnQuery)) {
+					$field = (string) ($columnRow['Field'] ?? '');
+					if ($field !== '') {
+						$columns[$field] = true;
+					}
+				}
 			}
-			$prefs[$name] = $row;
+
+			$sql = "SELECT `name`, `value` FROM `{$table}`";
+			$where = [];
+			if (isset($columns['archived'])) {
+				$where[] = "`archived` = 0";
+			}
+			if ($where !== []) {
+				$sql .= " WHERE " . implode(' AND ', $where);
+			}
+
+			$order = [];
+			if (isset($columns['sort'])) {
+				$order[] = "`sort` ASC";
+			}
+			if (isset($columns['id'])) {
+				$order[] = "`id` ASC";
+			}
+			if ($order !== []) {
+				$sql .= " ORDER BY " . implode(', ', $order);
+			}
+
+			$queryprefs = mysqli_query($conn, $sql);
+		}
+
+		if ($queryprefs instanceof mysqli_result) {
+			while ($rowprefs = mysqli_fetch_assoc($queryprefs)) {
+				$name = (string) ($rowprefs['name'] ?? '');
+				if ($name === '') {
+					continue;
+				}
+				$prefs[$name] = $rowprefs['value'] ?? '';
+			}
+		}
+	}
+
+	if ($prefs === [] && function_exists('cms_preferences_table')) {
+		global $pdo, $DB_OK;
+
+		$table = cms_preferences_table();
+		if ($table && !empty($DB_OK) && ($pdo instanceof PDO)) {
+			try {
+				$columnsStmt = $pdo->query("SHOW COLUMNS FROM `{$table}`");
+				$columns = [];
+				foreach (($columnsStmt ? $columnsStmt->fetchAll(PDO::FETCH_ASSOC) : []) as $columnRow) {
+					$field = (string) ($columnRow['Field'] ?? '');
+					if ($field !== '') {
+						$columns[$field] = true;
+					}
+				}
+
+				$sql = "SELECT `name`, `value` FROM `{$table}`";
+				$where = [];
+				if (isset($columns['archived'])) {
+					$where[] = "`archived` = 0";
+				}
+				if ($where !== []) {
+					$sql .= " WHERE " . implode(' AND ', $where);
+				}
+
+				$order = [];
+				if (isset($columns['sort'])) {
+					$order[] = "`sort` ASC";
+				}
+				if (isset($columns['id'])) {
+					$order[] = "`id` ASC";
+				}
+				if ($order !== []) {
+					$sql .= " ORDER BY " . implode(', ', $order);
+				}
+
+				$stmt = $pdo->query($sql);
+				$rows = $stmt ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
+				foreach ($rows as $row) {
+					$name = (string) ($row['name'] ?? '');
+					if ($name === '') {
+						continue;
+					}
+					$prefs[$name] = $row['value'] ?? '';
+				}
+			} catch (Throwable $e) {
+				$prefs = [];
+			}
 		}
 	}
 

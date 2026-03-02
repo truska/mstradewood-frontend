@@ -6,23 +6,21 @@
 				<?php
 				$homeBannerImages = [];
 				$homeBannerRecordId = 0;
-				$homeBannerStrategy = 'content_home_layout_5';
-				$homePageId = (int) ($prefs['prefHomePage'] ?? 0);
+				$homeBannerStrategy = 'content_welcome_layout_5';
 
-				// 1) Primary: resolve the banner record from home-page content.id (layout 5).
-				if ($homePageId > 0) {
-					$selectHomeBannerContent = "SELECT `id` FROM `content`
-						WHERE `page` = " . $homePageId . "
-						AND `layout` = 5
-						AND `showonweb` = 'Yes'
-						AND `archived` = 0
-						ORDER BY `sort` ASC, `id` DESC
-						LIMIT 1";
-					$queryHomeBannerContent = mysqli_query($conn, $selectHomeBannerContent);
-					if ($queryHomeBannerContent instanceof mysqli_result) {
-						$rowHomeBannerContent = mysqli_fetch_assoc($queryHomeBannerContent) ?: [];
-						$homeBannerRecordId = (int) ($rowHomeBannerContent['id'] ?? 0);
-					}
+				// 1) Primary: resolve the banner record from welcome-page content.id (layout 5).
+				$selectHomeBannerContent = "SELECT c.`id` FROM `content` c
+					INNER JOIN `pages` p ON p.`id` = c.`page`
+					WHERE p.`slug` = 'welcome'
+					AND c.`layout` = 5
+					AND c.`showonweb` = 'Yes'
+					AND c.`archived` = 0
+					ORDER BY c.`sort` ASC, c.`id` DESC
+					LIMIT 1";
+				$queryHomeBannerContent = mysqli_query($conn, $selectHomeBannerContent);
+				if ($queryHomeBannerContent instanceof mysqli_result) {
+					$rowHomeBannerContent = mysqli_fetch_assoc($queryHomeBannerContent) ?: [];
+					$homeBannerRecordId = (int) ($rowHomeBannerContent['id'] ?? 0);
 				}
 
 				// 2) Fallback: latest gallery record_id for form 8.
