@@ -59,6 +59,9 @@
     .homepage-inner {
         padding-top:0px;
     }
+    .homepage .home-content-right {
+        padding-top: 0;
+    }
 </style>
 <div class='container inner homepage-inner'>
 			<div class="row homepage">
@@ -73,7 +76,7 @@
                     ?>
                     
 				</div>
-				<div class="col-md-6 right-section homepara2 home-content-right">
+				<div class="col-md-6 right-section home-content-right">
                     <?php
                     echo "" . $rowcontent["text2"] . "";
                     ?>

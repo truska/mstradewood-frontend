@@ -575,12 +575,6 @@ li.toplevel:first-child {
     color: #eeebeb;
     line-height: 33px;
 }
-.homepara2 {
-    padding-top:130px;
-}
-
-
-
 footer {
     background: rgba(255, 255, 255, 0.78);
     padding: 80px 0 150px; 
@@ -1313,9 +1307,6 @@ padding: 40px;
         display: list-item ;
         line-height: 26px;
     }    
-        .homepara2 {
-        padding-top:10px;
-    }
     .navbar-nav .open .dropdown-menu li a {
         color:#fff;
         opacity:1;
