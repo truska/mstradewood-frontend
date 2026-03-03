@@ -747,6 +747,9 @@ footer a:active {
 .download {
     margin: 33px 0 43px;
 }
+.brand-ms-tradewood {
+    text-transform: uppercase;
+}
 .sbimg,
 .sbimg img {
     line-height: normal;

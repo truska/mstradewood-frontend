@@ -119,11 +119,20 @@ function loadPrefs($conn) {
 ?>
 <!-- End loadprefs -->
 <?php
+function normalizeBrandDisplay($value) {
+	$value = (string) $value;
+	if ($value === '') {
+		return $value;
+	}
+
+	return preg_replace('/\b(?:MS (?:Tradewood|Timber)|MSTradewood)\b/i', 'MS TRADEWOOD', $value);
+}
+
 function getCompanyName($prefs) {
-		return prefValue($prefs, 'prefCompanyName');
+		return normalizeBrandDisplay(prefValue($prefs, 'prefCompanyName'));
 	}
 function getSiteName($prefs) {
-		return prefValue($prefs, 'prefSiteName');
+			return prefValue($prefs, 'prefSiteName');
 	}
 
 function prefValue($prefs, $key, $default = '') {
