@@ -168,7 +168,7 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
             {
             echo "<div class='download sbimg'>" ;
          //       echo "<h3>Locations / Contact</h3>" ;        
-                    echo "<img src='" . $baseURL . "/filestore/images/logos/ms-timber-logo2.jpg' alt='MS Timber products available in Ireland from MS Timber Belfast and Dublin' title='MS Timber products available in Ireland from MS Timber Belfast and Dublin'>" ;
+                    echo "<img src='" . $baseURL . "/filestore/images/logos/ms-tradewood-logo2.jpg' alt='MS Timber products available in Ireland from MS Timber Belfast and Dublin' title='MS Timber products available in Ireland from MS Timber Belfast and Dublin'>" ;
             echo "</div>" ;
             }
 				?>
