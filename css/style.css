@@ -747,6 +747,10 @@ footer a:active {
 .download {
     margin: 33px 0 43px;
 }
+.sbimg,
+.sbimg img {
+    line-height: normal;
+}
 .download h3 {
     margin: 0 0 5px;
 }

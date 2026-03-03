@@ -159,11 +159,11 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 				echo "<p style='color:#333333;'>No side bar elements set - use default one</p>" ;
 			}
 
-            if ($numrowsmanuf > 0)
-			{
-                $rowmanuf = mysqli_fetch_assoc($querymanuf) ;
-                    echo "<img src='" . $baseURL . "/filestore/images/logos/" . $rowmanuf["image"] . "' class='img-responsive' alt='" . $rowmanuf["name"] . " products available in Ireland from " . getCompanyName($prefs) . " Belfast and Dublin' title='" . $rowmanuf["name"] . " products available in Ireland from " . getCompanyName($prefs) . " Belfast and Dublin'>"  ;
-            }
+	            if ($numrowsmanuf > 0)
+				{
+	                $rowmanuf = mysqli_fetch_assoc($querymanuf) ;
+	                    echo "<img src='" . $baseURL . "/filestore/images/logos/" . $rowmanuf["image"] . "' class='img-responsive' alt='" . $rowmanuf["name"] . " products available in Ireland from " . getCompanyName($prefs) . " Belfast and Dublin' title='" . $rowmanuf["name"] . " products available in Ireland from " . getCompanyName($prefs) . " Belfast and Dublin'>"  ;
+	            }
             else
             {
             echo "<div class='download sbimg'>" ;
