@@ -99,7 +99,7 @@ $debugPageId = (int) ($rowpage['id'] ?? ($pageData['id'] ?? ($slugID ?? 0)));
       <div class="col-12 col-lg-9 ms-lg-auto">
         <h6>Content Map</h6>
         <?php
-          $contentDebug = $GLOBALS['cms_content_debug'] ?? [];
+          $contentDebug = $GLOBALS['cms_content_map'] ?? ($GLOBALS['cms_content_debug'] ?? []);
         ?>
         <?php if (!empty($contentDebug)): ?>
           <div class="content-debug-list">

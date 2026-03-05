@@ -35,6 +35,20 @@
     .techterms-sidebar {
         padding-left: 15px;
     }
+    .techterms-item.cms-edit-target {
+        position: relative;
+    }
+    .techterms-item.cms-edit-target .cms-frontend-edit-button {
+        left: -56px;
+        top: 10px;
+        z-index: 600;
+    }
+    @media (max-width: 991px) {
+        .techterms-item.cms-edit-target .cms-frontend-edit-button {
+            left: 10px;
+            top: 8px;
+        }
+    }
 </style>
 <?php
 // GET CONTENT
@@ -50,7 +64,12 @@
                     $backcol = "#F5F5F5" ;
                     while ($rowtechterms = mysqli_fetch_assoc($querytechterms) )
                     {
-                        echo "<div class='row techterms-item' style='background-color:" . $backcol . ";'>" ;
+                        $techtermsEditItem = [
+                            'id' => (int) ($rowtechterms["id"] ?? 0),
+                            'table_name' => 'techterms',
+                        ];
+                        echo "<div class='row techterms-item cms-edit-target' style='background-color:" . $backcol . ";'>" ;
+                            echo cms_render_frontend_edit_button($techtermsEditItem);
                             echo "<a name='" . $rowtechterms["name"] . "'></a>" ;
                             echo "<div class='col-lg-2 col-md-3 col-sm-3 col-xs-12 techterms-label'>" ;
                                 echo "<p><strong>" . $rowtechterms["name"] . "</strong></p>" ;

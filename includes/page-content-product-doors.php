@@ -87,7 +87,14 @@ $productGalleryImages = cms_product_gallery_images(
 				</ul>
 			</div> 
             
-            <div class="row hibernia-wrp">
+	            <div class="row hibernia-wrp cms-edit-target">
+                    <?php
+                    $doorsProductEditItem = [
+                        'id' => (int) ($rowproduct['id'] ?? 0),
+                        'table_name' => 'products',
+                    ];
+                    echo cms_render_frontend_edit_button($doorsProductEditItem);
+                    ?>
 
             	 <!-- L E F T  S I D E B A R   S E C T I O N -->
 

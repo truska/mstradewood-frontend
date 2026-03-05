@@ -8,6 +8,7 @@ $cmsShortcodesPath = __DIR__ . '/lib/cms_shortcodes.php';
 if (file_exists($cmsShortcodesPath)) {
   require_once $cmsShortcodesPath;
 }
+require_once __DIR__ . '/lib/cms_frontend_edit.php';
 
 $CMS_PREFS = cms_load_preferences('web');
 $legacyPrefs = [];

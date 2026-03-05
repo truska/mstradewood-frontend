@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-  var brandPattern = /\b(?:MS (?:Tradewood|Timber)|MSTradewood)\b/gi;
+  var brandPattern = /(?<!@)\b(?:MS (?:Tradewood|Timber)|MSTradewood)\b(?!@|\.com\b)/gi;
   var attrNames = ['alt', 'title', 'aria-label', 'placeholder'];
 
   function normalizeBrandText(value) {
@@ -22,6 +22,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var tagName = parent.nodeName;
         if (tagName === 'SCRIPT' || tagName === 'STYLE' || tagName === 'NOSCRIPT' || tagName === 'TEXTAREA') {
+          return NodeFilter.FILTER_REJECT;
+        }
+
+        if (parent.closest && parent.closest('a[href^="mailto:"]')) {
           return NodeFilter.FILTER_REJECT;
         }
 
