@@ -48,6 +48,20 @@ if (!isset($contentSourceFormId) || $contentSourceFormId === null || $contentSou
         padding-bottom:40px;
         padding-top:10px;
     }
+    .row-wrp.cms-edit-target {
+        position: relative;
+    }
+    .row-wrp.cms-edit-target .cms-frontend-edit-button {
+        left: -56px;
+        top: 10px;
+        z-index: 600;
+    }
+    @media (max-width: 991px) {
+        .row-wrp.cms-edit-target .cms-frontend-edit-button {
+            left: 10px;
+            top: 8px;
+        }
+    }
 </style>
 
                                 <?php
