@@ -64,8 +64,15 @@
     }
 </style>
 <div class='container inner homepage-inner'>
-			<div class="row homepage">
-				<div class="col-md-12" style="padding-top:100px;">
+				<div class="row homepage cms-edit-target">
+                    <?php
+                    $homeEditItem = [
+                        'id' => (int) ($rowcontent['id'] ?? 0),
+                        'table_name' => 'content',
+                    ];
+                    echo cms_render_frontend_edit_button($homeEditItem);
+                    ?>
+					<div class="col-md-12" style="padding-top:100px;">
                     <?php
                     echo "<h1>" . $rowcontent["heading"] . "</h1>";
                     ?>

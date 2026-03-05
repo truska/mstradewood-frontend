@@ -125,7 +125,7 @@ function normalizeBrandDisplay($value) {
 		return $value;
 	}
 
-	return preg_replace('/\b(?:MS (?:Tradewood|Timber)|MSTradewood)\b/i', 'MS TRADEWOOD', $value);
+	return preg_replace('/(?<!@)\b(?:MS (?:Tradewood|Timber)|MSTradewood)\b(?!@|\.com\b)/i', 'MS TRADEWOOD', $value);
 }
 
 function getCompanyName($prefs) {

@@ -1,3 +1,21 @@
+<?php
+if (!isset($contentItem) || !is_array($contentItem)) {
+  if (isset($rowcontent) && is_array($rowcontent)) {
+    $contentItem = $rowcontent;
+  } elseif (isset($rowcontent1) && is_array($rowcontent1)) {
+    $contentItem = $rowcontent1;
+  } else {
+    $contentItem = [];
+  }
+}
+if (!isset($contentSourceFormId) || $contentSourceFormId === null || $contentSourceFormId === '') {
+  $contentSourceFormId = (isset($contentItem['source_form_id']) && is_numeric((string) $contentItem['source_form_id']))
+    ? (int) $contentItem['source_form_id']
+    : null;
+}
+echo '<div class="cms-edit-target">';
+echo cms_render_frontend_edit_button($contentItem, ['form_id' => $contentSourceFormId ?? null]);
+?>
 <!-- START content-right-side-section.php -->
 <?php
 if (!function_exists('cms_localize_internal_link')) {
@@ -177,3 +195,4 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 		</div>
 	</div>
 <!-- END content-right-side-section.php -->
+<?php echo '</div>'; ?>

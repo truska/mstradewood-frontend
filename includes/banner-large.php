@@ -1,8 +1,8 @@
 <!-- START banner-large.php -->
 
 
-		<div class="banner">
-			<div class="desktop">
+			<div class="banner cms-edit-target">
+				<div class="desktop cms-edit-target">
 				<?php
 				$homeBannerImages = [];
 				$homeBannerRecordId = 0;
@@ -81,9 +81,14 @@
 						];
 					}
 				}
-				$homeBannerCount = count($homeBannerImages);
-				?>
-				<!-- home-banner-debug strategy=<?php echo $homeBannerStrategy; ?> record_id=<?php echo $homeBannerRecordId; ?> banner_rows=<?php echo $homeBannerCount; ?> -->
+					$homeBannerCount = count($homeBannerImages);
+					$bannerEditItem = [
+						'id' => (int) $homeBannerRecordId,
+						'table_name' => 'content',
+					];
+					?>
+					<!-- home-banner-debug strategy=<?php echo $homeBannerStrategy; ?> record_id=<?php echo $homeBannerRecordId; ?> banner_rows=<?php echo $homeBannerCount; ?> -->
+					<?php echo cms_render_frontend_edit_button($bannerEditItem); ?>
 
 				<?php if ($homeBannerCount === 1): ?>
 					<img src="<?php echo htmlspecialchars($homeBannerImages[0]['src'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($homeBannerImages[0]['alt'], ENT_QUOTES, 'UTF-8'); ?>">
