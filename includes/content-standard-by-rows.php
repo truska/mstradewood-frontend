@@ -20,7 +20,7 @@ echo cms_render_frontend_edit_button($contentItem, ['form_id' => $contentSourceF
 <?php
 // GET CONTENT
 
-$selectcontent = "SELECT * FROM `content` WHERE `id` = '" . $contentid  . "' AND `showonweb` = 'Yes' ORDER BY `sort` " ;
+$selectcontent = "SELECT * FROM `content` WHERE `id` = '" . $contentid  . "' AND `showonweb` = 'Yes' AND `archived` = 0 ORDER BY `sort` " ;
 				//	echo $selectcontent . "<br>";
 					$querycontent = mysqli_query($conn,$selectcontent);
 				//	$num_rows_content = mysqli_num_rows($querycontent);

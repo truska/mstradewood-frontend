@@ -13,8 +13,12 @@ if (!isset($contentSourceFormId) || $contentSourceFormId === null || $contentSou
     ? (int) $contentItem['source_form_id']
     : null;
 }
-echo '<div class="cms-edit-target">';
-echo cms_render_frontend_edit_button($contentItem, ['form_id' => $contentSourceFormId ?? null]);
+echo '<div class="cms-edit-target about-layout">';
+$mainContentEditItem = [
+  'id' => (int) ($contentItem['id'] ?? 0),
+  'table_name' => 'content',
+];
+echo cms_render_frontend_edit_button($mainContentEditItem, ['form_id' => $contentSourceFormId ?? null]);
 ?>
 <!-- START content-standard-by-cols.php (ABOUT US) -->
 <?php
@@ -28,7 +32,7 @@ if (isset($rowcontent) && is_array($rowcontent)) {
 
 // Fallback for direct/legacy use where this layout is included standalone.
 if (!$contentItem && isset($slugID)) {
-    $selectcontent = "SELECT * FROM `content` WHERE `page` = " . (int) $slugID . " AND `showonweb` = 'Yes' ORDER BY `sort` LIMIT 1";
+    $selectcontent = "SELECT * FROM `content` WHERE `page` = " . (int) $slugID . " AND `showonweb` = 'Yes' AND `archived` = 0 ORDER BY `sort` LIMIT 1";
     $querycontent = mysqli_query($conn, $selectcontent);
     $contentItem = mysqli_fetch_assoc($querycontent) ?: [];
 }
@@ -38,13 +42,39 @@ if (!$contentItem) {
 }
 
 // GET PEOPLE
-$selectpeople = "SELECT * FROM `people` WHERE `showonweb` = 'Yes' ORDER BY `order` ";
+$selectpeople = "SELECT * FROM `people` WHERE `showonweb` = 'Yes' AND `archived` = 0 ORDER BY `order` ";
 $querypeople = mysqli_query($conn, $selectpeople);
 ?>
 
 <style>
+    .about-layout.cms-edit-target > .cms-frontend-edit-button {
+        left: -56px;
+        top: 10px;
+        z-index: 600;
+    }
     .aboutusimg figure {
         padding-right: 50px;
+    }
+    .about-people-item.cms-edit-target {
+        position: relative;
+    }
+    .about-people-item.cms-edit-target .cms-frontend-edit-button {
+        left: -44px;
+        top: 6px;
+        width: 36px;
+        height: 36px;
+        font-size: 0.8rem;
+        z-index: 600;
+    }
+    .about-people-item.cms-edit-target .cms-frontend-edit-button i {
+        font-size: 1rem;
+    }
+    @media (max-width: 991px) {
+        .about-layout.cms-edit-target > .cms-frontend-edit-button,
+        .about-people-item.cms-edit-target .cms-frontend-edit-button {
+            left: 10px;
+            top: 8px;
+        }
     }
 </style>
 
@@ -61,11 +91,16 @@ $querypeople = mysqli_query($conn, $selectpeople);
                     $image = 'default-person.jpg';
                 }
 
-                echo "<figure>";
-                echo "<img src='" . $baseURL . "/filestore/images/content/" . $image . "'>";
-                echo "<figcaption>";
-                echo "<p>" . $rowpeople["name"] . " <span>" . $rowpeople["position"] . "</span></p>";
-                echo "</figcaption>";
+                $peopleEditItem = [
+                    'id' => (int) ($rowpeople["id"] ?? 0),
+                    'table_name' => 'people',
+                ];
+                echo "<figure class='cms-edit-target about-people-item'>";
+                    echo cms_render_frontend_edit_button($peopleEditItem);
+                    echo "<img src='" . $baseURL . "/filestore/images/content/" . $image . "'>";
+                    echo "<figcaption>";
+                        echo "<p>" . $rowpeople["name"] . " <span>" . $rowpeople["position"] . "</span></p>";
+                    echo "</figcaption>";
                 echo "</figure>";
             }
             ?>
