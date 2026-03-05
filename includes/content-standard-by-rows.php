@@ -1,20 +1,7 @@
 <?php
-if (!isset($contentItem) || !is_array($contentItem)) {
-  if (isset($rowcontent) && is_array($rowcontent)) {
-    $contentItem = $rowcontent;
-  } elseif (isset($rowcontent1) && is_array($rowcontent1)) {
-    $contentItem = $rowcontent1;
-  } else {
-    $contentItem = [];
-  }
-}
 if (!isset($contentSourceFormId) || $contentSourceFormId === null || $contentSourceFormId === '') {
-  $contentSourceFormId = (isset($contentItem['source_form_id']) && is_numeric((string) $contentItem['source_form_id']))
-    ? (int) $contentItem['source_form_id']
-    : null;
+  $contentSourceFormId = null;
 }
-echo '<div class="cms-edit-target">';
-echo cms_render_frontend_edit_button($contentItem, ['form_id' => $contentSourceFormId ?? null]);
 ?>
 <!-- START content-standard-by-rows.php () --> 
 <?php
@@ -48,7 +35,12 @@ $selectcontent = "SELECT * FROM `content` WHERE `id` = '" . $contentid  . "' AND
                                 echo "</div>" ;
                             }
 
-                                echo "<div class='row row-wrp'>" ;
+                                $contentRowEditItem = [
+                                    'id' => (int) ($rowcontent['id'] ?? 0),
+                                    'table_name' => 'content',
+                                ];
+                                echo "<div class='row row-wrp cms-edit-target'>" ;
+                                echo cms_render_frontend_edit_button($contentRowEditItem, ['form_id' => $contentSourceFormId ?? null]);
                                 ?>
 <style>
     .leftsidebar img {
@@ -82,4 +74,3 @@ $selectcontent = "SELECT * FROM `content` WHERE `id` = '" . $contentid  . "' AND
 				?>
 
 <!-- END content-standard-by-rows.php -->
-<?php echo '</div>'; ?>
