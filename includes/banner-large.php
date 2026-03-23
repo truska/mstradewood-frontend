@@ -1,4 +1,4 @@
-<!-- START banner-large.php -->
+<!-- START banner-large -->
 
 
 			<div class="banner cms-edit-target">
@@ -49,7 +49,7 @@
 					}
 				}
 
-				$selectHomeBanners = "SELECT `image`, `alttag`, `caption`, `folder_name` FROM `gallery`
+				$selectHomeBanners = "SELECT `image`, `alttag`, `caption`, `title`, `subtitle`, `folder_name` FROM `gallery`
 					WHERE `form_id` = 8
 					AND `record_id` = " . $homeBannerRecordId . "
 					AND `showonweb` = 'Yes'
@@ -78,6 +78,8 @@
 						$homeBannerImages[] = [
 							'src' => $baseURL . '/filestore/' . $desktopImagePath,
 							'alt' => $altText,
+							'title' => trim((string) ($rowHomeBanner['title'] ?? '')),
+							'subtitle' => trim((string) ($rowHomeBanner['subtitle'] ?? '')),
 						];
 					}
 				}
@@ -92,13 +94,33 @@
 
 				<?php if ($homeBannerCount === 1): ?>
 					<img src="<?php echo htmlspecialchars($homeBannerImages[0]['src'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($homeBannerImages[0]['alt'], ENT_QUOTES, 'UTF-8'); ?>">
+					<?php if (!empty($homeBannerImages[0]['title']) || !empty($homeBannerImages[0]['subtitle'])): ?>
+						<div class="carousel-caption container inner">
+							<?php if (!empty($homeBannerImages[0]['title'])): ?>
+								<h2 class="banner-title"><?php echo htmlspecialchars($homeBannerImages[0]['title'], ENT_QUOTES, 'UTF-8'); ?></h2>
+							<?php endif; ?>
+							<?php if (!empty($homeBannerImages[0]['subtitle'])): ?>
+								<p class="banner-subtitle"><?php echo htmlspecialchars($homeBannerImages[0]['subtitle'], ENT_QUOTES, 'UTF-8'); ?></p>
+							<?php endif; ?>
+						</div>
+					<?php endif; ?>
 					<?php elseif ($homeBannerCount > 1): ?>
 						<div id="home-banner-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
 						<div class="carousel-inner" role="listbox">
 							<?php foreach ($homeBannerImages as $index => $homeBanner): ?>
 								<div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>">
 									<img src="<?php echo htmlspecialchars($homeBanner['src'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($homeBanner['alt'], ENT_QUOTES, 'UTF-8'); ?>">
-									<div class="carousel-caption container inner"></div>
+									<?php if (!empty($homeBanner['title']) || !empty($homeBanner['subtitle'])): ?>
+										<div class="carousel-caption container inner">
+											<?php if (!empty($homeBanner['title'])): ?>
+												<h2 class="banner-title"><?php echo htmlspecialchars($homeBanner['title'], ENT_QUOTES, 'UTF-8'); ?></h2>
+											<?php endif; ?>
+											<?php if (!empty($homeBanner['subtitle'])): ?>
+												<p class="banner-subtitle"><?php echo htmlspecialchars($homeBanner['subtitle'], ENT_QUOTES, 'UTF-8'); ?></p>
+											<?php endif; ?>
+										</div>
+									<?php endif; ?>
+
 								</div>
 							<?php endforeach; ?>
 						</div>

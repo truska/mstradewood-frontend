@@ -434,13 +434,31 @@ li.toplevel:first-child {
     right: 0;
     left: 0;
     padding-bottom: 0;
-    bottom: 0;
+    bottom: 10%;
     font-size: 51px;
-    color: var(--color-surface);
+    color: #fff;
     line-height: 41px;
     text-transform: uppercase;
     margin: auto;
-    text-align: left;
+    text-align: center;
+}
+
+.banner .banner-title,
+.banner .banner-subtitle {
+    color: #fff;
+    text-align: center;
+}
+
+.banner .banner-title {
+    margin: 0 0 10px;
+    font-size: 51px;
+    line-height: 1;
+}
+
+.banner .banner-subtitle {
+    margin: 0;
+    font-size: 26px;
+    line-height: 1.2;
 }
 
 .carousel-inner > .item {
@@ -1330,6 +1348,22 @@ padding: 40px;
     }
 }
 @media only screen and (max-width: 767px) {
+    .banner .carousel-caption {
+        right: 8%;
+        left: 8%;
+        bottom: 28%;
+        font-size: 24px;
+        line-height: 1.1;
+    }
+    .banner .banner-title {
+        margin: 0 0 6px;
+        font-size: 24px;
+        line-height: 1.1;
+    }
+    .banner .banner-subtitle {
+        font-size: 14px;
+        line-height: 1.25;
+    }
     .bottom-header .mobile {
         position: relative;
         display: flex;
