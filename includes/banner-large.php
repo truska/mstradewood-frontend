@@ -1,27 +1,9 @@
 <!-- START banner-large -->
 
 
-			<?php
-			$normalizeBannerColor = static function ($value, $fallback) {
-				$value = trim((string) $value);
-				if ($value === '') {
-					return $fallback;
-				}
-
-				$value = ltrim($value, '#');
-				if (preg_match('/^[0-9A-Fa-f]{3}([0-9A-Fa-f]{3})?$/', $value)) {
-					return '#' . strtoupper($value);
-				}
-
-				return $fallback;
-			};
-
-			$bannerTitleColor = $normalizeBannerColor($prefscss['prefH2Col'] ?? '', '#FFFFFF');
-			$bannerSubtitleColor = $normalizeBannerColor($prefscss['prefTextCol'] ?? '', '#FFFFFF');
-			?>
-			<div class="banner cms-edit-target" style="--banner-title-color: <?php echo htmlspecialchars($bannerTitleColor, ENT_QUOTES, 'UTF-8'); ?>; --banner-subtitle-color: <?php echo htmlspecialchars($bannerSubtitleColor, ENT_QUOTES, 'UTF-8'); ?>;">
-				<div class="desktop cms-edit-target">
-				<?php
+			<div class="banner cms-edit-target">
+					<div class="desktop cms-edit-target">
+					<?php
 				$homeBannerImages = [];
 				$homeBannerRecordId = 0;
 				$homeBannerStrategy = 'content_welcome_layout_5';
