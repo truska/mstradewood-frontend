@@ -69,10 +69,6 @@
 
   document.querySelectorAll('.menu-bs5 .panel-finder-bs5 .dropdown-submenu > .panel-finder-subtoggle').forEach(function (toggleEl) {
     toggleEl.addEventListener('click', function (event) {
-      if (!isPanelFinderMobile()) {
-        return;
-      }
-
       event.preventDefault();
       event.stopPropagation();
 
@@ -83,6 +79,31 @@
 
       var submenu = toggleEl.nextElementSibling;
       if (!submenu || !submenu.classList.contains('dropdown-menu')) {
+        return;
+      }
+
+      if (!isPanelFinderMobile()) {
+        var desktopParentMenu = toggleEl.closest('.dropdown-menu');
+        if (desktopParentMenu) {
+          getDirectOpenSubmenus(desktopParentMenu).forEach(function (openItem) {
+            if (openItem !== parentItem) {
+              openItem.classList.remove('pf-open');
+              var openSubmenu = getDirectSubmenu(openItem);
+              if (openSubmenu) {
+                openSubmenu.classList.remove('show');
+              }
+              var openToggle = getDirectSubtoggle(openItem);
+              if (openToggle) {
+                openToggle.setAttribute('aria-expanded', 'false');
+              }
+            }
+          });
+        }
+
+        var desktopWillOpen = !submenu.classList.contains('show');
+        submenu.classList.toggle('show', desktopWillOpen);
+        parentItem.classList.toggle('pf-open', desktopWillOpen);
+        toggleEl.setAttribute('aria-expanded', desktopWillOpen ? 'true' : 'false');
         return;
       }
 
@@ -163,6 +184,25 @@
       panelDropdown.querySelectorAll('.dropdown-submenu > .dropdown-menu').forEach(function (submenu) {
         submenu.style.display = 'none';
       });
+    });
+  });
+
+  document.addEventListener('click', function (event) {
+    document.querySelectorAll('.menu-bs5 .panel-finder-bs5.show, .menu-bs5 .panel-finder-bs5 .show').forEach(function (openEl) {
+      if (openEl.contains(event.target)) {
+        return;
+      }
+      openEl.classList.remove('show');
+    });
+    document.querySelectorAll('.menu-bs5 .panel-finder-bs5 .dropdown-submenu.pf-open').forEach(function (openItem) {
+      if (openItem.contains(event.target)) {
+        return;
+      }
+      openItem.classList.remove('pf-open');
+      var openToggle = getDirectSubtoggle(openItem);
+      if (openToggle) {
+        openToggle.setAttribute('aria-expanded', 'false');
+      }
     });
   });
 })();

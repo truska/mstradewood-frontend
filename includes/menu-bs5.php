@@ -235,7 +235,7 @@ $panelItemUrl = function ($item) use ($baseURL) {
     <div class="row">
       <div class="col-md-3 col-xs-6">
         <div class="dropdown panel-finder-bs5" data-bs-auto-close="outside">
-          <a href="#" class="panel-finder-bs5-toggle dropdown-toggle" id="panelFinderBs5Toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a href="#" class="panel-finder-bs5-toggle dropdown-toggle" id="panelFinderBs5Toggle" role="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
             <span>panel </span> finder <span><i class="fa fa-sort-desc" aria-hidden="true"></i></span>
           </a>
           <ul class="dropdown-menu panel-finder-bs5-menu" aria-labelledby="panelFinderBs5Toggle">
