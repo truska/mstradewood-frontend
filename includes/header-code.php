@@ -56,14 +56,27 @@ $useLegacyBootstrap = !file_exists(__DIR__ . '/menu.php');
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <?php if (file_exists(__DIR__ . '/../css/bootstrap5-legacy-compat.css')): ?>
-    <link rel="stylesheet" href="<?php echo $baseURL; ?>/css/bootstrap5-legacy-compat.css">
+  <?php
+    $bootstrapCompatCssPath = __DIR__ . '/../css/bootstrap5-legacy-compat.css';
+    if (file_exists($bootstrapCompatCssPath)):
+      $bootstrapCompatCssVer = (string) filemtime($bootstrapCompatCssPath);
+  ?>
+    <link rel="stylesheet" href="<?php echo $baseURL; ?>/css/bootstrap5-legacy-compat.css?v=<?php echo rawurlencode($bootstrapCompatCssVer); ?>">
   <?php endif; ?>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer">
-  <?php if (file_exists(__DIR__ . '/../css/site.css')): ?>
-    <link rel="stylesheet" href="<?php echo $baseURL; ?>/css/site.css">
-  <?php else: ?>
-    <link rel="stylesheet" href="<?php echo $baseURL; ?>/css/style.css">
+  <?php
+    $styleCssPath = __DIR__ . '/../css/style.css';
+    if (file_exists($styleCssPath)):
+      $styleCssVer = (string) filemtime($styleCssPath);
+  ?>
+    <link rel="stylesheet" href="<?php echo $baseURL; ?>/css/style.css?v=<?php echo rawurlencode($styleCssVer); ?>">
+  <?php endif; ?>
+  <?php
+    $siteCssPath = __DIR__ . '/../css/site.css';
+    if (file_exists($siteCssPath)):
+      $siteCssVer = (string) filemtime($siteCssPath);
+  ?>
+    <link rel="stylesheet" href="<?php echo $baseURL; ?>/css/site.css?v=<?php echo rawurlencode($siteCssVer); ?>">
   <?php endif; ?>
   <?php
     $menuBs5CssPath = __DIR__ . '/../css/menu-bs5.css';
