@@ -67,6 +67,69 @@
     return null;
   }
 
+  function closePanelFinder(panelDropdown) {
+    if (!panelDropdown) {
+      return;
+    }
+
+    panelDropdown.classList.remove('show');
+    panelDropdown.classList.remove('pf-root-open');
+    var rootToggle = panelDropdown.querySelector('.panel-finder-bs5-toggle');
+    var rootMenu = panelDropdown.querySelector('.panel-finder-bs5-menu');
+    if (rootToggle) {
+      rootToggle.setAttribute('aria-expanded', 'false');
+    }
+    if (rootMenu) {
+      rootMenu.style.display = 'none';
+    }
+
+    panelDropdown.querySelectorAll('.dropdown-menu.show').forEach(function (openMenu) {
+      openMenu.classList.remove('show');
+    });
+    panelDropdown.querySelectorAll('.dropdown-submenu.pf-open').forEach(function (openItem) {
+      openItem.classList.remove('pf-open');
+    });
+    panelDropdown.querySelectorAll('.panel-finder-subtoggle[aria-expanded="true"]').forEach(function (openToggle) {
+      openToggle.setAttribute('aria-expanded', 'false');
+    });
+    panelDropdown.querySelectorAll('.dropdown-submenu > .dropdown-menu').forEach(function (submenu) {
+      submenu.style.display = 'none';
+    });
+  }
+
+  document.querySelectorAll('.menu-bs5 .panel-finder-bs5').forEach(function (panelDropdown) {
+    var rootToggle = panelDropdown.querySelector('.panel-finder-bs5-toggle');
+    var rootMenu = panelDropdown.querySelector('.panel-finder-bs5-menu');
+
+    if (!rootToggle || !rootMenu) {
+      return;
+    }
+
+    rootToggle.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      var willOpen = !rootMenu.classList.contains('show');
+
+      document.querySelectorAll('.menu-bs5 .panel-finder-bs5').forEach(function (otherDropdown) {
+        if (otherDropdown !== panelDropdown) {
+          closePanelFinder(otherDropdown);
+        }
+      });
+
+      if (!willOpen) {
+        closePanelFinder(panelDropdown);
+        return;
+      }
+
+      panelDropdown.classList.add('show');
+      panelDropdown.classList.add('pf-root-open');
+      rootMenu.classList.add('show');
+      rootMenu.style.display = 'block';
+      rootToggle.setAttribute('aria-expanded', 'true');
+    });
+  });
+
   document.querySelectorAll('.menu-bs5 .panel-finder-bs5 .dropdown-submenu > .panel-finder-subtoggle').forEach(function (toggleEl) {
     toggleEl.addEventListener('click', function (event) {
       event.preventDefault();
@@ -172,37 +235,16 @@
   // Clear nested panel finder submenus when root closes.
   document.querySelectorAll('.menu-bs5 .panel-finder-bs5').forEach(function (panelDropdown) {
     panelDropdown.addEventListener('hidden.bs.dropdown', function () {
-      panelDropdown.querySelectorAll('.dropdown-menu.show').forEach(function (openMenu) {
-        openMenu.classList.remove('show');
-      });
-      panelDropdown.querySelectorAll('.dropdown-submenu.pf-open').forEach(function (openItem) {
-        openItem.classList.remove('pf-open');
-      });
-      panelDropdown.querySelectorAll('.panel-finder-subtoggle[aria-expanded=\"true\"]').forEach(function (openToggle) {
-        openToggle.setAttribute('aria-expanded', 'false');
-      });
-      panelDropdown.querySelectorAll('.dropdown-submenu > .dropdown-menu').forEach(function (submenu) {
-        submenu.style.display = 'none';
-      });
+      closePanelFinder(panelDropdown);
     });
   });
 
   document.addEventListener('click', function (event) {
-    document.querySelectorAll('.menu-bs5 .panel-finder-bs5.show, .menu-bs5 .panel-finder-bs5 .show').forEach(function (openEl) {
-      if (openEl.contains(event.target)) {
+    document.querySelectorAll('.menu-bs5 .panel-finder-bs5').forEach(function (panelDropdown) {
+      if (panelDropdown.contains(event.target)) {
         return;
       }
-      openEl.classList.remove('show');
-    });
-    document.querySelectorAll('.menu-bs5 .panel-finder-bs5 .dropdown-submenu.pf-open').forEach(function (openItem) {
-      if (openItem.contains(event.target)) {
-        return;
-      }
-      openItem.classList.remove('pf-open');
-      var openToggle = getDirectSubtoggle(openItem);
-      if (openToggle) {
-        openToggle.setAttribute('aria-expanded', 'false');
-      }
+      closePanelFinder(panelDropdown);
     });
   });
 })();

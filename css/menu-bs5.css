@@ -25,10 +25,13 @@
   background: #3ea244;
   width: 254px;
   padding: 17px 15px;
+  border: 0;
   color: #fff;
+  text-align: left;
   text-transform: uppercase;
   font-weight: 700;
   line-height: 1.2;
+  appearance: none;
 }
 
 .menu-bs5 .panel-finder-bs5-toggle:hover,
@@ -139,6 +142,19 @@
 
 .menu-bs5 .panel-finder-bs5 .dropdown-menu {
   overflow: visible;
+}
+
+.menu-bs5 .panel-finder-bs5 .panel-finder-bs5-menu.show,
+.menu-bs5 .panel-finder-bs5 .panel-finder-bs5-submenu.show {
+  display: block;
+}
+
+.menu-bs5 .panel-finder-bs5.pf-root-open > .panel-finder-bs5-menu {
+  display: block !important;
+}
+
+.menu-bs5 .panel-finder-bs5:focus-within > .panel-finder-bs5-menu {
+  display: block;
 }
 
 .menu-bs5 .menu-bs5-desktop-nav {
