@@ -229,6 +229,7 @@
 
 .menu-bs5 .menu-bs5-desktop-nav .menu-bs5-choose-label > span {
   font-size: 13px;
+  visibility: hidden;
 }
 
 /* Counter legacy broad last-child rule that made final items transparent. */
