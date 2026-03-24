@@ -451,8 +451,9 @@ li.toplevel:first-child {
 
 .banner .banner-title {
     margin: 0 0 10px;
-    font-size: 51px;
+    font-size: 45px;
     line-height: 1;
+    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
 }
 
 .banner .banner-subtitle {
