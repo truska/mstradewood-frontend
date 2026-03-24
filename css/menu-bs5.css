@@ -448,10 +448,21 @@
 
   .menu-bs5 .panel-finder-bs5 .dropdown-item {
     box-sizing: border-box;
-    font-size: 10px;
-    line-height: 1.2;
+    font-size: 12px !important;
+    line-height: 1.15;
     padding: 8px 9px;
-    font-weight: 600;
+    font-weight: 400 !important;
+    color: #fff !important;
+    opacity: 1;
+  }
+
+  .menu-bs5 .panel-finder-bs5 .panel-finder-bs5-menu > li > .dropdown-item,
+  .menu-bs5 .panel-finder-bs5 .panel-finder-bs5-submenu.level2 .dropdown-item,
+  .menu-bs5 .panel-finder-bs5 .panel-finder-bs5-submenu.level3 .dropdown-item {
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    color: #fff !important;
+    opacity: 1 !important;
   }
 
   .menu-bs5 .panel-finder-bs5 .panel-finder-bs5-menu,
