@@ -1,7 +1,25 @@
 <!-- START banner-large -->
 
 
-			<div class="banner cms-edit-target">
+			<?php
+			$normalizeBannerColor = static function ($value, $fallback) {
+				$value = trim((string) $value);
+				if ($value === '') {
+					return $fallback;
+				}
+
+				$value = ltrim($value, '#');
+				if (preg_match('/^[0-9A-Fa-f]{3}([0-9A-Fa-f]{3})?$/', $value)) {
+					return '#' . strtoupper($value);
+				}
+
+				return $fallback;
+			};
+
+			$bannerTitleColor = $normalizeBannerColor($prefscss['prefH2Col'] ?? '', '#FFFFFF');
+			$bannerSubtitleColor = $normalizeBannerColor($prefscss['prefTextCol'] ?? '', '#FFFFFF');
+			?>
+			<div class="banner cms-edit-target" style="--banner-title-color: <?php echo htmlspecialchars($bannerTitleColor, ENT_QUOTES, 'UTF-8'); ?>; --banner-subtitle-color: <?php echo htmlspecialchars($bannerSubtitleColor, ENT_QUOTES, 'UTF-8'); ?>;">
 				<div class="desktop cms-edit-target">
 				<?php
 				$homeBannerImages = [];
@@ -111,6 +129,7 @@
 								<div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>">
 									<img src="<?php echo htmlspecialchars($homeBanner['src'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($homeBanner['alt'], ENT_QUOTES, 'UTF-8'); ?>">
 									<?php if (!empty($homeBanner['title']) || !empty($homeBanner['subtitle'])): ?>
+
 										<div class="carousel-caption container inner">
 											<?php if (!empty($homeBanner['title'])): ?>
 												<h2 class="banner-title"><?php echo htmlspecialchars($homeBanner['title'], ENT_QUOTES, 'UTF-8'); ?></h2>
@@ -119,6 +138,7 @@
 												<p class="banner-subtitle"><?php echo htmlspecialchars($homeBanner['subtitle'], ENT_QUOTES, 'UTF-8'); ?></p>
 											<?php endif; ?>
 										</div>
+										
 									<?php endif; ?>
 
 								</div>

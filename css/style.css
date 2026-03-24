@@ -436,7 +436,7 @@ li.toplevel:first-child {
     padding-bottom: 0;
     bottom: 10%;
     font-size: 51px;
-    color: #fff;
+    color: var(--banner-title-color, #fff);
     line-height: 41px;
     text-transform: uppercase;
     margin: auto;
@@ -445,17 +445,18 @@ li.toplevel:first-child {
 
 .banner .banner-title,
 .banner .banner-subtitle {
-    color: #fff;
     text-align: center;
 }
 
 .banner .banner-title {
+    color: var(--banner-title-color, #fff);
     margin: 0 0 10px;
     font-size: 51px;
     line-height: 1;
 }
 
 .banner .banner-subtitle {
+    color: var(--banner-subtitle-color, #fff);
     margin: 0;
     font-size: 26px;
     line-height: 1.2;
