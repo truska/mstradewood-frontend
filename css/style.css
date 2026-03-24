@@ -1365,6 +1365,30 @@ padding: 40px;
         font-size: 14px;
         line-height: 1.25;
     }
+    .banner .panel-heading {
+        background: none !important;
+        height: auto;
+        min-height: 57px;
+        overflow: hidden;
+    }
+    .banner .panel-heading:after {
+        width: auto;
+        right: 0;
+        background-image: none !important;
+        clip-path: polygon(0 0, 100% 0, calc(100% - 24px) 100%, 0 100%);
+    }
+    .banner .panel-heading a {
+        padding: 10px 48px 10px 16px;
+        line-height: 37px;
+    }
+    .banner .panel-heading a .caret {
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        margin: 0;
+        transform: translateY(-50%);
+        z-index: 12;
+    }
     .bottom-header .mobile {
         position: relative;
         display: flex;
