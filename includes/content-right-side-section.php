@@ -13,7 +13,7 @@ if (!isset($contentSourceFormId) || $contentSourceFormId === null || $contentSou
     ? (int) $contentItem['source_form_id']
     : null;
 }
-echo '<div class="cms-edit-target">';
+echo '<div class="col-sm-3 col-lg-2 col-md-2 sidebar-right cms-edit-target">';
 echo cms_render_frontend_edit_button($contentItem, ['form_id' => $contentSourceFormId ?? null]);
 ?>
 <!-- START content-right-side-section.php -->
@@ -82,7 +82,6 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 ?>
 
 	 <!-- R I G H T  S I D E B A R   S E C T I O N -->
-	<div class="col-sm-3 col-lg-2 col-md-2 sidebar-right">
 		<div class="sidebar-wpr">
 			
 			<?php
@@ -193,6 +192,5 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 
 			
 		</div>
-	</div>
 <!-- END content-right-side-section.php -->
 <?php echo '</div>'; ?>
