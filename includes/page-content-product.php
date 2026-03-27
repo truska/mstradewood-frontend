@@ -1,4 +1,4 @@
-<!-- START page-content-product.php -->
+<!-- START page content product -->
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <?php
 require_once __DIR__ . '/lib/cms_product_images.php';
@@ -262,4 +262,4 @@ $productGalleryImages = cms_product_gallery_images(
 
 <?php include __DIR__ . '/dop-request-modal.php'; ?>
 
-<!-- END page-content-product.php -->
+<!-- END page content product -->

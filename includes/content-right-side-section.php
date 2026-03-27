@@ -1,4 +1,5 @@
-<?php
+<!-- START content right side section -->
+ <?php
 if (!isset($contentItem) || !is_array($contentItem)) {
   if (isset($rowcontent) && is_array($rowcontent)) {
     $contentItem = $rowcontent;
@@ -60,7 +61,7 @@ $selectaltproducts = "SELECT * FROM `products` WHERE `section` = '" . $rowproduc
 				//	echo "Number of records = " . $numrowsaltproducts . "<br>";
 				//	$rowaltproducts = mysqli_fetch_assoc($queryaltproducts) ;
 
-// GET SIDEBAR CONTENT Below Alternative Porducts
+// GET SIDEBAR CONTENT Below Alternative Products
 $selectsidebar = "SELECT * FROM `sidebar` WHERE `page` = '" . $slugID  . "' AND (`product` = '0' OR `product` = '" . $segs[1]  . "') AND `showonweb` = 'Yes' ORDER BY `order` " ;
 				//	echo "<p>SelectSidebar = " . $selectsidebar . "</p>";
 					$querysidebar = mysqli_query($conn,$selectsidebar);
@@ -85,7 +86,7 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 		<div class="sidebar-wpr">
 			
 			<?php
-            
+            // Alternative Products
 			if ($numrowsaltproducts > 0)
 			{
 				if ($rowsection["title"]) { echo "<h3>" . $rowsection["title"] . "</h3>" ; } else { echo "<h3>Alternative Products</h3>" ; }
@@ -98,7 +99,43 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
                     }
                 echo "</ul>";
             }
-            
+
+			
+            // Product Brochure below alt product list
+            $productPdf = trim((string) ($rowproduct["pdf"] ?? ''));
+            if ($productPdf !== '') {
+                $pdfHeading = trim((string) ($rowproduct["pdfheading"] ?? 'Product Brochure'));
+                if ($pdfHeading === '') {
+                    $pdfHeading = 'Product Brochure';
+                }
+
+                $pdfCaption = trim((string) ($rowproduct["pdfcaption"] ?? ($rowproduct["pdftext"] ?? '')));
+                if ($pdfCaption === '' && !empty($rowproduct["name"])) {
+                    $pdfCaption = $rowproduct["name"];
+                }
+
+                $isHttpLink = (stripos($productPdf, 'http://') === 0 || stripos($productPdf, 'https://') === 0);
+                if ($isHttpLink) {
+                    $pdfLink = cms_localize_internal_link($productPdf, $baseURL);
+                } elseif (strpos($productPdf, '/') === 0) {
+                    $pdfLink = rtrim($baseURL, '/') . $productPdf;
+                } else {
+                    $pdfLink = $baseURL . "/filestore/files/" . $productPdf;
+                }
+
+                echo "<div class='download sbpdf'>" ;
+                    echo "<a href='" . $pdfLink . "' target='_blank'>" ;
+                        echo "<h3><span  style='color:red;'><i class='fas fa-file-pdf'></i></span> " . $pdfHeading . "</h3>" ;
+                        if ($pdfCaption !== '') {
+                            echo "<p style='color:#aaaaaa;'>" . $pdfCaption . "</p>" ;
+                        }
+                    echo "</a>" ;
+
+                echo "</div>" ;
+            }
+
+
+
             // Rest of Side bar below products
 			if ($num_rows_sidebar > 0)
 			{
@@ -192,5 +229,6 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 
 			
 		</div>
-<!-- END content-right-side-section.php -->
+
 <?php echo '</div>'; ?>
+<!-- END content right side section -->

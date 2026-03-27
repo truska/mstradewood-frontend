@@ -158,7 +158,7 @@
                
             echo "<div class='panel panel-default'>" ;
                 echo "<div class='panel-heading' role='tab' id='heading". $counter . "'>" ;
-                echo "<a role='button' data-toggle='collapse' data-parent='#accordion' href='#collapse". $counter . "' aria-expanded='true' aria-controls='collapse". $counter . "'>
+                echo "<a role='button' class='collapsed' data-bs-toggle='collapse' data-toggle='collapse' data-bs-parent='#accordion' data-parent='#accordion' data-bs-target='#collapse". $counter . "' href='#collapse". $counter . "' aria-expanded='false' aria-controls='collapse". $counter . "'>
                          " . $rowsection["title"] . "<span class='caret'></span></a>" ;
                 echo "</div>" ;
                 echo "<div id='collapse". $counter . "' class='panel-collapse collapse' role='tabpanel' aria-labelledby='heading". $counter . "'>" ;
