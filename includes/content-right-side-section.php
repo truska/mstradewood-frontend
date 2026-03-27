@@ -103,6 +103,8 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 			
             // Product Brochure below alt product list
             $productPdf = trim((string) ($rowproduct["pdf"] ?? ''));
+            $productPdfNormalized = '';
+            $baseURLTrimmed = rtrim((string) $baseURL, '/');
             if ($productPdf !== '') {
                 $pdfHeading = trim((string) ($rowproduct["pdfheading"] ?? 'Product Brochure'));
                 if ($pdfHeading === '') {
@@ -112,6 +114,16 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
                 $pdfCaption = trim((string) ($rowproduct["pdfcaption"] ?? ($rowproduct["pdftext"] ?? '')));
                 if ($pdfCaption === '' && !empty($rowproduct["name"])) {
                     $pdfCaption = $rowproduct["name"];
+                }
+
+                $productPdfNormalized = strtolower($productPdf);
+                $baseURLTrimmed = rtrim((string) $baseURL, '/');
+                if ($baseURLTrimmed !== '' && stripos($productPdfNormalized, strtolower($baseURLTrimmed . '/')) === 0) {
+                    $productPdfNormalized = substr($productPdfNormalized, strlen($baseURLTrimmed . '/'));
+                }
+                $productPdfNormalized = ltrim($productPdfNormalized, '/');
+                if (stripos($productPdfNormalized, 'filestore/files/') === 0) {
+                    $productPdfNormalized = substr($productPdfNormalized, strlen('filestore/files/'));
                 }
 
                 $isHttpLink = (stripos($productPdf, 'http://') === 0 || stripos($productPdf, 'https://') === 0);
@@ -197,7 +209,21 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 						echo "</div>" ;
 					}
 					// IF PDF Link (Internal in files folder)
-					if ($rowsidebar["item"] == "pdf") {
+                    if ($rowsidebar["item"] == "pdf") {
+                        $sidebarPdfLink = trim((string) ($rowsidebar["link"] ?? ''));
+                        $sidebarPdfNorm = strtolower($sidebarPdfLink);
+                        if ($baseURLTrimmed !== '' && stripos($sidebarPdfNorm, strtolower($baseURLTrimmed . '/')) === 0) {
+                            $sidebarPdfNorm = substr($sidebarPdfNorm, strlen($baseURLTrimmed . '/'));
+                        }
+                        $sidebarPdfNorm = ltrim($sidebarPdfNorm, '/');
+                        if (stripos($sidebarPdfNorm, 'filestore/files/') === 0) {
+                            $sidebarPdfNorm = substr($sidebarPdfNorm, strlen('filestore/files/'));
+                        }
+
+                        if ($productPdfNormalized !== '' && $sidebarPdfNorm !== '' && $sidebarPdfNorm === $productPdfNormalized) {
+                            continue; // already rendered in product brochure block
+                        }
+
 						echo "<div class='download sbpdf'>" ;
 							echo "<a href='" . $baseURL . "/filestore/files/" . $rowsidebar["link"] . "' target='_blank'>" ;
 								echo "<h3><span  style='color:red;'><i class='fas fa-file-pdf'></i></span> " . $rowsidebar["heading"] . "</h3>" ;
