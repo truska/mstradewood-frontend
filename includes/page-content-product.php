@@ -84,9 +84,9 @@ $productGalleryImages = cms_product_gallery_images(
     (string) ($rowproduct['name'] ?? '')
 );
 
-$magicToolboxMode = function_exists('cms_magictoolbox_mode') ? cms_magictoolbox_mode() : 'magiczoom';
+$magicToolboxMode = function_exists('cms_magictoolbox_mode') ? cms_magictoolbox_mode() : 'magiczoomplus';
 if ($magicToolboxMode === 'none') {
-    $magicToolboxMode = 'magiczoom';
+    $magicToolboxMode = 'magiczoomplus';
 }
 $magicToolboxClass = $magicToolboxMode === 'magiczoomplus' ? 'MagicZoomPlus' : 'MagicZoom';
 $magicToolboxOptionsAttr = " data-options='zoomWidth:120%; zoomHeight:100%'";

@@ -437,6 +437,19 @@ function cms_magictoolbox_mode(?string $override = null): string {
   if (in_array($mode, ['magiczoom', 'magiczoomplus'], true)) {
     return $mode;
   }
+
+  $localPlusCss = is_file(__DIR__ . '/../../css/magiczoomplus.css');
+  $localPlusJs = is_file(__DIR__ . '/../../js/magiczoomplus.js');
+  if ($localPlusCss && $localPlusJs) {
+    return 'magiczoomplus';
+  }
+
+  $localZoomCss = is_file(__DIR__ . '/../../css/magiczoom.css');
+  $localZoomJs = is_file(__DIR__ . '/../../js/magiczoom.js');
+  if ($localZoomCss && $localZoomJs) {
+    return 'magiczoom';
+  }
+
   return 'none';
 }
 
@@ -463,6 +476,21 @@ function cms_magictoolbox_assets_html(?string $mode = null): string {
 
   $assetBase = rtrim((string) cms_pref('prefMagicToolboxAssetBase', ''), '/');
   if ($assetBase === '') {
+    $baseUrl = rtrim((string) ($GLOBALS['baseURL'] ?? (function_exists('cms_base_url') ? cms_base_url() : '')), '/');
+    $plusCssPath = __DIR__ . '/../../css/magiczoomplus.css';
+    $plusJsPath = __DIR__ . '/../../js/magiczoomplus.js';
+    $zoomCssPath = __DIR__ . '/../../css/magiczoom.css';
+    $zoomJsPath = __DIR__ . '/../../js/magiczoom.js';
+
+    if ($resolved === 'magiczoomplus' && is_file($plusCssPath) && is_file($plusJsPath)) {
+      return '<link rel="stylesheet" href="' . cms_h($baseUrl . '/css/magiczoomplus.css') . '">' . "\n"
+        . '<script src="' . cms_h($baseUrl . '/js/magiczoomplus.js') . '"></script>';
+    }
+    if ($resolved === 'magiczoom' && is_file($zoomCssPath) && is_file($zoomJsPath)) {
+      return '<link rel="stylesheet" href="' . cms_h($baseUrl . '/css/magiczoom.css') . '">' . "\n"
+        . '<script src="' . cms_h($baseUrl . '/js/magiczoom.js') . '"></script>';
+    }
+
     return '';
   }
 
