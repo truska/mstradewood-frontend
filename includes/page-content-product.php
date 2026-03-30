@@ -2,6 +2,7 @@
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <?php
 require_once __DIR__ . '/lib/cms_product_images.php';
+require_once __DIR__ . '/lib/cms_images.php';
 
 $cmsHasColumn = static function (mysqli $conn, string $table, string $column): bool {
     $tableEsc = mysqli_real_escape_string($conn, $table);
@@ -82,6 +83,13 @@ $productGalleryImages = cms_product_gallery_images(
     (string) $baseURL,
     (string) ($rowproduct['name'] ?? '')
 );
+
+$magicToolboxMode = function_exists('cms_magictoolbox_mode') ? cms_magictoolbox_mode() : 'magiczoom';
+if ($magicToolboxMode === 'none') {
+    $magicToolboxMode = 'magiczoom';
+}
+$magicToolboxClass = $magicToolboxMode === 'magiczoomplus' ? 'MagicZoomPlus' : 'MagicZoom';
+$magicToolboxOptionsAttr = " data-options='zoomWidth:120%; zoomHeight:100%'";
 ?>
 
 		<div class="container inner inner-page">
@@ -175,7 +183,7 @@ $productGalleryImages = cms_product_gallery_images(
                                 if (!empty($productGalleryImages)) {
                                     $firstImage = $productGalleryImages[0];
                                     echo "<div style='padding-bottom:20px; display:block; margin-left:auto; margin-right:auto; width:100%;'>";
-                                    echo "<a href='" . $firstImage['zoom'] . "' class='MagicZoom' id='product-gallery-zoom' title='" . htmlspecialchars($firstImage['alt'], ENT_QUOTES, 'UTF-8') . "'>";
+                                    echo "<a href='" . $firstImage['zoom'] . "' class='" . $magicToolboxClass . "' id='product-gallery-zoom' title='" . htmlspecialchars($firstImage['alt'], ENT_QUOTES, 'UTF-8') . "'" . $magicToolboxOptionsAttr . ">";
                                     echo "<img src='" . $firstImage['main'] . "' class='img-responsive' alt='" . htmlspecialchars($firstImage['alt'], ENT_QUOTES, 'UTF-8') . "' title='" . htmlspecialchars($firstImage['alt'], ENT_QUOTES, 'UTF-8') . "'>";
                                     echo "</a>";
                                     echo "</div>";
@@ -202,7 +210,7 @@ $productGalleryImages = cms_product_gallery_images(
                                     
                                     if (file_exists($imagefilenamelg1)) 
                                     { 
-                                        echo "<a href='" . $baseURL . "/filestore/images/content/" . $imagefilenamelg . "' class='MagicZoom' title='" . $imagetag. "'><img src='" . $baseURL . "/filestore/images/content/" . $imagefilenamesm . "' class='img-responsive' alt='" . $imagetag . "' title='" . $imagetag. "'></a>" ;
+                                        echo "<a href='" . $baseURL . "/filestore/images/content/" . $imagefilenamelg . "' class='" . $magicToolboxClass . "' id='product-gallery-zoom' title='" . $imagetag. "'" . $magicToolboxOptionsAttr . "><img src='" . $baseURL . "/filestore/images/content/" . $imagefilenamesm . "' class='img-responsive' alt='" . $imagetag . "' title='" . $imagetag. "'></a>" ;
                                     }
                                     else
                                     {

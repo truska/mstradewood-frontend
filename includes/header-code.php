@@ -86,6 +86,17 @@ $useLegacyBootstrap = !file_exists(__DIR__ . '/menu.php');
     <link rel="stylesheet" href="<?php echo $baseURL; ?>/css/menu-bs5.css?v=<?php echo rawurlencode($menuBs5CssVer); ?>">
   <?php endif; ?>
   <?php
+    $cmsImagesPath = __DIR__ . '/lib/cms_images.php';
+    if (file_exists($cmsImagesPath)) {
+      require_once $cmsImagesPath;
+      $magicToolboxAssets = cms_magictoolbox_assets_html();
+      if ($magicToolboxAssets === '') {
+        $magicToolboxAssets = cms_magictoolbox_assets_html('magiczoom');
+      }
+      echo $magicToolboxAssets;
+    }
+  ?>
+  <?php
     $customHeadPath = __DIR__ . '/custom-head.php';
     if (file_exists($customHeadPath)) {
       include $customHeadPath;
