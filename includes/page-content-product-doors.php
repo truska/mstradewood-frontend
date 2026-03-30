@@ -2,6 +2,7 @@
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <?php
 require_once __DIR__ . '/lib/cms_product_images.php';
+require_once __DIR__ . '/lib/cms_images.php';
 
 // GET PRODUCT
 $selectproduct = "SELECT * FROM `products` WHERE `id` = " . $segs[1]  . " AND `showonweb` = 'Yes' " ;
@@ -59,6 +60,14 @@ $productGalleryImages = cms_product_gallery_images(
     (string) $baseURL,
     (string) ($rowproduct['name'] ?? '')
 );
+
+$magicToolboxMode = function_exists('cms_magictoolbox_mode') ? cms_magictoolbox_mode() : 'magiczoomplus';
+if ($magicToolboxMode === 'none') {
+    $magicToolboxMode = 'magiczoomplus';
+}
+$magicToolboxClass = $magicToolboxMode === 'magiczoomplus' ? 'MagicZoomPlus' : 'MagicZoom';
+$magicToolboxOptionsAttr = " data-options='zoomWidth:120%; zoomHeight:100%'";
+$magicZoomId = 'product-gallery-zoom';
 
 ?>
 <style>
@@ -153,7 +162,7 @@ $productGalleryImages = cms_product_gallery_images(
                                 if (!empty($productGalleryImages)) {
                                     $firstImage = $productGalleryImages[0];
                                     echo "<div style='padding-bottom:20px; display:block; margin-left:auto; margin-right:auto; width:100%;'>";
-                                    echo "<a href='" . $firstImage['zoom'] . "' class='MagicZoom' id='doors' title='" . htmlspecialchars($firstImage['alt'], ENT_QUOTES, 'UTF-8') . "' data-options='zoomWidth:120%; zoomHeight:100%'>";
+                                    echo "<a href='" . $firstImage['zoom'] . "' class='" . $magicToolboxClass . "' id='" . $magicZoomId . "' title='" . htmlspecialchars($firstImage['alt'], ENT_QUOTES, 'UTF-8') . "'" . $magicToolboxOptionsAttr . ">";
                                     echo "<img src='" . $firstImage['main'] . "' class='img-responsive' alt='" . htmlspecialchars($firstImage['alt'], ENT_QUOTES, 'UTF-8') . "' title='" . htmlspecialchars($firstImage['alt'], ENT_QUOTES, 'UTF-8') . "'>";
                                     echo "</a>";
                                     echo "</div>";
@@ -162,7 +171,7 @@ $productGalleryImages = cms_product_gallery_images(
                                         echo "<div class='row thumbnailimages' style='padding-bottom:20px; padding-left:0px; padding-right:0px;'>";
                                         foreach ($productGalleryImages as $image) {
                                             echo "<div class='col-4 col-lg-4 col-md-4 col-sm-4 col-xs-4 thumbnailimages'>";
-                                            echo "<a data-zoom-id='doors' href='" . $image['zoom'] . "' data-image='" . $image['main'] . "'>";
+                                            echo "<a data-zoom-id='" . $magicZoomId . "' href='" . $image['zoom'] . "' data-image='" . $image['main'] . "'>";
                                             echo "<img src='" . $image['thumb'] . "' class='img-responsive img-fluid' alt='" . htmlspecialchars($image['alt'], ENT_QUOTES, 'UTF-8') . "' title='" . htmlspecialchars($image['alt'], ENT_QUOTES, 'UTF-8') . "'>";
                                             echo "</a>";
                                             echo "</div>";
@@ -180,7 +189,7 @@ $productGalleryImages = cms_product_gallery_images(
 
                                     if (file_exists($imagefilenamelg1)) 
                                     { 
-                                        echo "<a href='" . $baseURL . "/filestore/images/content/" . $imagefilenamelg . "' class='MagicZoom' id='doors' title='" . $imagetag. "' data-options='zoomWidth:120%; zoomHeight:100%'><img src='" . $baseURL . "/filestore/images/content/" . $imagefilenamesm . "' class='img-responsive' alt='" . $imagetag . "' title='" . $imagetag. "'></a>" ;
+                                        echo "<a href='" . $baseURL . "/filestore/images/content/" . $imagefilenamelg . "' class='" . $magicToolboxClass . "' id='" . $magicZoomId . "' title='" . $imagetag. "'" . $magicToolboxOptionsAttr . "><img src='" . $baseURL . "/filestore/images/content/" . $imagefilenamesm . "' class='img-responsive' alt='" . $imagetag . "' title='" . $imagetag. "'></a>" ;
                                     }
                                     else
                                     {

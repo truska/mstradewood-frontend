@@ -89,11 +89,7 @@ $useLegacyBootstrap = !file_exists(__DIR__ . '/menu.php');
     $cmsImagesPath = __DIR__ . '/lib/cms_images.php';
     if (file_exists($cmsImagesPath)) {
       require_once $cmsImagesPath;
-      $magicToolboxAssets = cms_magictoolbox_assets_html();
-      if ($magicToolboxAssets === '') {
-        $magicToolboxAssets = cms_magictoolbox_assets_html('magiczoom');
-      }
-      echo $magicToolboxAssets;
+      echo cms_magictoolbox_assets_html();
     }
   ?>
   <?php
