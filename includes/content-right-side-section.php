@@ -1,4 +1,5 @@
 <!-- START content right side section -->
+<!-- sidebar-template-check-20260428-content-right-side-section -->
  <?php
 if (!isset($contentItem) || !is_array($contentItem)) {
   if (isset($rowcontent) && is_array($rowcontent)) {
