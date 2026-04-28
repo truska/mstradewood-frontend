@@ -176,7 +176,8 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 						echo "<div class='download sbimg'>" ;
 							echo "<h3>" . $rowsidebar["heading"] . "</h3>" ;
 							echo "<a href='" . $sidebarLink . "' target='_blank'>" ;
-								echo "<img src='" . $baseURL . "/filestore/images/content/" . $rowsidebar["source"] . "' style='width:85%;' alt='" . $rowsidebar["alttag"] . "' title='" . $rowsidebar["alttag"] . " - " '></a>" ;
+								echo "<img src='" . $baseURL . "/filestore/images/content/" . $rowsidebar["source"] . "' style='width:85%;' alt='" . $rowsidebar["alttag"] . "' title='" . $rowsidebar["alttag"] . "'>";
+                            echo "</a>" ;
 								echo "<p>" . $rowsidebar["caption"] . "</p>" ;
 						echo "</div>" ;
 					}
@@ -193,7 +194,8 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 						{
                             $sidebarLink = cms_localize_internal_link($rowsidebar["link"] ?? '', $baseURL);
 							echo "<a href='" . $sidebarLink . "' target='_blank'>" ;
-								echo "<img src='" . $baseURL . "/filestore/images/content/youtube-click-to-play.jpg' style='width:85%;' alt='" . $rowsidebar["alttag"] . "' title='" . $rowsidebar["alttag"] . " - "'></a>" ;
+								echo "<img src='" . $baseURL . "/filestore/images/content/youtube-click-to-play.jpg' style='width:85%;' alt='" . $rowsidebar["alttag"] . "' title='" . $rowsidebar["alttag"] . "'>";
+                            echo "</a>" ;
 						}
 						echo "</div>" ;
 					}
@@ -210,6 +212,7 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 					}
 					// IF PDF Link (Internal in files folder)
                     if ($rowsidebar["item"] == "pdf") {
+                        $sidebarProductId = (int) ($rowsidebar["product"] ?? 0);
                         $sidebarPdfLink = trim((string) ($rowsidebar["link"] ?? ''));
                         $sidebarPdfNorm = strtolower($sidebarPdfLink);
                         if ($baseURLTrimmed !== '' && stripos($sidebarPdfNorm, strtolower($baseURLTrimmed . '/')) === 0) {
@@ -224,7 +227,19 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
                             continue; // already rendered in product brochure block
                         }
 
-						echo "<div class='download sbpdf'>" ;
+                        $sidebarPdfEditClass = $sidebarProductId > 0 ? " cms-edit-target" : "";
+
+						echo "<div class='download sbpdf" . $sidebarPdfEditClass . "'>" ;
+                            if ($sidebarProductId > 0) {
+                                echo cms_render_frontend_edit_button([
+                                    'id' => (int) ($rowsidebar["id"] ?? 0),
+                                    'table_name' => 'sidebar',
+                                ], [
+                                    'form_id' => 24,
+                                    'class' => 'cms-sidebar-edit-button',
+                                    'title' => 'Edit this sidebar item in WCCMS',
+                                ]);
+                            }
 							echo "<a href='" . $baseURL . "/filestore/files/" . $rowsidebar["link"] . "' target='_blank'>" ;
 								echo "<h3><span  style='color:red;'><i class='fas fa-file-pdf'></i></span> " . $rowsidebar["heading"] . "</h3>" ;
 								echo "<p style='color:#aaaaaa;'>" . $rowsidebar["caption"] . "</p>" ;
