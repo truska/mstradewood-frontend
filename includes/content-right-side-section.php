@@ -1,5 +1,23 @@
 <!-- START content right side section -->
 <!-- sidebar-template-check-20260428-content-right-side-section -->
+<style>
+  .sidebar-right .sidebar-wpr .download.cms-edit-target {
+    position: relative;
+  }
+
+  .sidebar-right .sidebar-wpr .download.cms-edit-target > a.cms-frontend-edit-button.cms-sidebar-edit-button {
+    top: 0.1rem !important;
+    right: auto !important;
+    left: -48px !important;
+    width: 34px;
+    height: 34px;
+    z-index: 30;
+  }
+
+  .sidebar-right .sidebar-wpr .download.cms-edit-target > a.cms-frontend-edit-button.cms-sidebar-edit-button i {
+    font-size: 1rem;
+  }
+</style>
  <?php
 if (!isset($contentItem) || !is_array($contentItem)) {
   if (isset($rowcontent) && is_array($rowcontent)) {
