@@ -43,6 +43,26 @@ if (!function_exists('cms_localize_internal_link')) {
         return rtrim($baseURL, '/') . $path . $query . $fragment;
     }
 }
+if (!function_exists('cms_normalize_filestore_file_link')) {
+    function cms_normalize_filestore_file_link($link, $baseURL) {
+        $link = trim((string) $link);
+        if ($link === '') {
+            return '';
+        }
+
+        $baseURLTrimmed = rtrim((string) $baseURL, '/');
+        $normalized = strtolower($link);
+        if ($baseURLTrimmed !== '' && stripos($normalized, strtolower($baseURLTrimmed . '/')) === 0) {
+            $normalized = substr($normalized, strlen($baseURLTrimmed . '/'));
+        }
+        $normalized = ltrim($normalized, '/');
+        if (stripos($normalized, 'filestore/files/') === 0) {
+            $normalized = substr($normalized, strlen('filestore/files/'));
+        }
+
+        return $normalized;
+    }
+}
 // Get Section Data
 $selectsection = "SELECT * FROM `sections` WHERE `id` = '" . $rowproduct["section"]  . "' AND `showonweb` = 'Yes' AND `archived` = 0  ORDER BY `order` ";
 				//	echo "<p>Selectsection = " . $selectsection . "</p>";
@@ -118,12 +138,30 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 
                 $productPdfNormalized = strtolower($productPdf);
                 $baseURLTrimmed = rtrim((string) $baseURL, '/');
-                if ($baseURLTrimmed !== '' && stripos($productPdfNormalized, strtolower($baseURLTrimmed . '/')) === 0) {
-                    $productPdfNormalized = substr($productPdfNormalized, strlen($baseURLTrimmed . '/'));
-                }
-                $productPdfNormalized = ltrim($productPdfNormalized, '/');
-                if (stripos($productPdfNormalized, 'filestore/files/') === 0) {
-                    $productPdfNormalized = substr($productPdfNormalized, strlen('filestore/files/'));
+                $productPdfNormalized = cms_normalize_filestore_file_link($productPdf, $baseURL);
+
+                $productPdfSidebarEditItem = null;
+                if ($productPdfNormalized !== '' && (int) ($rowproduct["id"] ?? 0) > 0 && (int) ($slugID ?? 0) > 0) {
+                    $productPdfSidebarSql = "SELECT * FROM `sidebar`
+                        WHERE `page` = '" . (int) $slugID . "'
+                        AND `product` = '" . (int) $rowproduct["id"] . "'
+                        AND `item` = 'pdf'
+                        AND `showonweb` = 'Yes'
+                        AND `archived` = 0
+                        ORDER BY `order`, `id`";
+                    $productPdfSidebarQuery = mysqli_query($conn, $productPdfSidebarSql);
+                    if ($productPdfSidebarQuery instanceof mysqli_result) {
+                        while ($productPdfSidebarRow = mysqli_fetch_assoc($productPdfSidebarQuery)) {
+                            $candidatePdf = cms_normalize_filestore_file_link($productPdfSidebarRow["link"] ?? '', $baseURL);
+                            if ($candidatePdf === '') {
+                                $candidatePdf = cms_normalize_filestore_file_link($productPdfSidebarRow["source"] ?? '', $baseURL);
+                            }
+                            if ($candidatePdf !== '' && $candidatePdf === $productPdfNormalized) {
+                                $productPdfSidebarEditItem = $productPdfSidebarRow;
+                                break;
+                            }
+                        }
+                    }
                 }
 
                 $isHttpLink = (stripos($productPdf, 'http://') === 0 || stripos($productPdf, 'https://') === 0);
@@ -135,7 +173,18 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
                     $pdfLink = $baseURL . "/filestore/files/" . $productPdf;
                 }
 
-                echo "<div class='download sbpdf'>" ;
+                $productPdfEditClass = is_array($productPdfSidebarEditItem) ? " cms-edit-target" : "";
+                echo "<div class='download sbpdf" . $productPdfEditClass . "'>" ;
+                    if (is_array($productPdfSidebarEditItem)) {
+                        echo cms_render_frontend_edit_button([
+                            'id' => (int) ($productPdfSidebarEditItem["id"] ?? 0),
+                            'table_name' => 'sidebar',
+                        ], [
+                            'form_id' => 24,
+                            'class' => 'cms-sidebar-edit-button',
+                            'title' => 'Edit this sidebar item in WCCMS',
+                        ]);
+                    }
                     echo "<a href='" . $pdfLink . "' target='_blank'>" ;
                         echo "<h3><span  style='color:red;'><i class='fas fa-file-pdf'></i></span> " . $pdfHeading . "</h3>" ;
                         if ($pdfCaption !== '') {
@@ -214,14 +263,7 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
                     if ($rowsidebar["item"] == "pdf") {
                         $sidebarProductId = (int) ($rowsidebar["product"] ?? 0);
                         $sidebarPdfLink = trim((string) ($rowsidebar["link"] ?? ''));
-                        $sidebarPdfNorm = strtolower($sidebarPdfLink);
-                        if ($baseURLTrimmed !== '' && stripos($sidebarPdfNorm, strtolower($baseURLTrimmed . '/')) === 0) {
-                            $sidebarPdfNorm = substr($sidebarPdfNorm, strlen($baseURLTrimmed . '/'));
-                        }
-                        $sidebarPdfNorm = ltrim($sidebarPdfNorm, '/');
-                        if (stripos($sidebarPdfNorm, 'filestore/files/') === 0) {
-                            $sidebarPdfNorm = substr($sidebarPdfNorm, strlen('filestore/files/'));
-                        }
+                        $sidebarPdfNorm = cms_normalize_filestore_file_link($sidebarPdfLink, $baseURL);
 
                         if ($productPdfNormalized !== '' && $sidebarPdfNorm !== '' && $sidebarPdfNorm === $productPdfNormalized) {
                             continue; // already rendered in product brochure block

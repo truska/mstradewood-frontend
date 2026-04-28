@@ -47,6 +47,18 @@
   font-size: 1.2rem;
 }
 
+.sidebar-wpr .download.cms-edit-target > .cms-frontend-edit-button.cms-sidebar-edit-button {
+  top: 0.35rem;
+  right: 0.35rem;
+  left: auto;
+  width: 34px;
+  height: 34px;
+}
+
+.sidebar-wpr .download.cms-edit-target > .cms-frontend-edit-button.cms-sidebar-edit-button i {
+  font-size: 1rem;
+}
+
 @media (max-width: 575px) {
   .cms-frontend-edit-button {
     top: 0.5rem;
