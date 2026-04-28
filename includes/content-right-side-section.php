@@ -136,12 +136,11 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
                     $pdfCaption = $rowproduct["name"];
                 }
 
-                $productPdfNormalized = strtolower($productPdf);
                 $baseURLTrimmed = rtrim((string) $baseURL, '/');
                 $productPdfNormalized = cms_normalize_filestore_file_link($productPdf, $baseURL);
 
                 $productPdfSidebarEditItem = null;
-                if ($productPdfNormalized !== '' && (int) ($rowproduct["id"] ?? 0) > 0 && (int) ($slugID ?? 0) > 0) {
+                if ((int) ($rowproduct["id"] ?? 0) > 0 && (int) ($slugID ?? 0) > 0) {
                     $productPdfSidebarSql = "SELECT * FROM `sidebar`
                         WHERE `page` = '" . (int) $slugID . "'
                         AND `product` = '" . (int) $rowproduct["id"] . "'
@@ -151,16 +150,7 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
                         ORDER BY `order`, `id`";
                     $productPdfSidebarQuery = mysqli_query($conn, $productPdfSidebarSql);
                     if ($productPdfSidebarQuery instanceof mysqli_result) {
-                        while ($productPdfSidebarRow = mysqli_fetch_assoc($productPdfSidebarQuery)) {
-                            $candidatePdf = cms_normalize_filestore_file_link($productPdfSidebarRow["link"] ?? '', $baseURL);
-                            if ($candidatePdf === '') {
-                                $candidatePdf = cms_normalize_filestore_file_link($productPdfSidebarRow["source"] ?? '', $baseURL);
-                            }
-                            if ($candidatePdf !== '' && $candidatePdf === $productPdfNormalized) {
-                                $productPdfSidebarEditItem = $productPdfSidebarRow;
-                                break;
-                            }
-                        }
+                        $productPdfSidebarEditItem = mysqli_fetch_assoc($productPdfSidebarQuery) ?: null;
                     }
                 }
 
