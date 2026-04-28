@@ -44,7 +44,7 @@ if (!function_exists('cms_localize_internal_link')) {
     }
 }
 // Get Section Data
-$selectsection = "SELECT * FROM `sections` WHERE `id` = '" . $rowproduct["section"]  . "' AND `showonweb` = 'Yes' " ;
+$selectsection = "SELECT * FROM `sections` WHERE `id` = '" . $rowproduct["section"]  . "' AND `showonweb` = 'Yes' AND `archived` = 0  ORDER BY `order` ";
 				//	echo "<p>Selectsection = " . $selectsection . "</p>";
 					$querysection = mysqli_query($conn,$selectsection);
 					$numrowssection = mysqli_num_rows($querysection);
@@ -53,7 +53,7 @@ $selectsection = "SELECT * FROM `sections` WHERE `id` = '" . $rowproduct["sectio
 					$rowsection = mysqli_fetch_assoc($querysection) ;
 
 // GET ALTERNATIVE PRODUCTS
-$selectaltproducts = "SELECT * FROM `products` WHERE `section` = '" . $rowproduct["section"]  . "' AND `showonweb` = 'Yes' ORDER BY `order` " ;
+$selectaltproducts = "SELECT * FROM `products` WHERE `section` = '" . $rowproduct["section"]  . "' AND `showonweb` = 'Yes'  AND `archived` = 0 ORDER BY `order` " ;
 				//	echo "<p>SelectAlt Products = " . $selectaltproducts . "</p>";
 					$queryaltproducts = mysqli_query($conn,$selectaltproducts);
 					$numrowsaltproducts = mysqli_num_rows($queryaltproducts);
@@ -62,7 +62,7 @@ $selectaltproducts = "SELECT * FROM `products` WHERE `section` = '" . $rowproduc
 				//	$rowaltproducts = mysqli_fetch_assoc($queryaltproducts) ;
 
 // GET SIDEBAR CONTENT Below Alternative Products
-$selectsidebar = "SELECT * FROM `sidebar` WHERE `page` = '" . $slugID  . "' AND (`product` = '0' OR `product` = '" . $segs[1]  . "') AND `showonweb` = 'Yes' ORDER BY `order` " ;
+$selectsidebar = "SELECT * FROM `sidebar` WHERE `page` = '" . $slugID  . "' AND (`product` = '0' OR `product` = '" . $segs[1]  . "') AND `showonweb` = 'Yes' AND `archived` = 0 ORDER BY `order` " ;
 				//	echo "<p>SelectSidebar = " . $selectsidebar . "</p>";
 					$querysidebar = mysqli_query($conn,$selectsidebar);
 					$num_rows_sidebar = mysqli_num_rows($querysidebar);
@@ -71,7 +71,7 @@ $selectsidebar = "SELECT * FROM `sidebar` WHERE `page` = '" . $slugID  . "' AND 
 				//	$rowsidebar = mysqli_fetch_assoc($querysidebar) ;
 
 // GET SIDEBAR Manuf Image - always bottom
-$selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . "' AND `id` > '0' AND `showonweb` = 'Yes' " ;
+$selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . "' AND `id` > '0' AND `showonweb` = 'Yes' AND `archived` = 0" ;
 				//	echo "<p>Selectmanuf = " . $selectmanuf . "</p>";
 					$querymanuf = mysqli_query($conn,$selectmanuf);
 					$numrowsmanuf = mysqli_num_rows($querymanuf);
@@ -176,7 +176,7 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 						echo "<div class='download sbimg'>" ;
 							echo "<h3>" . $rowsidebar["heading"] . "</h3>" ;
 							echo "<a href='" . $sidebarLink . "' target='_blank'>" ;
-								echo "<img src='" . $baseURL . "/filestore/images/content/" . $rowsidebar["source"] . "' style='width:85%;' alt='" . $rowsidebar["alttag"] . "' title='" . $rowsidebar["alttag"] . " - " . $rowsidebar["id"] . "'></a>" ;
+								echo "<img src='" . $baseURL . "/filestore/images/content/" . $rowsidebar["source"] . "' style='width:85%;' alt='" . $rowsidebar["alttag"] . "' title='" . $rowsidebar["alttag"] . " - " '></a>" ;
 								echo "<p>" . $rowsidebar["caption"] . "</p>" ;
 						echo "</div>" ;
 					}
@@ -193,7 +193,7 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 						{
                             $sidebarLink = cms_localize_internal_link($rowsidebar["link"] ?? '', $baseURL);
 							echo "<a href='" . $sidebarLink . "' target='_blank'>" ;
-								echo "<img src='" . $baseURL . "/filestore/images/content/youtube-click-to-play.jpg' style='width:85%;' alt='" . $rowsidebar["alttag"] . "' title='" . $rowsidebar["alttag"] . " - " . $rowsidebar["id"] . "'></a>" ;
+								echo "<img src='" . $baseURL . "/filestore/images/content/youtube-click-to-play.jpg' style='width:85%;' alt='" . $rowsidebar["alttag"] . "' title='" . $rowsidebar["alttag"] . " - "'></a>" ;
 						}
 						echo "</div>" ;
 					}
@@ -245,13 +245,13 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 	                    echo "<img src='" . $baseURL . "/filestore/images/logos/" . $rowmanuf["image"] . "' class='img-responsive' alt='" . $rowmanuf["name"] . " products available in Ireland from " . getCompanyName($prefs) . " Belfast and Dublin' title='" . $rowmanuf["name"] . " products available in Ireland from " . getCompanyName($prefs) . " Belfast and Dublin'>"  ;
 	            }
             else
-            {
-            echo "<div class='download sbimg'>" ;
-         //       echo "<h3>Locations / Contact</h3>" ;        
-                    echo "<img src='" . $baseURL . "/filestore/images/logos/ms-tradewood-logo2.jpg' alt='MS Timber products available in Ireland from MS Timber Belfast and Dublin' title='MS Timber products available in Ireland from MS Timber Belfast and Dublin'>" ;
-            echo "</div>" ;
-            }
-				?>
+                {
+                echo "<div class='download sbimg'>" ;
+                    //       echo "<h3>Locations / Contact</h3>" ;        
+                        echo "<img src='" . $baseURL . "/filestore/images/logos/ms-tradewood-logo2.jpg' alt='MS Tradewood products available in Ireland from MS Tradewood Belfast and Dublin' title='MS Tradewood products available in Ireland from MS Tradewood Belfast and Dublin'>" ;
+                echo "</div>" ;
+                }
+			?>
 
 			
 		</div>
