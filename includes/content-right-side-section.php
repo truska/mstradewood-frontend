@@ -447,6 +447,7 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 
 
             // Rest of Side bar below products
+            $sidebarVideoModals = '';
 			if ($num_rows_sidebar > 0)
 			{
 			    $sidebarSeen = [];
@@ -510,25 +511,25 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
                                     echo "<span class='sidebar-video-play-icon' aria-hidden='true'><i class='fa-solid fa-play'></i></span>" ;
                                 echo "</button>" ;
 
-                                echo "<div class='modal fade sidebar-video-modal' id='" . $videoModalId . "' tabindex='-1' aria-labelledby='" . $videoModalId . "Label' aria-hidden='true'>" ;
-                                    echo "<div class='modal-dialog modal-xl modal-dialog-centered'>" ;
-                                        echo "<div class='modal-content'>" ;
-                                            echo "<div class='modal-header'>" ;
-                                                echo "<h5 class='modal-title' id='" . $videoModalId . "Label'>" . $videoTitle . "</h5>" ;
-                                                echo "<button type='button' class='btn-close' data-bs-dismiss='modal' data-sidebar-video-dismiss aria-label='Close'></button>" ;
-                                            echo "</div>" ;
-                                            echo "<div class='modal-body'>" ;
-                                                echo "<div class='sidebar-video-modal-embed'>" ;
-                                                    echo "<iframe data-src='" . $youtubeEmbedAttr . "' title='" . $videoTitle . "' referrerpolicy='strict-origin-when-cross-origin' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>" ;
-                                                echo "</div>" ;
-                                            echo "</div>" ;
-                                            echo "<div class='modal-footer'>" ;
-                                                echo "<a class='btn btn-outline-secondary' href='" . $youtubeWatchAttr . "' target='_blank' rel='noopener' data-sidebar-video-watch>Watch on YouTube</a>" ;
-                                                echo "<button type='button' class='btn btn-secondary' data-bs-dismiss='modal' data-sidebar-video-dismiss>Close</button>" ;
-                                            echo "</div>" ;
-                                        echo "</div>" ;
-                                    echo "</div>" ;
-                                echo "</div>" ;
+                                $sidebarVideoModals .= "<div class='modal fade sidebar-video-modal' id='" . $videoModalId . "' tabindex='-1' aria-labelledby='" . $videoModalId . "Label' aria-hidden='true'>" ;
+                                    $sidebarVideoModals .= "<div class='modal-dialog modal-xl modal-dialog-centered'>" ;
+                                        $sidebarVideoModals .= "<div class='modal-content'>" ;
+                                            $sidebarVideoModals .= "<div class='modal-header'>" ;
+                                                $sidebarVideoModals .= "<h5 class='modal-title' id='" . $videoModalId . "Label'>" . $videoTitle . "</h5>" ;
+                                                $sidebarVideoModals .= "<button type='button' class='btn-close' data-bs-dismiss='modal' data-sidebar-video-dismiss aria-label='Close'></button>" ;
+                                            $sidebarVideoModals .= "</div>" ;
+                                            $sidebarVideoModals .= "<div class='modal-body'>" ;
+                                                $sidebarVideoModals .= "<div class='sidebar-video-modal-embed'>" ;
+                                                    $sidebarVideoModals .= "<iframe data-src='" . $youtubeEmbedAttr . "' title='" . $videoTitle . "' referrerpolicy='strict-origin-when-cross-origin' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>" ;
+                                                $sidebarVideoModals .= "</div>" ;
+                                            $sidebarVideoModals .= "</div>" ;
+                                            $sidebarVideoModals .= "<div class='modal-footer'>" ;
+                                                $sidebarVideoModals .= "<a class='btn btn-outline-secondary' href='" . $youtubeWatchAttr . "' target='_blank' rel='noopener' data-sidebar-video-watch>Watch on YouTube</a>" ;
+                                                $sidebarVideoModals .= "<button type='button' class='btn btn-secondary' data-bs-dismiss='modal' data-sidebar-video-dismiss>Close</button>" ;
+                                            $sidebarVideoModals .= "</div>" ;
+                                        $sidebarVideoModals .= "</div>" ;
+                                    $sidebarVideoModals .= "</div>" ;
+                                $sidebarVideoModals .= "</div>" ;
 							}
 						else
 						{
@@ -604,5 +605,8 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 			
 		</div>
 
-<?php echo '</div>'; ?>
+<?php
+echo '</div>';
+echo $sidebarVideoModals ?? '';
+?>
 <!-- END content right side section -->
