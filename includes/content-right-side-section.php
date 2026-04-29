@@ -18,27 +18,67 @@
     font-size: 1rem;
   }
 
-  .sidebar-right .sidebar-video-embed {
+  .sidebar-right .sidebar-video-poster {
+    appearance: none;
+    background: #111;
+    border: 0;
+    cursor: pointer;
     display: block;
+    overflow: hidden;
+    padding: 0;
+    position: relative;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    z-index: 3;
+  }
+
+  .sidebar-right .sidebar-video-poster img {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    width: 100%;
+  }
+
+  .sidebar-right .sidebar-video-poster:hover img,
+  .sidebar-right .sidebar-video-poster:focus img {
+    opacity: 0.84;
+    transform: scale(1.03);
+  }
+
+  .sidebar-right .sidebar-video-play-icon {
+    align-items: center;
+    background: rgba(191, 30, 46, 0.92);
+    border-radius: 999px;
+    color: #fff;
+    display: flex;
+    font-size: 1.6rem;
+    height: 56px;
+    justify-content: center;
+    left: 50%;
+    line-height: 1;
+    padding-left: 0.2rem;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 56px;
+    z-index: 4;
+  }
+
+  .sidebar-video-modal-embed {
+    background: #000;
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
-    height: auto;
-    min-height: 120px;
-    padding: 0;
-    overflow: hidden;
-    z-index: 2;
   }
 
-  .sidebar-right .sidebar-video-embed iframe {
+  .sidebar-video-modal-embed iframe {
+    border: 0;
+    height: 100%;
+    left: 0;
     position: absolute;
     top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    border: 0;
-    z-index: 1;
-    pointer-events: auto;
   }
 
   .sidebar-right .sdvideo {
@@ -46,6 +86,38 @@
     z-index: 2;
   }
 </style>
+<script>
+  (function () {
+    if (window.cmsSidebarVideoModalReady) {
+      return;
+    }
+    window.cmsSidebarVideoModalReady = true;
+
+    document.addEventListener('show.bs.modal', function (event) {
+      var modal = event.target;
+      if (!modal || !modal.classList.contains('sidebar-video-modal')) {
+        return;
+      }
+
+      var iframe = modal.querySelector('iframe[data-src]');
+      if (iframe && !iframe.getAttribute('src')) {
+        iframe.setAttribute('src', iframe.getAttribute('data-src'));
+      }
+    });
+
+    document.addEventListener('hidden.bs.modal', function (event) {
+      var modal = event.target;
+      if (!modal || !modal.classList.contains('sidebar-video-modal')) {
+        return;
+      }
+
+      var iframe = modal.querySelector('iframe[data-src]');
+      if (iframe) {
+        iframe.setAttribute('src', '');
+      }
+    });
+  }());
+</script>
  <?php
 if (!isset($contentItem) || !is_array($contentItem)) {
   if (isset($rowcontent) && is_array($rowcontent)) {
@@ -169,7 +241,27 @@ if (!function_exists('cms_youtube_embed_url')) {
             return '';
         }
 
-        return 'https://www.youtube.com/embed/' . rawurlencode($youtubeId) . '?feature=oembed';
+        return 'https://www.youtube.com/embed/' . rawurlencode($youtubeId) . '?feature=oembed&autoplay=1&rel=0';
+    }
+}
+if (!function_exists('cms_youtube_watch_url')) {
+    function cms_youtube_watch_url($youtubeId) {
+        $youtubeId = cms_extract_youtube_id($youtubeId);
+        if ($youtubeId === '') {
+            return '';
+        }
+
+        return 'https://www.youtube.com/watch?v=' . rawurlencode($youtubeId);
+    }
+}
+if (!function_exists('cms_youtube_thumbnail_url')) {
+    function cms_youtube_thumbnail_url($youtubeId) {
+        $youtubeId = cms_extract_youtube_id($youtubeId);
+        if ($youtubeId === '') {
+            return '';
+        }
+
+        return 'https://i.ytimg.com/vi/' . rawurlencode($youtubeId) . '/hqdefault.jpg';
     }
 }
 // Get Section Data
@@ -347,8 +439,37 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 							echo "<h3>" . $rowsidebar["heading"] . "</h3>" ;
 							if ($youtubeId !== '') {
                                 $youtubeEmbedUrl = cms_youtube_embed_url($youtubeId);
-                                echo "<div class='sidebar-video-embed'>" ;
-                                    echo "<iframe width='200' height='113' src='" . $youtubeEmbedUrl . "' title='" . htmlspecialchars((string) ($rowsidebar["heading"] ?? 'YouTube video'), ENT_QUOTES) . "' loading='lazy' frameborder='0' referrerpolicy='strict-origin-when-cross-origin' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>" ;
+                                $youtubeWatchUrl = cms_youtube_watch_url($youtubeId);
+                                $youtubeThumbnailUrl = cms_youtube_thumbnail_url($youtubeId);
+                                $youtubeEmbedAttr = htmlspecialchars($youtubeEmbedUrl, ENT_QUOTES);
+                                $youtubeWatchAttr = htmlspecialchars($youtubeWatchUrl, ENT_QUOTES);
+                                $youtubeThumbnailAttr = htmlspecialchars($youtubeThumbnailUrl, ENT_QUOTES);
+                                $videoTitle = htmlspecialchars((string) ($rowsidebar["heading"] ?? 'YouTube video'), ENT_QUOTES);
+                                $videoModalId = 'sidebarVideoModal' . (int) ($rowsidebar["id"] ?? 0);
+
+                                echo "<button type='button' class='sidebar-video-poster' data-bs-toggle='modal' data-bs-target='#" . $videoModalId . "' aria-label='Play " . $videoTitle . "'>" ;
+                                    echo "<img src='" . $youtubeThumbnailAttr . "' alt='" . $videoTitle . "' loading='lazy'>" ;
+                                    echo "<span class='sidebar-video-play-icon' aria-hidden='true'><i class='fa-solid fa-play'></i></span>" ;
+                                echo "</button>" ;
+
+                                echo "<div class='modal fade sidebar-video-modal' id='" . $videoModalId . "' tabindex='-1' aria-labelledby='" . $videoModalId . "Label' aria-hidden='true'>" ;
+                                    echo "<div class='modal-dialog modal-xl modal-dialog-centered'>" ;
+                                        echo "<div class='modal-content'>" ;
+                                            echo "<div class='modal-header'>" ;
+                                                echo "<h5 class='modal-title' id='" . $videoModalId . "Label'>" . $videoTitle . "</h5>" ;
+                                                echo "<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>" ;
+                                            echo "</div>" ;
+                                            echo "<div class='modal-body'>" ;
+                                                echo "<div class='sidebar-video-modal-embed'>" ;
+                                                    echo "<iframe data-src='" . $youtubeEmbedAttr . "' title='" . $videoTitle . "' referrerpolicy='strict-origin-when-cross-origin' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>" ;
+                                                echo "</div>" ;
+                                            echo "</div>" ;
+                                            echo "<div class='modal-footer'>" ;
+                                                echo "<a class='btn btn-outline-secondary' href='" . $youtubeWatchAttr . "' target='_blank' rel='noopener'>Watch on YouTube</a>" ;
+                                                echo "<button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Close</button>" ;
+                                            echo "</div>" ;
+                                        echo "</div>" ;
+                                    echo "</div>" ;
                                 echo "</div>" ;
 							}
 						else
