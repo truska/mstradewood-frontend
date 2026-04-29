@@ -99,8 +99,8 @@
 				<div class="col-md-6 col-xs-12 right-section" style="padding-top:20px;">
 				<!--	<div class="col-md-4 col-xs-5 col-xs-offset-1 img-section" style="padding-left:0px; "> -->
 					<div class="col-md-5 col-xs-5 col-xs-offset-0 img-section" style="padding-left:0px; ">
-						<a href="<?php echo $baseURL ;?>/filestore/files/MSTradewood-full-product-brochure.pdf" target="_blank">
-							<img src="<?php echo $baseURL ;?>/filestore/images/content/timber-brochure.jpg" class="img-responsive" style="padding-left:20px;">
+						<a href="<?php echo $baseURL ;?>/filestore/files/MSTradewood-full-product-brochure.pdf" target="_blank" alt="MS Tradewood distributing to timber importers, builders merchants, buying groups and the public sector throughout Ireland. ">
+							<img src="<?php echo $baseURL ;?>/filestore/images/content/timber-brochure.jpg" class="img-responsive" style="padding-left:20px;" alt="MSTradewood Corporate Brochure">
 						</a>
 					</div>
 					<div class="col-md-4 col-xs-5 img-section" >
