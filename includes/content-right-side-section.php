@@ -482,6 +482,8 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 					}
 					// IF Video Link 
 					if ($rowsidebar["item"] == "Video") {
+                        $sidebarProductId = (int) ($rowsidebar["product"] ?? 0);
+                        $sidebarVideoEditClass = $sidebarProductId > 0 ? " cms-edit-target" : "";
                         $youtubeId = '';
                         $videoIdCandidates = [
                             $rowsidebar["youtubeid"] ?? '',
@@ -494,7 +496,17 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
                                 break;
                             }
                         }
-						echo "<div class='download sdvideo'>" ;
+						echo "<div class='download sdvideo" . $sidebarVideoEditClass . "'>" ;
+                            if ($sidebarProductId > 0) {
+                                echo cms_render_frontend_edit_button([
+                                    'id' => (int) ($rowsidebar["id"] ?? 0),
+                                    'table_name' => 'sidebar',
+                                ], [
+                                    'form_id' => 24,
+                                    'class' => 'cms-sidebar-edit-button',
+                                    'title' => 'Edit this sidebar item in WCCMS',
+                                ]);
+                            }
 							echo "<h3>" . $rowsidebar["heading"] . "</h3>" ;
 							if ($youtubeId !== '') {
                                 $youtubeEmbedUrl = cms_youtube_embed_url($youtubeId);
