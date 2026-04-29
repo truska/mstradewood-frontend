@@ -1,5 +1,5 @@
 <!-- START content right side section -->
-<!-- sidebar-template-check-20260428-content-right-side-section -->
+<!-- sidebar-template-check-20260429-17:00-content-right-side-section -->
 <style>
   .sidebar-right .sidebar-wpr .download.cms-edit-target {
     position: relative;
@@ -148,6 +148,16 @@ if (!function_exists('cms_extract_youtube_id')) {
         }
 
         return '';
+    }
+}
+if (!function_exists('cms_youtube_embed_url')) {
+    function cms_youtube_embed_url($youtubeId) {
+        $youtubeId = cms_extract_youtube_id($youtubeId);
+        if ($youtubeId === '') {
+            return '';
+        }
+
+        return 'https://www.youtube-nocookie.com/embed/' . rawurlencode($youtubeId) . '?rel=0';
     }
 }
 // Get Section Data
@@ -324,8 +334,9 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 						echo "<div class='download sdvideo'>" ;
 							echo "<h3>" . $rowsidebar["heading"] . "</h3>" ;
 							if ($youtubeId !== '') {
+                                $youtubeEmbedUrl = cms_youtube_embed_url($youtubeId);
                                 echo "<div class='sidebar-video-embed'>" ;
-                                    echo "<iframe src='https://www.youtube.com/embed/" . $youtubeId . "' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>" ;
+                                    echo "<iframe src='" . $youtubeEmbedUrl . "' title='" . htmlspecialchars((string) ($rowsidebar["heading"] ?? 'YouTube video'), ENT_QUOTES) . "' loading='lazy' referrerpolicy='strict-origin-when-cross-origin' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>" ;
                                 echo "</div>" ;
 							}
 						else
