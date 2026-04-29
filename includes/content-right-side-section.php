@@ -19,10 +19,15 @@
   }
 
   .sidebar-right .sidebar-video-embed {
+    display: block;
     position: relative;
     width: 100%;
-    padding-top: 56.25%;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    min-height: 120px;
+    padding: 0;
     overflow: hidden;
+    z-index: 2;
   }
 
   .sidebar-right .sidebar-video-embed iframe {
@@ -32,6 +37,13 @@
     width: 100%;
     height: 100%;
     border: 0;
+    z-index: 1;
+    pointer-events: auto;
+  }
+
+  .sidebar-right .sdvideo {
+    position: relative;
+    z-index: 2;
   }
 </style>
  <?php
@@ -157,7 +169,7 @@ if (!function_exists('cms_youtube_embed_url')) {
             return '';
         }
 
-        return 'https://www.youtube-nocookie.com/embed/' . rawurlencode($youtubeId) . '?rel=0';
+        return 'https://www.youtube.com/embed/' . rawurlencode($youtubeId) . '?feature=oembed';
     }
 }
 // Get Section Data
@@ -336,7 +348,7 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 							if ($youtubeId !== '') {
                                 $youtubeEmbedUrl = cms_youtube_embed_url($youtubeId);
                                 echo "<div class='sidebar-video-embed'>" ;
-                                    echo "<iframe src='" . $youtubeEmbedUrl . "' title='" . htmlspecialchars((string) ($rowsidebar["heading"] ?? 'YouTube video'), ENT_QUOTES) . "' loading='lazy' referrerpolicy='strict-origin-when-cross-origin' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>" ;
+                                    echo "<iframe width='200' height='113' src='" . $youtubeEmbedUrl . "' title='" . htmlspecialchars((string) ($rowsidebar["heading"] ?? 'YouTube video'), ENT_QUOTES) . "' loading='lazy' frameborder='0' referrerpolicy='strict-origin-when-cross-origin' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>" ;
                                 echo "</div>" ;
 							}
 						else
