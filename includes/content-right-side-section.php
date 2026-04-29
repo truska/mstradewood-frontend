@@ -81,6 +81,43 @@
     width: 100%;
   }
 
+  .sidebar-video-modal .modal-header,
+  .sidebar-video-modal .modal-footer {
+    position: relative;
+    z-index: 3;
+  }
+
+  .sidebar-video-modal .modal-footer {
+    align-items: center;
+    background: #111;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    padding: 0.75rem 1rem;
+  }
+
+  .sidebar-video-modal .modal-footer .btn,
+  .sidebar-video-modal .modal-footer button {
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0.375rem 0.75rem;
+  }
+
+  .sidebar-video-modal .modal-footer button {
+    background: #6c757d;
+    border: 1px solid #6c757d;
+    color: #fff;
+  }
+
+  .sidebar-video-modal .modal-footer a.btn {
+    background: transparent;
+    border: 1px solid #f8f9fa;
+    color: #f8f9fa;
+    text-decoration: none;
+  }
+
   .sidebar-right .sdvideo {
     position: relative;
     z-index: 2;
@@ -114,6 +151,27 @@
       var iframe = modal.querySelector('iframe[data-src]');
       if (iframe) {
         iframe.setAttribute('src', '');
+      }
+    });
+
+    document.addEventListener('click', function (event) {
+      var closeButton = event.target.closest('[data-sidebar-video-dismiss]');
+      if (closeButton) {
+        var modal = closeButton.closest('.sidebar-video-modal');
+        if (modal && window.bootstrap && window.bootstrap.Modal) {
+          event.preventDefault();
+          window.bootstrap.Modal.getOrCreateInstance(modal).hide();
+        } else if (modal && window.jQuery && window.jQuery.fn && window.jQuery.fn.modal) {
+          event.preventDefault();
+          window.jQuery(modal).modal('hide');
+        }
+        return;
+      }
+
+      var watchLink = event.target.closest('[data-sidebar-video-watch]');
+      if (watchLink) {
+        event.preventDefault();
+        window.open(watchLink.href, '_blank', 'noopener');
       }
     });
   }());
@@ -457,7 +515,7 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
                                         echo "<div class='modal-content'>" ;
                                             echo "<div class='modal-header'>" ;
                                                 echo "<h5 class='modal-title' id='" . $videoModalId . "Label'>" . $videoTitle . "</h5>" ;
-                                                echo "<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>" ;
+                                                echo "<button type='button' class='btn-close' data-bs-dismiss='modal' data-sidebar-video-dismiss aria-label='Close'></button>" ;
                                             echo "</div>" ;
                                             echo "<div class='modal-body'>" ;
                                                 echo "<div class='sidebar-video-modal-embed'>" ;
@@ -465,8 +523,8 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
                                                 echo "</div>" ;
                                             echo "</div>" ;
                                             echo "<div class='modal-footer'>" ;
-                                                echo "<a class='btn btn-outline-secondary' href='" . $youtubeWatchAttr . "' target='_blank' rel='noopener'>Watch on YouTube</a>" ;
-                                                echo "<button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Close</button>" ;
+                                                echo "<a class='btn btn-outline-secondary' href='" . $youtubeWatchAttr . "' target='_blank' rel='noopener' data-sidebar-video-watch>Watch on YouTube</a>" ;
+                                                echo "<button type='button' class='btn btn-secondary' data-bs-dismiss='modal' data-sidebar-video-dismiss>Close</button>" ;
                                             echo "</div>" ;
                                         echo "</div>" ;
                                     echo "</div>" ;
