@@ -17,6 +17,22 @@
   .sidebar-right .sidebar-wpr .download.cms-edit-target > a.cms-frontend-edit-button.cms-sidebar-edit-button i {
     font-size: 1rem;
   }
+
+  .sidebar-right .sidebar-video-embed {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    overflow: hidden;
+  }
+
+  .sidebar-right .sidebar-video-embed iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
 </style>
  <?php
 if (!isset($contentItem) || !is_array($contentItem)) {
@@ -80,6 +96,58 @@ if (!function_exists('cms_normalize_filestore_file_link')) {
         }
 
         return $normalized;
+    }
+}
+if (!function_exists('cms_extract_youtube_id')) {
+    function cms_extract_youtube_id($value) {
+        $value = trim((string) $value);
+        if ($value === '') {
+            return '';
+        }
+
+        if (preg_match('/^[A-Za-z0-9_-]{11}$/', $value)) {
+            return $value;
+        }
+
+        $parts = @parse_url($value);
+        if (!is_array($parts)) {
+            return '';
+        }
+
+        $host = strtolower($parts['host'] ?? '');
+        $path = trim((string) ($parts['path'] ?? ''), '/');
+
+        if ($host === 'youtu.be') {
+            $segments = explode('/', $path);
+            $candidate = $segments[0] ?? '';
+            return preg_match('/^[A-Za-z0-9_-]{11}$/', $candidate) ? $candidate : '';
+        }
+
+        if (
+            $host === 'youtube.com' ||
+            $host === 'www.youtube.com' ||
+            $host === 'm.youtube.com' ||
+            $host === 'youtube-nocookie.com' ||
+            $host === 'www.youtube-nocookie.com'
+        ) {
+            if (!empty($parts['query'])) {
+                parse_str($parts['query'], $query);
+                $candidate = trim((string) ($query['v'] ?? ''));
+                if (preg_match('/^[A-Za-z0-9_-]{11}$/', $candidate)) {
+                    return $candidate;
+                }
+            }
+
+            $segments = explode('/', $path);
+            if (($segments[0] ?? '') === 'embed' || ($segments[0] ?? '') === 'shorts') {
+                $candidate = $segments[1] ?? '';
+                if (preg_match('/^[A-Za-z0-9_-]{11}$/', $candidate)) {
+                    return $candidate;
+                }
+            }
+        }
+
+        return '';
     }
 }
 // Get Section Data
@@ -241,12 +309,24 @@ $selectmanuf = "SELECT * FROM `manuf` WHERE `id` = '" . $rowproduct["manuf"]  . 
 					}
 					// IF Video Link 
 					if ($rowsidebar["item"] == "Video") {
+                        $youtubeId = '';
+                        $videoIdCandidates = [
+                            $rowsidebar["youtubeid"] ?? '',
+                            $rowsidebar["link"] ?? '',
+                            $rowsidebar["source"] ?? '',
+                        ];
+                        foreach ($videoIdCandidates as $candidate) {
+                            $youtubeId = cms_extract_youtube_id($candidate);
+                            if ($youtubeId !== '') {
+                                break;
+                            }
+                        }
 						echo "<div class='download sdvideo'>" ;
 							echo "<h3>" . $rowsidebar["heading"] . "</h3>" ;
-							if($rowsidebar["youtubeid"]) {
-							echo "<div style='position:relative;padding-top:56.25%;height:0;overflow:hidden;'>" ;
-								echo "<iframe src='https://www.youtube.com/embed/" . $rowsidebar["youtubeid"] . "' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:100%;height:100%;'></iframe>" ;
-							echo "</div>" ;
+							if ($youtubeId !== '') {
+                                echo "<div class='sidebar-video-embed'>" ;
+                                    echo "<iframe src='https://www.youtube.com/embed/" . $youtubeId . "' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>" ;
+                                echo "</div>" ;
 							}
 						else
 						{
