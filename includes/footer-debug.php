@@ -14,7 +14,7 @@ $requestHost = (string) ($_SERVER['HTTP_HOST'] ?? ($_SERVER['SERVER_NAME'] ?? 'u
 $requestScheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $requestUri = (string) ($_SERVER['REQUEST_URI'] ?? '/');
 $requestUrl = $requestScheme . '://' . $requestHost . $requestUri;
-$wccmsUrl = $requestUrl . (strpos($requestUrl, '?') === false ? '?wccms' : '&wccms');
+$wccmsUrl = $requestScheme . '://' . $requestHost . '/wccms';
 $debugPageId = (int) ($rowpage['id'] ?? ($pageData['id'] ?? ($slugID ?? 0)));
 ?>
 <section class="footer-debug">
