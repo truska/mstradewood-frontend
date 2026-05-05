@@ -14,6 +14,7 @@ $requestHost = (string) ($_SERVER['HTTP_HOST'] ?? ($_SERVER['SERVER_NAME'] ?? 'u
 $requestScheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $requestUri = (string) ($_SERVER['REQUEST_URI'] ?? '/');
 $requestUrl = $requestScheme . '://' . $requestHost . $requestUri;
+$wccmsUrl = $requestUrl . (strpos($requestUrl, '?') === false ? '?wccms' : '&wccms');
 $debugPageId = (int) ($rowpage['id'] ?? ($pageData['id'] ?? ($slugID ?? 0)));
 ?>
 <section class="footer-debug">
@@ -41,6 +42,11 @@ $debugPageId = (int) ($rowpage['id'] ?? ($pageData['id'] ?? ($slugID ?? 0)));
     }
     .footer-debug .content-debug-list > div {
       margin-bottom: 0.25rem;
+    }
+    .footer-debug .debug-icon {
+      width: 1.1rem;
+      margin-right: 0.25rem;
+      text-align: center;
     }
   </style>
   <div class="container">
@@ -89,10 +95,19 @@ $debugPageId = (int) ($rowpage['id'] ?? ($pageData['id'] ?? ($slugID ?? 0)));
       </div>
       <div class="col-sm-6 col-lg-3">
         <h6>Database</h6>
-        <p class="mb-0">
-          <i class="fa-solid <?php echo $dbOk ? 'fa-circle-check' : 'fa-circle-xmark'; ?>"></i>
-          <span><?php echo htmlspecialchars($dbName, ENT_QUOTES); ?></span>
-        </p>
+        <div class="small">
+          <div>
+            <i class="fa-solid <?php echo $dbOk ? 'fa-circle-check' : 'fa-circle-xmark'; ?> debug-icon" aria-hidden="true"></i>
+            <span><?php echo htmlspecialchars($dbName, ENT_QUOTES); ?></span>
+          </div>
+        </div>
+        <h6 class="mt-3">WCCMS</h6>
+        <div class="small">
+          <div>
+            <i class="fa-solid fa-arrow-right-from-arc debug-icon" aria-hidden="true"></i>
+            <a href="<?php echo htmlspecialchars($wccmsUrl, ENT_QUOTES); ?>" target="_blank" rel="noopener">Open WCCMS</a>
+          </div>
+        </div>
       </div>
     </div>
     <div class="row g-3 mt-2">
