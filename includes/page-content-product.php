@@ -3,6 +3,7 @@
 <?php
 require_once __DIR__ . '/lib/cms_product_images.php';
 require_once __DIR__ . '/lib/cms_images.php';
+require_once __DIR__ . '/lib/cms_product_models.php';
 
 $cmsHasColumn = static function (mysqli $conn, string $table, string $column): bool {
     $tableEsc = mysqli_real_escape_string($conn, $table);
@@ -83,6 +84,8 @@ $productGalleryImages = cms_product_gallery_images(
     (string) $baseURL,
     (string) ($rowproduct['name'] ?? '')
 );
+$productModel = cms_product_model($rowproduct ?? [], (string) $baseURL);
+$productLifestyleImage = cms_product_lifestyle_image($rowproduct ?? [], (string) $baseURL);
 
 $magicToolboxMode = function_exists('cms_magictoolbox_mode') ? cms_magictoolbox_mode() : 'magiczoomplus';
 if ($magicToolboxMode === 'none') {
@@ -179,6 +182,7 @@ $magicToolboxOptionsAttr = " data-options='zoomWidth:120%; zoomHeight:100%'";
                                 }
                                 ?>
 							</figcaption>
+                                <?php echo cms_render_product_model($productModel, 'Interactive 3D model of ' . $imagetag); ?>
 								<?php
                                 if (!empty($productGalleryImages)) {
                                     $firstImage = $productGalleryImages[0];
@@ -252,10 +256,14 @@ $magicToolboxOptionsAttr = " data-options='zoomWidth:120%; zoomHeight:100%'";
                                 }
                                 ?>
                             </ul>
+                            </div>
                         <?php
                         }
                         ?>
-					</div>
+                        <?php echo cms_render_product_lifestyle_image(
+                            $productLifestyleImage,
+                            $imagetag . ' lifestyle image'
+                        ); ?>
 					</div>
 
 				</div>
@@ -269,5 +277,9 @@ $magicToolboxOptionsAttr = " data-options='zoomWidth:120%; zoomHeight:100%'";
 		</div>
 
 <?php include __DIR__ . '/dop-request-modal.php'; ?>
+
+<?php if ($productModel !== null): ?>
+<script type="module" src="https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js"></script>
+<?php endif; ?>
 
 <!-- END page content product -->

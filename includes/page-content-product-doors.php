@@ -3,6 +3,7 @@
 <?php
 require_once __DIR__ . '/lib/cms_product_images.php';
 require_once __DIR__ . '/lib/cms_images.php';
+require_once __DIR__ . '/lib/cms_product_models.php';
 
 // GET PRODUCT
 $selectproduct = "SELECT * FROM `products` WHERE `id` = " . $segs[1]  . " AND `showonweb` = 'Yes' " ;
@@ -60,6 +61,8 @@ $productGalleryImages = cms_product_gallery_images(
     (string) $baseURL,
     (string) ($rowproduct['name'] ?? '')
 );
+$productModel = cms_product_model($rowproduct ?? [], (string) $baseURL);
+$productLifestyleImage = cms_product_lifestyle_image($rowproduct ?? [], (string) $baseURL);
 
 $magicToolboxMode = function_exists('cms_magictoolbox_mode') ? cms_magictoolbox_mode() : 'magiczoomplus';
 if ($magicToolboxMode === 'none') {
@@ -158,6 +161,7 @@ $magicZoomId = 'product-gallery-zoom';
                                     <?php
                                 }
                                 ?>							</figcaption>
+                                <?php echo cms_render_product_model($productModel, 'Interactive 3D model of ' . $imagetag); ?>
 								<?php
                                 if (!empty($productGalleryImages)) {
                                     $firstImage = $productGalleryImages[0];
@@ -236,6 +240,10 @@ $magicZoomId = 'product-gallery-zoom';
                         <?php
                         }
                         ?>
+                        <?php echo cms_render_product_lifestyle_image(
+                            $productLifestyleImage,
+                            $imagetag . ' lifestyle image'
+                        ); ?>
 					</div>
 
 				</div>
@@ -249,5 +257,9 @@ $magicZoomId = 'product-gallery-zoom';
 		</div>
 
 <?php include __DIR__ . '/dop-request-modal.php'; ?>
+
+<?php if ($productModel !== null): ?>
+<script type="module" src="https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js"></script>
+<?php endif; ?>
 
 <!-- END page-content-product-doors.php -->
