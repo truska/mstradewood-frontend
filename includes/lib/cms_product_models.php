@@ -13,14 +13,14 @@ if (!function_exists('cms_product_model')) {
             return null;
         }
 
-        $modelPath = dirname(__DIR__, 2) . '/filestore/images/products/original/' . $filename;
+        $modelPath = dirname(__DIR__, 2) . '/filestore/images/products/3dimages/' . $filename;
         if (!is_file($modelPath)) {
             return null;
         }
 
         return [
             'filename' => $filename,
-            'url' => rtrim($baseUrl, '/') . '/filestore/images/products/original/' . rawurlencode($filename),
+            'url' => rtrim($baseUrl, '/') . '/filestore/images/products/3dimages/' . rawurlencode($filename),
         ];
     }
 }
