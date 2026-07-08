@@ -180,21 +180,13 @@ if (!function_exists('cms_product_gallery_variants')) {
 
     $newZoom = [
       "/filestore/images/products/lg/{$filename}",
-      "/filestore/images/products/md/{$filename}",
-      "/filestore/images/products/sm/{$filename}",
-      "/filestore/images/products/{$filename}",
     ];
     $newMain = [
       "/filestore/images/products/sm/{$filename}",
-      "/filestore/images/products/md/{$filename}",
-      "/filestore/images/products/lg/{$filename}",
-      "/filestore/images/products/{$filename}",
     ];
     $newThumb = [
+      "/filestore/images/products/xs/{$filename}",
       "/filestore/images/products/sm/{$filename}",
-      "/filestore/images/products/md/{$filename}",
-      "/filestore/images/products/lg/{$filename}",
-      "/filestore/images/products/{$filename}",
     ];
 
     $legacyZoom = [
@@ -202,7 +194,6 @@ if (!function_exists('cms_product_gallery_variants')) {
     ];
     $legacyMain = [
       "/filestore/images/content/sm-{$filename}",
-      "/filestore/images/content/lg-{$filename}",
     ];
     $legacyThumb = [
       "/filestore/images/content/tn-{$filename}",
@@ -222,12 +213,6 @@ if (!function_exists('cms_product_gallery_variants')) {
       $thumb = cms_product_gallery_pick($newThumb, $baseUrl);
     }
 
-    if ($main === '' && $zoom !== '') {
-      $main = $zoom;
-    }
-    if ($zoom === '' && $main !== '') {
-      $zoom = $main;
-    }
     if ($thumb === '' && $main !== '') {
       $thumb = $main;
     }
@@ -258,13 +243,10 @@ if (!function_exists('cms_product_single_image_variants')) {
     ];
     $newMain = [
       "/filestore/images/products/sm/{$filename}",
-      "/filestore/images/products/lg/{$filename}",
-      "/filestore/images/products/{$filename}",
     ];
     $newThumb = [
       "/filestore/images/products/xs/{$filename}",
       "/filestore/images/products/sm/{$filename}",
-      "/filestore/images/products/{$filename}",
     ];
 
     $zoom = cms_product_gallery_pick($legacyZoom, $baseUrl);
@@ -283,12 +265,6 @@ if (!function_exists('cms_product_single_image_variants')) {
 
     $hasZoom = $zoom !== '';
 
-    if ($main === '' && $zoom !== '') {
-      $main = $zoom;
-    }
-    if ($zoom === '' && $main !== '') {
-      $zoom = $main;
-    }
     if ($thumb === '' && $main !== '') {
       $thumb = $main;
     }
