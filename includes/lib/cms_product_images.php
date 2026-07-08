@@ -184,8 +184,8 @@ if (!function_exists('cms_product_gallery_variants')) {
       "/filestore/images/products/{$filename}",
     ];
     $newMain = [
-      "/filestore/images/products/md/{$filename}",
       "/filestore/images/products/sm/{$filename}",
+      "/filestore/images/products/md/{$filename}",
       "/filestore/images/products/lg/{$filename}",
       "/filestore/images/products/{$filename}",
     ];
