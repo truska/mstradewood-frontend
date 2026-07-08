@@ -13,15 +13,18 @@ if (!function_exists('cms_product_model')) {
             return null;
         }
 
-        $modelPath = dirname(__DIR__, 2) . '/filestore/images/products/3dimages/' . $filename;
-        if (!is_file($modelPath)) {
-            return null;
+        $productModelFolders = ['3dimages', 'original', 'originals', 'master'];
+        foreach ($productModelFolders as $folder) {
+            $modelPath = dirname(__DIR__, 2) . '/filestore/images/products/' . $folder . '/' . $filename;
+            if (is_file($modelPath)) {
+                return [
+                    'filename' => $filename,
+                    'url' => rtrim($baseUrl, '/') . '/filestore/images/products/' . $folder . '/' . rawurlencode($filename),
+                ];
+            }
         }
 
-        return [
-            'filename' => $filename,
-            'url' => rtrim($baseUrl, '/') . '/filestore/images/products/3dimages/' . rawurlencode($filename),
-        ];
+        return null;
     }
 }
 
