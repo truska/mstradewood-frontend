@@ -208,10 +208,6 @@ if (!function_exists('cms_product_gallery_variants')) {
       "/filestore/images/content/tn-{$filename}",
       "/filestore/images/content/sm-{$filename}",
     ];
-    $legacyRaw = [
-      "/filestore/images/content/{$filename}",
-    ];
-
     $zoom = cms_product_gallery_pick($legacyZoom, $baseUrl);
     $main = cms_product_gallery_pick($legacyMain, $baseUrl);
     $thumb = cms_product_gallery_pick($legacyThumb, $baseUrl);
@@ -224,15 +220,6 @@ if (!function_exists('cms_product_gallery_variants')) {
     }
     if ($thumb === '') {
       $thumb = cms_product_gallery_pick($newThumb, $baseUrl);
-    }
-    if ($zoom === '') {
-      $zoom = cms_product_gallery_pick($legacyRaw, $baseUrl);
-    }
-    if ($main === '') {
-      $main = cms_product_gallery_pick($legacyRaw, $baseUrl);
-    }
-    if ($thumb === '') {
-      $thumb = cms_product_gallery_pick($legacyRaw, $baseUrl);
     }
 
     if ($main === '' && $zoom !== '') {
@@ -266,10 +253,6 @@ if (!function_exists('cms_product_single_image_variants')) {
       "/filestore/images/content/tn-{$filename}",
       "/filestore/images/content/sm-{$filename}",
     ];
-    $legacyRaw = [
-      "/filestore/images/content/{$filename}",
-    ];
-
     $newZoom = [
       "/filestore/images/products/lg/{$filename}",
     ];
@@ -296,15 +279,6 @@ if (!function_exists('cms_product_single_image_variants')) {
     }
     if ($thumb === '') {
       $thumb = cms_product_gallery_pick($newThumb, $baseUrl);
-    }
-    if ($zoom === '') {
-      $zoom = cms_product_gallery_pick($legacyRaw, $baseUrl);
-    }
-    if ($main === '') {
-      $main = cms_product_gallery_pick($legacyRaw, $baseUrl);
-    }
-    if ($thumb === '') {
-      $thumb = cms_product_gallery_pick($legacyRaw, $baseUrl);
     }
 
     $hasZoom = $zoom !== '';
