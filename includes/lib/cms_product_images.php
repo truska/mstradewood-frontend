@@ -129,12 +129,28 @@ if (!function_exists('cms_product_gallery_image_file')) {
 
 if (!function_exists('cms_product_gallery_image_alt')) {
   function cms_product_gallery_image_alt(array $row, string $defaultAlt): string {
-    $candidates = ['alttag', 'title', 'name', 'heading', 'caption'];
+    $imageFile = cms_product_gallery_image_file($row);
+    $imageName = $imageFile !== '' ? pathinfo($imageFile, PATHINFO_FILENAME) : '';
+    $candidates = ['alttag', 'title', 'heading', 'caption', 'name'];
+
     foreach ($candidates as $key) {
-      if (!empty($row[$key])) {
-        return trim((string) $row[$key]);
+      if (empty($row[$key])) {
+        continue;
       }
+
+      $alt = trim((string) $row[$key]);
+      $altFile = basename(str_replace('\\', '/', $alt));
+      $altName = pathinfo($altFile, PATHINFO_FILENAME);
+      if ($imageFile !== '' && $altFile === basename(str_replace('\\', '/', $imageFile))) {
+        continue;
+      }
+      if ($imageName !== '' && $altName === $imageName) {
+        continue;
+      }
+
+      return $alt;
     }
+
     return $defaultAlt;
   }
 }
