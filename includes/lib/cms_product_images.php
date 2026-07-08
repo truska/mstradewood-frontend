@@ -173,6 +173,7 @@ if (!function_exists('cms_product_gallery_pick')) {
 
 if (!function_exists('cms_product_gallery_variants')) {
   function cms_product_gallery_variants(string $filename, string $baseUrl): array {
+    $filename = basename(str_replace('\\', '/', trim(stripslashes($filename))));
     if ($filename === '') {
       return ['zoom' => '', 'main' => '', 'thumb' => ''];
     }
@@ -198,16 +199,16 @@ if (!function_exists('cms_product_gallery_variants')) {
 
     $legacyZoom = [
       "/filestore/images/content/lg-{$filename}",
-      "/filestore/images/content/{$filename}",
     ];
     $legacyMain = [
       "/filestore/images/content/sm-{$filename}",
-      "/filestore/images/content/{$filename}",
       "/filestore/images/content/lg-{$filename}",
     ];
     $legacyThumb = [
       "/filestore/images/content/tn-{$filename}",
       "/filestore/images/content/sm-{$filename}",
+    ];
+    $legacyRaw = [
       "/filestore/images/content/{$filename}",
     ];
 
@@ -223,6 +224,15 @@ if (!function_exists('cms_product_gallery_variants')) {
     }
     if ($thumb === '') {
       $thumb = cms_product_gallery_pick($newThumb, $baseUrl);
+    }
+    if ($zoom === '') {
+      $zoom = cms_product_gallery_pick($legacyRaw, $baseUrl);
+    }
+    if ($main === '') {
+      $main = cms_product_gallery_pick($legacyRaw, $baseUrl);
+    }
+    if ($thumb === '') {
+      $thumb = cms_product_gallery_pick($legacyRaw, $baseUrl);
     }
 
     if ($main === '' && $zoom !== '') {
@@ -241,7 +251,7 @@ if (!function_exists('cms_product_gallery_variants')) {
 
 if (!function_exists('cms_product_single_image_variants')) {
   function cms_product_single_image_variants(string $filename, string $baseUrl): array {
-    $filename = trim(stripslashes($filename));
+    $filename = basename(str_replace('\\', '/', trim(stripslashes($filename))));
     if ($filename === '') {
       return ['zoom' => '', 'main' => '', 'thumb' => ''];
     }
@@ -251,11 +261,12 @@ if (!function_exists('cms_product_single_image_variants')) {
     ];
     $legacyMain = [
       "/filestore/images/content/sm-{$filename}",
-      "/filestore/images/content/{$filename}",
     ];
     $legacyThumb = [
       "/filestore/images/content/tn-{$filename}",
       "/filestore/images/content/sm-{$filename}",
+    ];
+    $legacyRaw = [
       "/filestore/images/content/{$filename}",
     ];
 
@@ -285,6 +296,15 @@ if (!function_exists('cms_product_single_image_variants')) {
     }
     if ($thumb === '') {
       $thumb = cms_product_gallery_pick($newThumb, $baseUrl);
+    }
+    if ($zoom === '') {
+      $zoom = cms_product_gallery_pick($legacyRaw, $baseUrl);
+    }
+    if ($main === '') {
+      $main = cms_product_gallery_pick($legacyRaw, $baseUrl);
+    }
+    if ($thumb === '') {
+      $thumb = cms_product_gallery_pick($legacyRaw, $baseUrl);
     }
 
     $hasZoom = $zoom !== '';
