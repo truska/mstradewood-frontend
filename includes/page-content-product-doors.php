@@ -182,9 +182,9 @@ $magicZoomId = 'product-gallery-zoom';
                                         }
                                         echo "</div>";
                                     }
-                                } elseif ($rowproduct["image"]) {
+                                } else {
                                     // Legacy products.image first, with new product folders as missing-file fallbacks.
-                                    $imageVariants = cms_product_single_image_variants((string) $rowproduct["image"], (string) $baseURL);
+                                    $imageVariants = cms_product_single_image_variants((string) ($rowproduct["image"] ?? ''), (string) $baseURL);
                                     $imageAlt = htmlspecialchars($imagetag, ENT_QUOTES, 'UTF-8');
 
                                     if ($imageVariants['main'] !== '') {
