@@ -183,21 +183,16 @@ $magicZoomId = 'product-gallery-zoom';
                                         echo "</div>";
                                     }
                                 } elseif ($rowproduct["image"]) {
-                                    // Legacy fallback: keep existing products.image behavior.
-                                    $imagefilenamelg1 = $_SERVER['DOCUMENT_ROOT'] . "/filestore/images/content/lg-" . stripslashes($rowproduct["image"]) ;
-                                    if (file_exists($imagefilenamelg1)) { $imagefilenamelg = "lg-" . stripslashes($rowproduct["image"]) ; }
+                                    // Legacy products.image first, with new product folders as missing-file fallbacks.
+                                    $imageVariants = cms_product_single_image_variants((string) $rowproduct["image"], (string) $baseURL);
+                                    $imageAlt = htmlspecialchars($imagetag, ENT_QUOTES, 'UTF-8');
 
-                                    $imagefilenamesm1 = $_SERVER['DOCUMENT_ROOT'] . "/filestore/images/content/sm-" . stripslashes($rowproduct["image"]) ;
-                                    if (file_exists($imagefilenamesm1)) { 
-                                        $imagefilenamesm = "sm-" . stripslashes($rowproduct["image"]) ; } else  { $imagefilenamesm = stripslashes($rowproduct["image"]) ; }
-
-                                    if (file_exists($imagefilenamelg1)) 
-                                    { 
-                                        echo "<a href='" . $baseURL . "/filestore/images/content/" . $imagefilenamelg . "' class='" . $magicToolboxClass . "' id='" . $magicZoomId . "' title='" . $imagetag. "'" . $magicToolboxOptionsAttr . "><img src='" . $baseURL . "/filestore/images/content/" . $imagefilenamesm . "' class='img-responsive' alt='" . $imagetag . "' title='" . $imagetag. "'></a>" ;
-                                    }
-                                    else
-                                    {
-                                        echo "<img src='" . $baseURL . "/filestore/images/content/" . $imagefilenamesm . "' class='img-responsive' alt='" . $imagetag . "' title='" . $imagetag. "'>" ;
+                                    if ($imageVariants['main'] !== '') {
+                                        if (!empty($imageVariants['has_zoom'])) {
+                                            echo "<a href='" . $imageVariants['zoom'] . "' class='" . $magicToolboxClass . "' id='" . $magicZoomId . "' title='" . $imageAlt . "'" . $magicToolboxOptionsAttr . "><img src='" . $imageVariants['main'] . "' class='img-responsive' alt='" . $imageAlt . "' title='" . $imageAlt . "'></a>" ;
+                                        } else {
+                                            echo "<img src='" . $imageVariants['main'] . "' class='img-responsive' alt='" . $imageAlt . "' title='" . $imageAlt . "'>" ;
+                                        }
                                     }
                                 }
 								?>

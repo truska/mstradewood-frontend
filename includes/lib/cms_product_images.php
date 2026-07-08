@@ -195,14 +195,18 @@ if (!function_exists('cms_product_gallery_variants')) {
       "/filestore/images/content/{$filename}",
     ];
 
-    $zoom = cms_product_gallery_pick($newZoom, $baseUrl);
-    $main = cms_product_gallery_pick($newMain, $baseUrl);
-    $thumb = cms_product_gallery_pick($newThumb, $baseUrl);
+    $zoom = cms_product_gallery_pick($legacyZoom, $baseUrl);
+    $main = cms_product_gallery_pick($legacyMain, $baseUrl);
+    $thumb = cms_product_gallery_pick($legacyThumb, $baseUrl);
 
-    if ($zoom === '' && $main === '' && $thumb === '') {
-      $zoom = cms_product_gallery_pick($legacyZoom, $baseUrl);
-      $main = cms_product_gallery_pick($legacyMain, $baseUrl);
-      $thumb = cms_product_gallery_pick($legacyThumb, $baseUrl);
+    if ($zoom === '') {
+      $zoom = cms_product_gallery_pick($newZoom, $baseUrl);
+    }
+    if ($main === '') {
+      $main = cms_product_gallery_pick($newMain, $baseUrl);
+    }
+    if ($thumb === '') {
+      $thumb = cms_product_gallery_pick($newThumb, $baseUrl);
     }
 
     if ($main === '' && $zoom !== '') {
@@ -216,6 +220,70 @@ if (!function_exists('cms_product_gallery_variants')) {
     }
 
     return ['zoom' => $zoom, 'main' => $main, 'thumb' => $thumb];
+  }
+}
+
+if (!function_exists('cms_product_single_image_variants')) {
+  function cms_product_single_image_variants(string $filename, string $baseUrl): array {
+    $filename = trim(stripslashes($filename));
+    if ($filename === '') {
+      return ['zoom' => '', 'main' => '', 'thumb' => ''];
+    }
+
+    $legacyZoom = [
+      "/filestore/images/content/lg-{$filename}",
+    ];
+    $legacyMain = [
+      "/filestore/images/content/sm-{$filename}",
+      "/filestore/images/content/{$filename}",
+    ];
+    $legacyThumb = [
+      "/filestore/images/content/tn-{$filename}",
+      "/filestore/images/content/sm-{$filename}",
+      "/filestore/images/content/{$filename}",
+    ];
+
+    $newZoom = [
+      "/filestore/images/products/lg/{$filename}",
+    ];
+    $newMain = [
+      "/filestore/images/products/sm/{$filename}",
+      "/filestore/images/products/lg/{$filename}",
+      "/filestore/images/products/{$filename}",
+    ];
+    $newThumb = [
+      "/filestore/images/products/xs/{$filename}",
+      "/filestore/images/products/sm/{$filename}",
+      "/filestore/images/products/{$filename}",
+    ];
+
+    $zoom = cms_product_gallery_pick($legacyZoom, $baseUrl);
+    $main = cms_product_gallery_pick($legacyMain, $baseUrl);
+    $thumb = cms_product_gallery_pick($legacyThumb, $baseUrl);
+
+    if ($zoom === '') {
+      $zoom = cms_product_gallery_pick($newZoom, $baseUrl);
+    }
+    if ($main === '') {
+      $main = cms_product_gallery_pick($newMain, $baseUrl);
+    }
+    if ($thumb === '') {
+      $thumb = cms_product_gallery_pick($newThumb, $baseUrl);
+    }
+
+    $hasZoom = $zoom !== '';
+
+    if ($main === '' && $zoom !== '') {
+      $main = $zoom;
+    }
+    if ($zoom === '' && $main !== '') {
+      $zoom = $main;
+    }
+    if ($thumb === '' && $main !== '') {
+      $thumb = $main;
+    }
+
+    return ['zoom' => $zoom, 'main' => $main, 'thumb' => $thumb, 'has_zoom' => $hasZoom];
   }
 }
 
@@ -253,14 +321,12 @@ if (!function_exists('cms_product_legacy_card_image_url')) {
 
     if (!empty($rowproduct['image'])) {
       $img = trim(stripslashes((string) $rowproduct['image']));
-      $smPath = "/filestore/images/content/sm-{$img}";
-      $rawPath = "/filestore/images/content/{$img}";
-
-      $docRoot = rtrim((string) ($_SERVER['DOCUMENT_ROOT'] ?? ''), '/');
-      if (is_file($docRoot . $smPath)) {
-        $legacyFile = $smPath;
-      } elseif (is_file($docRoot . $rawPath)) {
-        $legacyFile = $rawPath;
+      $variants = cms_product_single_image_variants($img, $baseUrl);
+      if ($variants['thumb'] !== '') {
+        return $variants['thumb'];
+      }
+      if ($variants['main'] !== '') {
+        return $variants['main'];
       }
     }
 
